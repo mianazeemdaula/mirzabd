@@ -12,6 +12,7 @@ import { BookGrid } from "@/components/store/book-grid";
 import { ReviewForm } from "@/components/store/review-form";
 import { Button } from "@/components/ui/button";
 import { AddToBagButton } from "@/components/store/add-to-bag-button";
+import { AddToWishlistButton } from "@/components/store/add-to-wishlist-button";
 import { formatPKR, serializeProduct } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -217,11 +218,12 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
             </div>
 
             {/* Simulated Form for checkout add actions */}
-            {!isOutOfStock && (
-              <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+              {!isOutOfStock && (
                 <AddToBagButton book={serializedBook} coverImage={coverImage} />
-              </div>
-            )}
+              )}
+              <AddToWishlistButton productId={book.id} />
+            </div>
           </div>
         </div>
       </div>

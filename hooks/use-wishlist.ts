@@ -9,7 +9,7 @@ import { toast } from "sonner";
 // Guest local storage key
 const GUEST_WISHLIST_KEY = "mirza-book-depot-wishlist";
 
-export function useWishlist() {
+export function useWishlist(initialData?: any[]) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [guestWishlist, setGuestWishlist] = useState<number[]>([]);
@@ -27,8 +27,37 @@ export function useWishlist() {
     }
   }, []);
 
+  // Sync guest wishlist to server on login
+  useEffect(() => {
+    if (isMounted && session && guestWishlist.length > 0 && !isLoading) {
+      const syncWishlist = async () => {
+        try {
+          for (const productId of guestWishlist) {
+            const isAlreadyOnServer = serverWishlist.some(
+              (item: any) => item.id === productId || item.productId === productId
+            );
+            if (!isAlreadyOnServer) {
+              await fetch("/api/store/wishlist", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId }),
+              });
+            }
+          }
+          localStorage.removeItem(GUEST_WISHLIST_KEY);
+          setGuestWishlist([]);
+          queryClient.invalidateQueries({ queryKey: ["wishlist", session?.user?.id] });
+          toast.success("Synced your wishlist!");
+        } catch (err) {
+          console.error("Failed to sync wishlist:", err);
+        }
+      };
+      syncWishlist();
+    }
+  }, [isMounted, session, guestWishlist, serverWishlist, isLoading, queryClient]);
+
   // Fetch wishlist from server for authenticated user
-  const { data: serverWishlist = [], isLoading } = useQuery<any[]>({
+  const { data: serverWishlist = initialData || [], isLoading } = useQuery<any[]>({
     queryKey: ["wishlist", session?.user?.id],
     queryFn: async () => {
       if (!session) return [];
@@ -37,6 +66,7 @@ export function useWishlist() {
       return res.json(); // returns array of products
     },
     enabled: !!session,
+    initialData,
   });
 
   // Mutate wishlist on server
