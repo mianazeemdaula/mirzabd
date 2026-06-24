@@ -2694,6 +2694,7 @@ Follow this order. Do not proceed to the next task until the current one is comp
 
 ### General
 
+- **Package Manager:** Use `npm` exclusively (never `pnpm`, `yarn`, or `bun`) for all package management, installation, and run scripts.
 - **All components:** TypeScript strict mode — no `any` except WC formatter raw inputs
 - **Server vs Client:** Prefer RSC for data fetching; add `"use client"` only for interactivity or hooks
 - **Imports:** Absolute with `@/` alias always
