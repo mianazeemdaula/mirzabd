@@ -1,26 +1,200 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Backgrounds */
+  --color-void: #080A12;
+  --color-surface: #0F1120;
+  --color-elevated: #161929;
+  --color-border: #252A40;
+
+  /* Accent — Antique Gold */
+  --color-gold: #E8A83E;
+  --color-gold-dim: #A87028;
+  --color-gold-glow: #E8A83E33;
+
+  /* Accent 2 — Spine Red */
+  --color-crimson: #C0392B;
+  --color-crimson-dim: #922B21;
+
+  /* Text */
+  --color-ink: #F5F0E8;
+  --color-muted: #8A8FA8;
+  --color-faint: #3D4260;
+
+  /* Typography */
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+
+  /* Radii */
+  --radius-card: 12px;
+  --radius-btn: 8px;
+
+  /* Shadows */
+  --shadow-glow: 0 0 40px var(--color-gold-glow);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Base layer overrides */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  ::selection {
+    background-color: var(--color-gold-glow);
+    color: var(--color-gold);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom utilities */
+@layer utilities {
+  .text-display {
+    font-family: var(--font-display);
+  }
+
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+
+  .bg-elevated {
+    background-color: var(--color-elevated);
+  }
+
+  .border-default {
+    border-color: var(--color-border);
+  }
+
+  .text-ink {
+    color: var(--color-ink);
+  }
+
+  .text-muted {
+    color: var(--color-muted);
+  }
+
+  .text-gold {
+    color: var(--color-gold);
+  }
+
+  .bg-gold {
+    background-color: var(--color-gold);
+  }
+
+  .glow-gold {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .card-shadow {
+    box-shadow: var(--shadow-card);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* Typography scale */
+  .text-hero {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.05;
+  }
+
+  .text-section {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .text-card-title {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .text-body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .text-caption {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .text-price {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .text-badge {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
 }
+
+/* Hide scrollbar but keep scroll functionality */
+@utility no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}
+
+/* Custom scrollbar for small scrollable lists */
+@utility custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-surface);
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-surface);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 9999px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold-dim);
+  }
+}
+
+
