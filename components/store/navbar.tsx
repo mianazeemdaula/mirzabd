@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Search, ShoppingBag, User, Menu, X, Heart, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, Heart, LogOut, ChevronDown, LayoutDashboard, Book } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/hooks/use-cart";
 import { useUiStore } from "@/store/ui";
@@ -38,9 +38,12 @@ export function Navbar() {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-void/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="font-display text-lg sm:text-2xl font-bold tracking-wide text-ink">
-            📚 {APP_NAME}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="p-1.5 rounded-lg bg-gold-glow/5 border border-gold/15 group-hover:border-gold/30 group-hover:bg-gold-glow/10 transition-all duration-300">
+            <Book className="text-gold group-hover:scale-105 transition-transform duration-300" size={20} />
+          </div>
+          <span className="font-display text-lg sm:text-xl font-bold tracking-wide text-ink group-hover:text-gold transition-colors duration-300">
+            {APP_NAME}
           </span>
         </Link>
 

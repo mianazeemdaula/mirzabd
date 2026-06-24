@@ -1,6 +1,7 @@
 // app/(auth)/layout.tsx
 import React from "react";
 import Link from "next/link";
+import { Book } from "lucide-react";
 import { APP_NAME, APP_TAGLINE } from "@/lib/constants";
 
 export default function AuthLayout({
@@ -16,9 +17,10 @@ export default function AuthLayout({
 
       {/* Brand Header */}
       <div className="mb-8 text-center relative z-10 space-y-2">
-        <Link href="/">
-          <span className="font-display text-3xl font-bold tracking-wide hover:text-gold transition-colors block">
-            📚 {APP_NAME}
+        <Link href="/" className="inline-flex items-center gap-2.5 group">
+          <Book className="text-gold group-hover:scale-105 transition-transform duration-300" size={24} />
+          <span className="font-display text-3xl font-bold tracking-wide group-hover:text-gold transition-colors block">
+            {APP_NAME}
           </span>
         </Link>
         <p className="text-xs text-muted font-medium italic">{APP_TAGLINE}</p>

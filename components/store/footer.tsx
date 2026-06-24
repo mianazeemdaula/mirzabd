@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Facebook, Instagram, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, Send, Book } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { APP_NAME, APP_TAGLINE, APP_ADDRESS, APP_CONTACT, APP_LANDLINE, APP_EMAIL } from "@/lib/constants";
@@ -27,9 +27,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Brand details */}
           <div className="space-y-4">
-            <h3 className="font-display text-xl font-bold tracking-wide text-ink">
-              📚 {APP_NAME}
-            </h3>
+            <div className="flex items-center gap-2.5">
+              <Book className="text-gold" size={20} />
+              <h3 className="font-display text-xl font-bold tracking-wide text-ink">
+                {APP_NAME}
+              </h3>
+            </div>
             <p className="text-sm font-medium italic text-gold">{APP_TAGLINE}</p>
             <div className="space-y-3 pt-2 text-sm text-muted">
               <div className="flex items-start gap-2">

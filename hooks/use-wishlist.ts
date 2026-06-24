@@ -27,6 +27,19 @@ export function useWishlist(initialData?: any[]) {
     }
   }, []);
 
+  // Fetch wishlist from server for authenticated user
+  const { data: serverWishlist = initialData || [], isLoading } = useQuery<any[]>({
+    queryKey: ["wishlist", session?.user?.id],
+    queryFn: async () => {
+      if (!session) return [];
+      const res = await fetch("/api/store/wishlist");
+      if (!res.ok) throw new Error("Failed to fetch wishlist");
+      return res.json(); // returns array of products
+    },
+    enabled: !!session,
+    initialData,
+  });
+
   // Sync guest wishlist to server on login
   useEffect(() => {
     if (isMounted && session && guestWishlist.length > 0 && !isLoading) {
@@ -55,19 +68,6 @@ export function useWishlist(initialData?: any[]) {
       syncWishlist();
     }
   }, [isMounted, session, guestWishlist, serverWishlist, isLoading, queryClient]);
-
-  // Fetch wishlist from server for authenticated user
-  const { data: serverWishlist = initialData || [], isLoading } = useQuery<any[]>({
-    queryKey: ["wishlist", session?.user?.id],
-    queryFn: async () => {
-      if (!session) return [];
-      const res = await fetch("/api/store/wishlist");
-      if (!res.ok) throw new Error("Failed to fetch wishlist");
-      return res.json(); // returns array of products
-    },
-    enabled: !!session,
-    initialData,
-  });
 
   // Mutate wishlist on server
   const toggleMutation = useMutation({
