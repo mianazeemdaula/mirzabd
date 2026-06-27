@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCategory } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
-import { logWcApi } from "@/lib/logger";
+import { logWcApi, withWcLogging } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
 /**
  * GET /wp-json/wc/v3/products/categories
  */
-export async function GET(req: Request) {
+async function GETHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -62,7 +62,7 @@ export async function GET(req: Request) {
 /**
  * POST /wp-json/wc/v3/products/categories
  */
-export async function POST(req: Request) {
+async function POSTHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -111,3 +111,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: "internal_error", message: "Failed to create category." }, { status: 500 });
   }
 }
+
+export const GET = withWcLogging(GETHandler);
+export const POST = withWcLogging(POSTHandler);

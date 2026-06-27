@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcProduct, parseWcProduct } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
-import { logWcApi } from "@/lib/logger";
+import { logWcApi, withWcLogging } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
 import Decimal = Prisma.Decimal;
 
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  * POST /wp-json/wc/v3/products/batch
  * Process bulk creates, updates, and deletes for books.
  */
-export async function POST(req: Request) {
+async function POSTHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -166,3 +166,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: "internal_error", message: "Failed to process batch." }, { status: 500 });
   }
 }
+
+export const POST = withWcLogging(POSTHandler);

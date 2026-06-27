@@ -1,5 +1,6 @@
 // app/wp-json/wc/v3/system_status/route.ts
 import { NextResponse } from "next/server";
+import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 
 export const dynamic = "force-dynamic";
@@ -7,7 +8,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /wp-json/wc/v3/system_status
  */
-export async function GET(req: Request) {
+async function GETHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -61,3 +62,5 @@ export async function GET(req: Request) {
     },
   });
 }
+
+export const GET = withWcLogging(GETHandler);

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcProduct, parseWcProduct } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
-import { logWcApi } from "@/lib/logger";
+import { logWcApi, withWcLogging } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
 import Decimal = Prisma.Decimal;
 
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /wp-json/wc/v3/products/[id]
  */
-export async function GET(req: Request, { params }: Params) {
+async function GETHandler(req: Request, { params }: Params) {
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -50,7 +50,7 @@ export async function GET(req: Request, { params }: Params) {
 /**
  * PUT /wp-json/wc/v3/products/[id]
  */
-export async function PUT(req: Request, { params }: Params) {
+async function PUTHandler(req: Request, { params }: Params) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -136,7 +136,7 @@ export async function PUT(req: Request, { params }: Params) {
 /**
  * DELETE /wp-json/wc/v3/products/[id]
  */
-export async function DELETE(req: Request, { params }: Params) {
+async function DELETEHandler(req: Request, { params }: Params) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -174,3 +174,7 @@ export async function DELETE(req: Request, { params }: Params) {
     return NextResponse.json({ code: "internal_error", message: "Failed to delete product." }, { status: 500 });
   }
 }
+
+export const GET = withWcLogging(GETHandler);
+export const PUT = withWcLogging(PUTHandler);
+export const DELETE = withWcLogging(DELETEHandler);

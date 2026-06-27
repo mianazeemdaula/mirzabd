@@ -1,5 +1,6 @@
 // app/wp-json/wc/v3/products/categories/[id]/route.ts
 import { NextResponse } from "next/server";
+import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCategory } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
@@ -11,7 +12,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /wp-json/wc/v3/products/categories/[id]
  */
-export async function GET(req: Request, { params }: Params) {
+async function GETHandler(req: Request, { params }: Params) {
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -43,7 +44,7 @@ export async function GET(req: Request, { params }: Params) {
 /**
  * PUT /wp-json/wc/v3/products/categories/[id]
  */
-export async function PUT(req: Request, { params }: Params) {
+async function PUTHandler(req: Request, { params }: Params) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -108,7 +109,7 @@ export async function PUT(req: Request, { params }: Params) {
 /**
  * DELETE /wp-json/wc/v3/products/categories/[id]
  */
-export async function DELETE(req: Request, { params }: Params) {
+async function DELETEHandler(req: Request, { params }: Params) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -162,3 +163,7 @@ export async function DELETE(req: Request, { params }: Params) {
     return NextResponse.json({ code: "internal_error", message: "Failed to delete category." }, { status: 500 });
   }
 }
+
+export const GET = withWcLogging(GETHandler);
+export const PUT = withWcLogging(PUTHandler);
+export const DELETE = withWcLogging(DELETEHandler);

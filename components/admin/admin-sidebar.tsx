@@ -13,6 +13,7 @@ import {
   Users,
   MessageSquare,
   Key,
+  Terminal,
   Settings,
   LogOut,
   User,
@@ -32,6 +33,7 @@ export function AdminSidebar() {
     { label: "Customers", href: "/admin/customers", icon: Users },
     { label: "Reviews", href: "/admin/reviews", icon: MessageSquare },
     { label: "API Credentials", href: "/admin/api-keys", icon: Key },
+    { label: "API Logs", href: "/admin/logs", icon: Terminal },
     { label: "Settings", href: "/admin/settings", icon: Settings },
   ];
 

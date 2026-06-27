@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcProduct, parseWcProduct } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
-import { logWcApi } from "@/lib/logger";
+import { logWcApi, withWcLogging } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
 import Decimal = Prisma.Decimal;
 
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  * GET /wp-json/wc/v3/products
  * Fetch list of products (books) in WooCommerce format.
  */
-export async function GET(req: Request) {
+async function GETHandler(req: Request) {
   // 1. Authenticate API Key permissions
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
@@ -80,7 +80,7 @@ export async function GET(req: Request) {
  * POST /wp-json/wc/v3/products
  * Create a new product (book) in WooCommerce format.
  */
-export async function POST(req: Request) {
+async function POSTHandler(req: Request) {
   // 1. Authenticate API Key permissions
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
@@ -163,3 +163,6 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const GET = withWcLogging(GETHandler);
+export const POST = withWcLogging(POSTHandler);

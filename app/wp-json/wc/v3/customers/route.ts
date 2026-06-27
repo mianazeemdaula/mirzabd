@@ -1,5 +1,6 @@
 // app/wp-json/wc/v3/customers/route.ts
 import { NextResponse } from "next/server";
+import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCustomer } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /wp-json/wc/v3/customers
  */
-export async function GET(req: Request) {
+async function GETHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -67,3 +68,5 @@ export async function GET(req: Request) {
     return NextResponse.json({ code: "internal_error", message: "Failed to fetch customers." }, { status: 500 });
   }
 }
+
+export const GET = withWcLogging(GETHandler);

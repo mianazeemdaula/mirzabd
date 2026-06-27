@@ -1,5 +1,6 @@
 // app/wp-json/wc/v3/orders/route.ts
 import { NextResponse } from "next/server";
+import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcOrder } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /wp-json/wc/v3/orders
  */
-export async function GET(req: Request) {
+async function GETHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "read");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -86,7 +87,7 @@ export async function GET(req: Request) {
 /**
  * POST /wp-json/wc/v3/orders
  */
-export async function POST(req: Request) {
+async function POSTHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -192,3 +193,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: "internal_error", message: "Failed to create order." }, { status: 500 });
   }
 }
+
+export const GET = withWcLogging(GETHandler);
+export const POST = withWcLogging(POSTHandler);

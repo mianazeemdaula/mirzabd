@@ -1,5 +1,6 @@
 // app/wp-json/wc/v3/products/categories/batch/route.ts
 import { NextResponse } from "next/server";
+import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCategory } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
  * POST /wp-json/wc/v3/products/categories/batch
  * Process bulk creates, updates, and deletes for category sync.
  */
-export async function POST(req: Request) {
+async function POSTHandler(req: Request) {
   const authResult = await wcAuthenticate(req, "write");
   if (!authResult.authenticated) {
     return authResult.errorResponse!;
@@ -153,3 +154,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: "internal_error", message: "Failed to process batch." }, { status: 500 });
   }
 }
+
+export const POST = withWcLogging(POSTHandler);
