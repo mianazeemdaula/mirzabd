@@ -4,6 +4,7 @@ import { formatWcProduct, parseWcProduct } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
 import { logWcApi, withWcLogging } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
+import { generateUniqueProductSlug } from "@/lib/slug-helper";
 import Decimal = Prisma.Decimal;
 
 export const dynamic = "force-dynamic";
@@ -100,18 +101,8 @@ async function POSTHandler(req: Request) {
     // 2. Parse WooCommerce JSON structure into Prisma input format
     const parsedData = parseWcProduct(body);
 
-    // Check slug uniqueness
-    const existing = await prisma.product.findUnique({
-      where: { slug: parsedData.slug },
-    });
-
-    if (existing) {
-      logWcApi("WARNING", "PRODUCTS_POST", `Failed to create product: slug "${parsedData.slug}" already exists.`);
-      return NextResponse.json(
-        { code: "product_invalid_slug", message: "A book with this slug already exists." },
-        { status: 400 }
-      );
-    }
+    // Check slug uniqueness and generate a unique one if needed
+    const slug = await generateUniqueProductSlug(parsedData.slug || parsedData.name);
 
     // Resolve categories if sent in body
     const categoryIds = (body.categories || []).map((c: any) => c.id);
@@ -120,7 +111,7 @@ async function POSTHandler(req: Request) {
     const product = await prisma.product.create({
       data: {
         name: parsedData.name,
-        slug: parsedData.slug,
+        slug,
         type: parsedData.type,
         status: parsedData.status,
         description: parsedData.description,

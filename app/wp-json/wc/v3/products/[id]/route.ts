@@ -4,6 +4,7 @@ import { formatWcProduct, parseWcProduct } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
 import { logWcApi, withWcLogging } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
+import { generateUniqueProductSlug } from "@/lib/slug-helper";
 import Decimal = Prisma.Decimal;
 
 type Params = { params: Promise<{ id: string }> };
@@ -84,7 +85,9 @@ async function PUTHandler(req: Request, { params }: Params) {
     // Build update payload
     const updateData: any = {};
     if (body.name !== undefined) updateData.name = parsedData.name;
-    if (body.slug !== undefined) updateData.slug = parsedData.slug;
+    if (body.slug !== undefined) {
+      updateData.slug = await generateUniqueProductSlug(parsedData.slug, productId);
+    }
     if (body.status !== undefined) updateData.status = parsedData.status;
     if (body.description !== undefined) updateData.description = parsedData.description;
     if (body.short_description !== undefined) updateData.shortDescription = parsedData.shortDescription;

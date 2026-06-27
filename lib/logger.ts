@@ -175,6 +175,14 @@ export function withWcLogging(handler: (req: Request, context: any) => Promise<R
     let err: any = null;
     let resBody: any = undefined;
 
+    // Clone request before it is consumed by the handler
+    let logReq = req;
+    try {
+      logReq = req.clone();
+    } catch (e) {
+      // Ignore clone failure
+    }
+
     try {
       res = await handler(req, context);
       
@@ -197,7 +205,7 @@ export function withWcLogging(handler: (req: Request, context: any) => Promise<R
     }
 
     const duration = Date.now() - startTime;
-    await logWcRequestResponse(req, res, duration, resBody);
+    await logWcRequestResponse(logReq, res, duration, resBody);
 
     if (err) {
       throw err;

@@ -4,6 +4,7 @@ import { formatWcProduct, parseWcProduct } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
 import { logWcApi, withWcLogging } from "@/lib/logger";
 import { Prisma } from "@prisma/client";
+import { generateUniqueProductSlug } from "@/lib/slug-helper";
 import Decimal = Prisma.Decimal;
 
 export const dynamic = "force-dynamic";
@@ -30,16 +31,22 @@ async function POSTHandler(req: Request) {
     const updatedResults: any[] = [];
     const deletedResults: any[] = [];
 
+    // Track slugs generated or used within this batch to avoid intra-batch duplicates
+    const localUsedSlugs = new Set<string>();
+
     // 1. Process Creates
     for (const item of createItems) {
       try {
         const parsed = parseWcProduct(item);
         const categoryIds = (item.categories || []).map((c: any) => c.id);
 
+        // Generate unique slug
+        const slug = await generateUniqueProductSlug(parsed.slug || parsed.name, undefined, localUsedSlugs);
+
         const product = await prisma.product.create({
           data: {
             name: parsed.name,
-            slug: parsed.slug || `${item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`,
+            slug,
             type: parsed.type,
             status: parsed.status,
             description: parsed.description,
@@ -90,7 +97,9 @@ async function POSTHandler(req: Request) {
         // Build updates payload
         const updateData: any = {};
         if (item.name !== undefined) updateData.name = parsed.name;
-        if (item.slug !== undefined) updateData.slug = parsed.slug;
+        if (item.slug !== undefined) {
+          updateData.slug = await generateUniqueProductSlug(parsed.slug, productId, localUsedSlugs);
+        }
         if (item.status !== undefined) updateData.status = parsed.status;
         if (item.description !== undefined) updateData.description = parsed.description;
         if (item.short_description !== undefined) updateData.shortDescription = parsed.shortDescription;
