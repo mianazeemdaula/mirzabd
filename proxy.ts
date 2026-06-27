@@ -11,6 +11,19 @@ export const proxy = auth((req) => {
   const userRole = (req.auth?.user as any)?.role;
   const isAdmin = userRole === "ADMIN";
 
+  // 1. Clean malformed WooCommerce API paths (e.g. containing /wp-json/)
+  // Look for '/wp-json/' anywhere in the path (e.g. /%0Abase%20url/wp-json/wc/v3/products)
+  const { pathname } = req.nextUrl;
+  const wpJsonIndex = pathname.indexOf("/wp-json/");
+  if (wpJsonIndex > -1) {
+    const cleanPath = pathname.substring(wpJsonIndex);
+    const url = req.nextUrl.clone();
+    url.pathname = cleanPath;
+    
+    // Rewrite internally so Next.js routes to the clean API endpoint
+    return NextResponse.rewrite(url);
+  }
+
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isAdminApiRoute = nextUrl.pathname.startsWith("/api/admin");
   const isAuthPage = nextUrl.pathname === "/login" || nextUrl.pathname === "/register";
