@@ -4,6 +4,7 @@ import { Navbar } from "@/components/store/navbar";
 import { Footer } from "@/components/store/footer";
 import { CartDrawer } from "@/components/store/cart-drawer";
 import { SearchBar } from "@/components/store/search-bar";
+import { ChatBot } from "@/components/store/chatbot";
 import { PageTransition } from "@/components/motion/page-transition";
 
 export default function StoreLayout({
@@ -20,6 +21,7 @@ export default function StoreLayout({
       <Footer />
       <CartDrawer />
       <SearchBar />
+      <ChatBot />
     </div>
   );
 }
