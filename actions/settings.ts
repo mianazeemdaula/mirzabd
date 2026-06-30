@@ -3,6 +3,8 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import fs from "fs";
+import path from "path";
 
 /**
  * Server Action to save store configuration settings
@@ -14,6 +16,7 @@ export async function saveStoreSettings(formData: FormData) {
   const contactEmail = formData.get("contactEmail") as string;
   const contactPhone = formData.get("contactPhone") as string;
   const storeAddress = formData.get("storeAddress") as string;
+  const chatbotInfo = formData.get("chatbotInfo") as string;
 
   try {
     // Save setting keys
@@ -38,6 +41,12 @@ export async function saveStoreSettings(formData: FormData) {
         value: settingsData as any,
       },
     });
+
+    // Save Chatbot Knowledge Base
+    if (chatbotInfo !== null && chatbotInfo !== undefined) {
+      const kbPath = path.join(process.cwd(), "chatbot-info.md");
+      fs.writeFileSync(kbPath, chatbotInfo, "utf-8");
+    }
 
     revalidatePath("/admin/settings");
     revalidatePath("/");

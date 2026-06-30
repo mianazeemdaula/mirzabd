@@ -1,11 +1,13 @@
 // app/admin/settings/page.tsx
 import React from "react";
 import prisma from "@/lib/prisma";
-import { Settings, Save, AlertCircle } from "lucide-react";
+import { Settings, Save, AlertCircle, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { saveStoreSettings } from "@/actions/settings";
 import { APP_NAME, APP_CONTACT, APP_EMAIL, APP_ADDRESS, DEFAULT_CURRENCY } from "@/lib/constants";
+import fs from "fs";
+import path from "path";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +26,17 @@ export default async function AdminSettingsPage() {
     storeAddress: APP_ADDRESS,
   };
 
+  // 2. Fetch chatbot-info.md from filesystem
+  let chatbotInfoContent = "";
+  try {
+    const kbPath = path.join(process.cwd(), "chatbot-info.md");
+    if (fs.existsSync(kbPath)) {
+      chatbotInfoContent = fs.readFileSync(kbPath, "utf-8");
+    }
+  } catch (err) {
+    console.error("Failed to read chatbot-info.md for admin settings:", err);
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -33,17 +46,17 @@ export default async function AdminSettingsPage() {
             <Settings size={28} className="text-gold" />
             General Settings
           </h1>
-          <p className="text-xs text-muted">Configure store branding, currency units, flat delivery shipping costs and shop locations.</p>
+          <p className="text-xs text-muted">Configure store branding, currency units, flat delivery shipping costs, shop locations, and the AI chatbot knowledge base.</p>
         </div>
       </div>
 
-      <div className="max-w-2xl bg-surface border border-border p-6 rounded-[var(--radius-card)] space-y-6 shadow-sm">
+      <div className="max-w-4xl bg-surface border border-border p-6 rounded-[var(--radius-card)] space-y-6 shadow-sm">
         
         {/* Info Box */}
         <div className="flex gap-3 bg-gold/5 border border-gold/20 p-4 rounded-lg text-xs leading-relaxed text-gold">
           <AlertCircle size={16} className="flex-shrink-0" />
           <p>
-            These properties define global storefront metadata. Make sure to double check contact details and city address coordinates to avoid shipping label sync errors.
+            These properties define global storefront metadata. Make sure to double check contact details, flat shipping rates, and the AI chatbot knowledge base to avoid checkout errors and customer support mismatches.
           </p>
         </div>
 
@@ -123,9 +136,32 @@ export default async function AdminSettingsPage() {
             />
           </div>
 
+          {/* Chatbot Knowledge Base */}
+          <div className="border-t border-border/60 pt-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <Bot size={22} className="text-gold" />
+              <h3 className="font-display text-lg font-bold text-ink">Chatbot Knowledge Base</h3>
+            </div>
+            <p className="text-xs text-muted leading-relaxed">
+              This markdown document provides context to the AI Assistant. Use it to document store information, operating hours, delivery timelines, return policies, contact methods, and general FAQs. The chatbot uses this context directly to respond to customer inquiries.
+            </p>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted">
+                Knowledge Base Content (Markdown Format)
+              </label>
+              <textarea
+                name="chatbotInfo"
+                defaultValue={chatbotInfoContent}
+                placeholder="# Store Policies..."
+                rows={14}
+                className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] p-3 focus:outline-none focus:border-gold placeholder:text-faint font-mono leading-relaxed resize-y"
+              />
+            </div>
+          </div>
+
           {/* Action button */}
           <div className="pt-4 border-t border-border/60 flex justify-end">
-            <Button type="submit" variant="primary" className="px-6 h-11 rounded-[var(--radius-btn)] font-semibold flex items-center gap-1.5">
+            <Button type="submit" variant="primary" className="px-6 h-11 rounded-[var(--radius-btn)] font-semibold flex items-center gap-1.5 cursor-pointer">
               <Save size={16} />
               Save Configuration Settings
             </Button>
