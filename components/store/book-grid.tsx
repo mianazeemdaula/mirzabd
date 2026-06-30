@@ -3,7 +3,6 @@
 
 import React from "react";
 import { BookCard } from "@/components/store/book-card";
-import { StaggerList, StaggerItem } from "@/components/motion/stagger-list";
 
 interface BookGridProps {
   books: any[];
@@ -19,13 +18,12 @@ export function BookGrid({ books }: BookGridProps) {
   }
 
   return (
-    <StaggerList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
       {books.map((book) => (
-        <StaggerItem key={book.id}>
-          <BookCard book={book} />
-        </StaggerItem>
+        <BookCard key={book.id} book={book} />
       ))}
-    </StaggerList>
+    </div>
   );
 }
+
 export default BookGrid;

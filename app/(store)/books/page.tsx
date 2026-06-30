@@ -201,40 +201,72 @@ export default async function BooksPage({
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-6 border-t border-border">
+            <div className="flex items-center justify-center gap-2 pt-6 border-t border-border flex-wrap">
               {/* Prev button */}
               {page > 1 && (
                 <Link href={getPageLink(page - 1)}>
-                  <Button variant="ghost" size="sm" className="h-9 px-3 rounded-[var(--radius-btn)] text-xs border border-border text-ink hover:border-gold">
+                  <Button variant="ghost" size="sm" className="h-9 px-3 rounded-[var(--radius-btn)] text-xs border border-border text-ink hover:border-gold cursor-pointer">
                     Previous
                   </Button>
                 </Link>
               )}
 
-              {/* Number buttons */}
-              {pagesList.map((p) => {
-                const isCurrent = p === page;
-                return (
-                  <Link key={p} href={getPageLink(p)}>
-                    <Button
-                      variant={isCurrent ? "primary" : "ghost"}
-                      size="sm"
-                      className={`h-9 w-9 rounded-[var(--radius-btn)] text-xs font-semibold ${
-                        isCurrent
-                          ? "bg-gold text-void font-bold shadow-md"
-                          : "border border-border text-ink hover:border-gold"
-                      }`}
-                    >
-                      {p}
-                    </Button>
-                  </Link>
-                );
-              })}
+              {/* Number buttons with Ellipses */}
+              {(() => {
+                const delta = 2; // Pages to show around current page
+                const range = [];
+                for (let i = 1; i <= totalPages; i++) {
+                  if (i === 1 || i === totalPages || (i >= page - delta && i <= page + delta)) {
+                    range.push(i);
+                  }
+                }
+
+                const buttons: (number | string)[] = [];
+                let prevPage = 0;
+                for (const p of range) {
+                  if (prevPage > 0) {
+                    if (p - prevPage === 2) {
+                      buttons.push(prevPage + 1);
+                    } else if (p - prevPage > 2) {
+                      buttons.push("...");
+                    }
+                  }
+                  buttons.push(p);
+                  prevPage = p;
+                }
+
+                return buttons.map((p, idx) => {
+                  if (p === "...") {
+                    return (
+                      <span key={`dots-${idx}`} className="px-2 text-muted text-xs select-none">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  const isCurrent = p === page;
+                  return (
+                    <Link key={p} href={getPageLink(p as number)}>
+                      <Button
+                        variant={isCurrent ? "primary" : "ghost"}
+                        size="sm"
+                        className={`h-9 w-9 rounded-[var(--radius-btn)] text-xs font-semibold cursor-pointer ${
+                          isCurrent
+                            ? "bg-gold text-void font-bold shadow-md"
+                            : "border border-border text-ink hover:border-gold"
+                        }`}
+                      >
+                        {p}
+                      </Button>
+                    </Link>
+                  );
+                });
+              })()}
 
               {/* Next button */}
               {page < totalPages && (
                 <Link href={getPageLink(page + 1)}>
-                  <Button variant="ghost" size="sm" className="h-9 px-3 rounded-[var(--radius-btn)] text-xs border border-border text-ink hover:border-gold">
+                  <Button variant="ghost" size="sm" className="h-9 px-3 rounded-[var(--radius-btn)] text-xs border border-border text-ink hover:border-gold cursor-pointer">
                     Next
                   </Button>
                 </Link>
