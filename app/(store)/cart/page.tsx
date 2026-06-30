@@ -3,7 +3,7 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "@/components/store/product-image";
 import { ShoppingBag, ArrowLeft, Trash2, Plus, Minus } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ export default function CartPage() {
               >
                 {/* Image */}
                 <div className="relative w-20 aspect-[2/3] bg-void rounded overflow-hidden flex-shrink-0">
-                  <Image
+                  <ProductImage
                     src={item.imageUrl || "/images/placeholder-book.png"}
                     alt={item.name}
                     fill

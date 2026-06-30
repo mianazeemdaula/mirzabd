@@ -2,8 +2,8 @@
 import React from "react";
 import Script from "next/script";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/store/product-image";
 import { BookOpen, Calendar, Globe, FileText, CheckCircle2, ChevronRight } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { PriceDisplay } from "@/components/store/price-display";
@@ -125,7 +125,7 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
         {/* Left Column: Book Cover Image */}
         <div className="md:col-span-5 lg:col-span-4 flex justify-center">
           <div className="relative aspect-[2/3] w-full max-w-[320px] rounded-[var(--radius-card)] overflow-hidden bg-surface border border-border shadow-card">
-            <Image
+            <ProductImage
               src={coverImage}
               alt={book.name}
               fill

@@ -261,7 +261,7 @@ export function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="w-[370px] sm:w-[400px] h-[550px] bg-surface border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden mb-4 card-shadow"
+            className="w-[calc(100vw-32px)] sm:w-[400px] h-[80vh] sm:h-[550px] max-h-[600px] bg-surface border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden mb-4 card-shadow"
           >
             {/* Header */}
             <div className="p-4 bg-elevated border-b border-border flex items-center justify-between">

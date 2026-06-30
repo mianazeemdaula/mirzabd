@@ -2,8 +2,8 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/store/product-image";
 import { ShoppingCart, Heart, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -115,7 +115,7 @@ export function BookCard({ book }: BookCardProps) {
 
         {/* Book cover image link */}
         <Link href={`/books/${book.slug}`} className="block relative aspect-[2/3] w-full overflow-hidden bg-elevated border-b border-border">
-          <Image
+          <ProductImage
             src={coverImage}
             alt={book.name}
             fill

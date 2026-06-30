@@ -3,8 +3,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/store/product-image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -409,7 +409,7 @@ export default function CheckoutPage() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3 items-center">
                 <div className="relative w-12 aspect-[2/3] bg-void rounded overflow-hidden flex-shrink-0">
-                  <Image
+                  <ProductImage
                     src={item.imageUrl || "/images/placeholder-book.png"}
                     alt={item.name}
                     fill

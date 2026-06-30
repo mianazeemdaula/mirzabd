@@ -1,7 +1,7 @@
 // app/admin/books/page.tsx
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "@/components/store/product-image";
 import Script from "next/script";
 import prisma from "@/lib/prisma";
 import { DataTable } from "@/components/admin/data-table";
@@ -72,7 +72,7 @@ export default async function AdminBooksPage({ searchParams }: AdminBooksPagePro
         }
         return (
           <div className="relative h-10 w-7 bg-void rounded overflow-hidden">
-            <Image src={coverSrc} alt={book.name} fill className="object-cover" />
+            <ProductImage src={coverSrc} alt={book.name} fill className="object-cover" />
           </div>
         );
       },

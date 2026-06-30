@@ -3,7 +3,7 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "@/components/store/product-image";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/hooks/use-cart";
@@ -93,7 +93,7 @@ export function CartDrawer() {
                   >
                     {/* Image */}
                     <div className="relative w-16 aspect-[2/3] flex-shrink-0 bg-void rounded overflow-hidden">
-                      <Image
+                      <ProductImage
                         src={item.imageUrl || "/images/placeholder-book.png"}
                         alt={item.name}
                         fill
