@@ -117,8 +117,8 @@ export const CheckoutSchema = z.object({
   // Billing Address
   billing: z.object({
     name: z.string().min(1, "Name is required"),
-    email: z.string().email(),
-    phone: z.string().min(10),
+    email: z.string().email("Valid email is required"),
+    phone: z.string().min(10, "Valid phone number is required"),
     address: z.string().min(1, "Address is required"),
     city: z.string().min(1, "City is required"),
     state: z.string().optional(),
@@ -129,11 +129,11 @@ export const CheckoutSchema = z.object({
   // Shipping Address (optional, defaults to billing)
   shippingSameAsBilling: z.boolean().default(true),
   shipping: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    phone: z.string().min(10),
-    address: z.string().min(1),
-    city: z.string().min(1),
+    name: z.string().optional(),
+    email: z.string().optional(),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    city: z.string().optional(),
     state: z.string().optional(),
     zip: z.string().optional(),
     country: z.string().default("Pakistan"),
@@ -144,6 +144,53 @@ export const CheckoutSchema = z.object({
 
   // Notes
   notes: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.shippingSameAsBilling) {
+    if (!data.shipping?.name || data.shipping.name.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Shipping name is required",
+        path: ["shipping", "name"],
+      });
+    }
+    if (!data.shipping?.email || data.shipping.email.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Shipping email is required",
+        path: ["shipping", "email"],
+      });
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(data.shipping.email)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Valid shipping email is required",
+          path: ["shipping", "email"],
+        });
+      }
+    }
+    if (!data.shipping?.phone || data.shipping.phone.trim().length < 10) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Shipping phone number is required (min 10 digits)",
+        path: ["shipping", "phone"],
+      });
+    }
+    if (!data.shipping?.address || data.shipping.address.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Shipping address is required",
+        path: ["shipping", "address"],
+      });
+    }
+    if (!data.shipping?.city || data.shipping.city.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Shipping city is required",
+        path: ["shipping", "city"],
+      });
+    }
+  }
 });
 
 export type CheckoutFormValues = z.infer<typeof CheckoutSchema>;

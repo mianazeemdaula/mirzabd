@@ -27,6 +27,7 @@ export default function CheckoutPage() {
     handleSubmit,
     watch,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(CheckoutSchema),
@@ -118,26 +119,47 @@ export default function CheckoutPage() {
   };
 
   // Sync Contact Email and Phone to Billing details automatically
-  const handleDetailsSubmit = (e: React.FormEvent) => {
+  const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Quick validation for first-step inputs
-    const emailVal = watch("email");
-    const phoneVal = watch("phone");
-    const nameVal = watch("billing.name");
-    const addrVal = watch("billing.address");
-    const cityVal = watch("billing.city");
+    // Validate first-step inputs using schema validation
+    const isValid = await trigger([
+      "email",
+      "phone",
+      "billing.name",
+      "billing.address",
+      "billing.city"
+    ]);
 
-    if (!emailVal || !phoneVal || !nameVal || !addrVal || !cityVal) {
-      toast.error("Please fill in all required billing and contact details.");
+    if (!isValid) {
+      toast.error("Please correct the errors in the billing and contact details.");
       return;
     }
+
+    const emailVal = watch("email");
+    const phoneVal = watch("phone");
 
     // Set billing contact values
     setValue("billing.email", emailVal);
     setValue("billing.phone", phoneVal);
     
     setStep("payment");
+  };
+
+  const onInvalid = (errors: any) => {
+    console.error("Form Validation Errors:", errors);
+    toast.error("Please correct the errors in your details before placing the order.");
+    
+    // If there are errors in details step fields, switch back to step details
+    const hasDetailsErrors = 
+      errors.email || 
+      errors.phone || 
+      errors.billing || 
+      errors.shipping;
+      
+    if (hasDetailsErrors) {
+      setStep("details");
+    }
   };
 
   if (items.length === 0) {
@@ -160,21 +182,63 @@ export default function CheckoutPage() {
       </div>
 
       {/* Steps Indicator */}
-      <div className="flex items-center gap-6 text-sm font-semibold max-w-md">
-        <div className={`flex items-center gap-2 pb-1 border-b-2 ${step === "details" ? "text-gold border-gold" : "text-muted border-transparent"}`}>
-          <ClipboardList size={16} />
-          <span>1. Shipping Details</span>
-        </div>
-        <div className={`flex items-center gap-2 pb-1 border-b-2 ${step === "payment" ? "text-gold border-gold" : "text-muted border-transparent"}`}>
-          <CreditCard size={16} />
-          <span>2. Payment & Review</span>
+      <div className="max-w-xl mx-auto w-full py-4 border-b border-border mb-8">
+        <div className="relative flex items-center justify-between w-full">
+          {/* Connector Line Background */}
+          <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-border -translate-y-1/2 z-0" />
+          
+          {/* Active Connector Line Fill */}
+          <div 
+            className="absolute top-1/2 left-0 h-0.5 bg-gold -translate-y-1/2 z-0 transition-all duration-500 ease-in-out" 
+            style={{ width: step === "details" ? "50%" : "100%" }}
+          />
+
+          {/* Step 1: Shopping Bag */}
+          <div className="relative flex flex-col items-center z-10">
+            <div className="w-10 h-10 rounded-full bg-gold text-void flex items-center justify-center border-2 border-gold shadow-glow transition-all duration-300">
+              <CheckCircle2 size={18} className="stroke-[2.5]" />
+            </div>
+            <span className="text-[10px] sm:text-xs font-bold text-ink mt-2 text-center tracking-wide uppercase">Shopping Bag</span>
+          </div>
+
+          {/* Step 2: Shipping Details */}
+          <div className="relative flex flex-col items-center z-10">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
+              step === "payment" 
+                ? "bg-gold text-void border-gold shadow-glow" 
+                : "bg-elevated text-gold border-gold"
+            }`}>
+              {step === "payment" ? (
+                <CheckCircle2 size={18} className="stroke-[2.5]" />
+              ) : (
+                <ClipboardList size={18} />
+              )}
+            </div>
+            <span className={`text-[10px] sm:text-xs font-bold mt-2 text-center tracking-wide uppercase transition-colors duration-300 ${
+              step === "details" || step === "payment" ? "text-ink" : "text-muted"
+            }`}>Shipping Details</span>
+          </div>
+
+          {/* Step 3: Payment & Review */}
+          <div className="relative flex flex-col items-center z-10">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
+              step === "payment"
+                ? "bg-elevated text-gold border-gold shadow-[0_0_15px_rgba(232,168,62,0.15)]"
+                : "bg-void text-muted border-border"
+            }`}>
+              <CreditCard size={18} />
+            </div>
+            <span className={`text-[10px] sm:text-xs font-bold mt-2 text-center tracking-wide uppercase transition-colors duration-300 ${
+              step === "payment" ? "text-ink" : "text-muted"
+            }`}>Payment & Review</span>
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Side: Multi-Step Form */}
         <div className="lg:col-span-7">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6">
             
             {/* Step 1: Details & Address */}
             {step === "details" && (

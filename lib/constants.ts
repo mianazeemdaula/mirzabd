@@ -60,6 +60,7 @@ export const FOOTER_LINKS = {
     { label: "Shipping Policy", href: "/shipping" },
     { label: "Return Policy", href: "/returns" },
     { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
   ],
 } as const;
 
