@@ -10,7 +10,7 @@ import path from "path";
 export const dynamic = "force-dynamic";
 
 const BYNARA_API_URL = "https://router.bynara.id/v1/chat/completions";
-const MODEL_NAME = "mimo-v2.5-free";
+const MODEL_NAME = "mistral-large";
 
 // Helper to convert Prisma Decimal values to regular numbers or strings for JSON serialization
 function serializePrisma(data: any): any {
