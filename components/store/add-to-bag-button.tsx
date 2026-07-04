@@ -20,7 +20,7 @@ export function AddToBagButton({ book, coverImage }: AddToBagButtonProps) {
           toast.error("Cart module is initializing. Please refresh.");
         }
       }}
-      className="bg-gold hover:bg-gold-dim text-void font-bold px-8 h-12 rounded-[var(--radius-btn)] transition-colors inline-flex items-center gap-2 shadow-md hover:shadow-gold/15 cursor-pointer text-sm"
+      className="bg-gold hover:bg-gold-dim text-white font-bold px-8 h-12 rounded-[var(--radius-btn)] transition-colors inline-flex items-center gap-2 shadow-md hover:shadow-gold/15 cursor-pointer text-sm"
     >
       Add to Shopping Bag
     </button>

@@ -47,7 +47,7 @@ export function SearchBar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSearchOpen(false)}
-            className="fixed inset-0 z-50 bg-void/80 backdrop-blur-md cursor-pointer"
+            className="fixed inset-0 z-50 bg-black/30 backdrop-blur-md cursor-pointer"
           />
 
           {/* Search Header Drawer */}

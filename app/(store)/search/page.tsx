@@ -37,12 +37,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     : [];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs sm:text-sm text-muted">
         <Link href="/" className="hover:text-gold transition-colors">Home</Link>
         <ChevronRight size={14} />
-        <Link href="/books" className="hover:text-gold transition-colors">Shop</Link>
+        <Link href="/products" className="hover:text-gold transition-colors">Shop</Link>
         <ChevronRight size={14} />
         <span className="text-ink">Search Results</span>
       </nav>
@@ -67,7 +67,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <p className="text-muted text-base">
               No matching products found. Try searching for something else or view all titles.
             </p>
-            <Link href="/books" className="inline-block mt-4 text-xs font-bold text-gold hover:underline uppercase tracking-wider">
+            <Link href="/products" className="inline-block mt-4 text-xs font-bold text-gold hover:underline uppercase tracking-wider">
               Browse All Products
             </Link>
           </div>

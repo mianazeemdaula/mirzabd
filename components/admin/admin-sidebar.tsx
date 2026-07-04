@@ -27,7 +27,7 @@ export function AdminSidebar() {
 
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Products Catalog", href: "/admin/books", icon: BookOpen },
+    { label: "Products Catalog", href: "/admin/products", icon: BookOpen },
     { label: "Categories", href: "/admin/categories", icon: FolderTree },
     { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
     { label: "Customers", href: "/admin/customers", icon: Users },

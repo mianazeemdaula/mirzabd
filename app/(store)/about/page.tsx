@@ -54,7 +54,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 space-y-20">
+    <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16 space-y-20">
       {/* Hero Section */}
       <motion.div
         initial="hidden"

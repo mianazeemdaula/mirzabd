@@ -42,7 +42,7 @@ export default async function OrdersHistoryPage() {
               You haven't placed any orders with us yet. Start browsing our books collection today!
             </p>
           </div>
-          <Link href="/books">
+          <Link href="/products">
             <Button variant="primary" className="text-xs h-9 px-5 rounded-[var(--radius-btn)]">
               Browse Books
             </Button>
@@ -127,7 +127,7 @@ export default async function OrdersHistoryPage() {
 function Button({ children, className = "", variant = "primary", ...props }: any) {
   const base = "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50";
   const styles = {
-    primary: "bg-gold text-void hover:bg-gold-dim shadow-sm",
+    primary: "bg-gold text-white hover:bg-gold-dim shadow-sm",
     ghost: "border border-border hover:bg-elevated hover:text-gold text-ink",
   };
   return (

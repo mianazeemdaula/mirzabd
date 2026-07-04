@@ -61,7 +61,7 @@ export function formatWcProduct(product: any) {
     id: product.id,
     name: product.name,
     slug: product.slug,
-    permalink: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/books/${product.slug}`,
+    permalink: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/products/${product.slug}`,
     type: product.type || "simple",
     status: product.status || "publish",
     featured: product.isFeatured || false,

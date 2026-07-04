@@ -26,27 +26,27 @@ export const ORDERS_PER_PAGE = 10;
 export const ADMIN_ITEMS_PER_PAGE = 20;
 
 // Image Defaults
-export const PLACEHOLDER_IMAGE = "/images/placeholder-book.png";
+export const PLACEHOLDER_IMAGE = "/images/placeholder-product.jpg";
 export const LOGO_URL = "/images/logo.png";
 
 // Navigation Links
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Books", href: "/books" },
+  { label: "Books", href: "/products" },
   { label: "Categories", href: "/categories" },
-  { label: "New Arrivals", href: "/books?sort=newest" },
-  { label: "Best Sellers", href: "/books?sort=best-selling" },
+  { label: "New Arrivals", href: "/products?sort=newest" },
+  { label: "Best Sellers", href: "/products?sort=best-selling" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
 // Footer Links
 export const FOOTER_LINKS = {
   shop: [
-    { label: "All Books", href: "/books" },
+    { label: "All Books", href: "/products" },
     { label: "Categories", href: "/categories" },
-    { label: "New Arrivals", href: "/books?sort=newest" },
-    { label: "Best Sellers", href: "/books?sort=best-selling" },
-    { label: "Sale", href: "/books?on_sale=true" },
+    { label: "New Arrivals", href: "/products?sort=newest" },
+    { label: "Best Sellers", href: "/products?sort=best-selling" },
+    { label: "Sale", href: "/products?on_sale=true" },
   ],
   account: [
     { label: "My Account", href: "/account" },

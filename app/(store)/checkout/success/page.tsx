@@ -131,13 +131,13 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
       {/* Action buttons */}
       <div className="flex justify-center gap-4">
-        <Link href="/books">
+        <Link href="/products">
           <Button variant="ghost" className="px-6 border-border hover:border-gold text-ink">
             Continue Shopping
           </Button>
         </Link>
         <Link href="/account/orders">
-          <Button variant="primary" className="px-6 bg-gold text-void hover:bg-gold-dim">
+          <Button variant="primary" className="px-6 bg-gold text-white hover:bg-gold-dim">
             Track My Order
           </Button>
         </Link>

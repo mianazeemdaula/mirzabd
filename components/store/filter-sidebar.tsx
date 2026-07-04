@@ -96,7 +96,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
     // Reset pagination when filter changes
     params.delete("page");
 
-    router.push(`/books?${params.toString()}`);
+    router.push(`/products?${params.toString()}`);
   };
 
   const handleCategoryChange = (slug: string) => {
@@ -128,7 +128,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
     setInStockOnly(false);
     
     // Clear all filters from URL
-    router.push("/books");
+    router.push("/products");
   };
 
   const languages = ["English", "Urdu", "Arabic", "Persian"];
@@ -165,7 +165,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
                   type="checkbox"
                   checked={selectedCategories.includes(category.slug)}
                   onChange={() => handleCategoryChange(category.slug)}
-                  className="rounded border-border bg-void text-gold focus:ring-gold focus:ring-offset-void focus:ring-1 h-4 w-4"
+                  className="rounded border-border bg-white text-gold focus:ring-gold focus:ring-offset-white focus:ring-1 h-4 w-4"
                 />
                 <span>{category.name}</span>
               </div>
@@ -216,7 +216,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
                 type="checkbox"
                 checked={selectedLanguages.includes(lang.toLowerCase())}
                 onChange={() => handleLanguageChange(lang.toLowerCase())}
-                className="rounded border-border bg-void text-gold focus:ring-gold focus:ring-offset-void focus:ring-1 h-4 w-4"
+                className="rounded border-border bg-white text-gold focus:ring-gold focus:ring-offset-white focus:ring-1 h-4 w-4"
               />
               <span>{lang}</span>
             </label>
@@ -236,7 +236,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
               setInStockOnly(val);
               applyFilters({ inStockOnly: val });
             }}
-            className="rounded border-border bg-void text-gold focus:ring-gold focus:ring-offset-void focus:ring-1 h-4 w-4"
+            className="rounded border-border bg-white text-gold focus:ring-gold focus:ring-offset-white focus:ring-1 h-4 w-4"
           />
         </label>
       </div>

@@ -440,15 +440,41 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Pre-fetch store policies (from chatbot-info.md) and active categories to avoid unnecessary LLM tool calls
-    let storeKnowledgeBase = "";
-    try {
-      const kbPath = path.join(process.cwd(), "chatbot-info.md");
-      if (fs.existsSync(kbPath)) {
-        storeKnowledgeBase = fs.readFileSync(kbPath, "utf-8");
+    // Extract the latest user query to perform local RAG semantic search
+    const lastUserMessage = [...clientMessages].reverse().find((m) => m.role === "user");
+    const userQuery = lastUserMessage?.content || "";
+
+    let ragContext = "";
+    let semanticProductsContext = "";
+    
+    if (userQuery) {
+      try {
+        const { semanticSearch } = await import("@/lib/rag");
+        const ragResult = await semanticSearch(userQuery, {
+          limitKb: 3,
+          limitProducts: 4,
+          minScore: 0.3,
+        });
+        
+        if (ragResult.knowledgeBase.length > 0) {
+          ragContext = ragResult.knowledgeBase
+            .map((chunk) => `[Topic: ${chunk.title}]\n${chunk.text}`)
+            .join("\n\n");
+        }
+        
+        if (ragResult.products.length > 0) {
+          semanticProductsContext = ragResult.products
+            .map((p) => `- ${p.name} (${p.author ? `by ${p.author}, ` : ""}Price: Rs. ${p.price}, Slug: '${p.slug}')`)
+            .join("\n");
+        }
+      } catch (err) {
+        console.error("Local RAG semantic search error:", err);
       }
-    } catch (err) {
-      console.error("Failed to read knowledge base for system prompt:", err);
+    }
+
+    // Fallback to minimal essential info if RAG didn't find specific chunks or had error
+    if (!ragContext) {
+      ragContext = "Store Name: Mirza Book Depot.\nAddress: Allah O Akbar Chowk, Deplapur, Punjab, Pakistan.\nStandard delivery: Rs. 200 (Free over Rs. 2,000). 7-day returns policy. Cash on Delivery (COD) and Credit/Debit Cards accepted. Contact: +92 333 6936666.";
     }
 
     let categoriesList = "";
@@ -468,13 +494,15 @@ export async function POST(req: NextRequest) {
       role: "system",
       content: `You are the Mirza Book Depot AI Assistant, a friendly and helpful virtual bookseller.
 Your goals:
-1. Help users search, browse and find books they love.
-2. Provide details about book listings including authors, prices, publisher, pages, and availability.
+1. Help users search, browse and find products they love.
+2. Provide details about product listings including authors, prices, publisher, pages, and availability.
 3. Track client order status and retrieve their order details.
 4. Answer general store info (delivery rates, refund rules, contact, opening times).
 
-Store Knowledge Base (Static Policies & FAQ):
-${storeKnowledgeBase || "No static details found."}
+Relevant Knowledge Base Sections (RAG - Semantic Search):
+${ragContext}
+
+${semanticProductsContext ? `Suggested Products Matching Query (RAG - Semantic Search):\n${semanticProductsContext}` : ""}
 
 Store Active Catalog Categories:
 ${categoriesList || "No categories found."}
@@ -487,11 +515,11 @@ Current user context:
 Guidelines:
 - CRITICAL: Skip reasoning steps and limit thinking. Keep your thinking/reasoning extremely brief (1-2 sentences maximum). Respond as fast as possible.
 - CRITICAL: Do NOT use markdown tables (such as using pipes | and dashes -) or code block tables to present products, orders, or lists. Tables render poorly in the chat bubble UI. Instead, always use simple, clean bulleted lists or numbered lists with bold text for fields (e.g. title, price, author) and line breaks.
-- You have direct access to the static Store Knowledge Base and Catalog Categories above. Answer general FAQs, address, hours, shipping, refund and category enquiries immediately using this context. Do NOT call the 'get_store_info' or 'get_categories' tools unless the information is not present in the static text.
+- You have direct access to the relevant Store Knowledge Base and Catalog Categories above. Answer general FAQs, address, hours, shipping, refund and category enquiries immediately using this context. Do NOT call the 'get_store_info' or 'get_categories' tools unless the information is not present in the static text.
 - If a user asks about "my orders" or "my order history", and they are logged in, call the 'get_my_orders' tool.
 - If a user asks to track a specific order and didn't provide a verification email, but is logged in, you can look up their orders. If guest, ask for their order number. If they give order number, call 'track_order'. You can request their email if required.
-- Do not make up book listings, prices, or orders. Always call the corresponding tool to retrieve accurate database records.
-- Format all response texts in beautiful Markdown. Use bullet points, bold tags, and spacing for high-end readability. Include links to book detail pages like '/books/[slug]' where appropriate.
+- Do not make up product listings, prices, or orders. Always call the corresponding tool to retrieve accurate database records.
+- Format all response texts in beautiful Markdown. Use bullet points, bold tags, and spacing for high-end readability. Include links to product detail pages like '/products/[slug]' where appropriate.
 - Keep answers polite, brief, and highly informative.`,
     };
 

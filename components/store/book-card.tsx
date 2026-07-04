@@ -36,7 +36,7 @@ export function BookCard({ book }: BookCardProps) {
   const { hasItem, toggleWishlist } = useWishlist();
 
   // Handle parsing images
-  let coverImage = "/images/placeholder-book.png";
+  let coverImage = "/images/placeholder-product.jpg";
   if (book.images) {
     try {
       const parsedImages = typeof book.images === "string" ? JSON.parse(book.images) : book.images;
@@ -44,7 +44,7 @@ export function BookCard({ book }: BookCardProps) {
         coverImage = parsedImages[0].src;
       }
     } catch (e) {
-      coverImage = "/images/placeholder-book.png";
+      coverImage = "/images/placeholder-product.jpg";
     }
   }
 
@@ -91,7 +91,7 @@ export function BookCard({ book }: BookCardProps) {
         {/* Wishlist button */}
         <button
           onClick={handleWishlistToggle}
-          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-void/60 text-muted hover:text-gold backdrop-blur-sm transition-colors border border-border/30 hover:border-gold/40 cursor-pointer"
+          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-white/60 text-muted hover:text-gold backdrop-blur-sm transition-colors border border-border/30 hover:border-gold/40 cursor-pointer"
           aria-label="Add to wishlist"
         >
           <Heart size={16} className={isWishlisted ? "fill-gold text-gold" : ""} />
@@ -106,7 +106,7 @@ export function BookCard({ book }: BookCardProps) {
 
         {/* Out of stock badge */}
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-void/80 z-10 flex flex-col items-center justify-center p-4">
+          <div className="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center p-4">
             <span className="bg-border text-muted font-bold text-xs uppercase tracking-widest px-3 py-1 rounded border border-border">
               Out of Stock
             </span>
@@ -114,7 +114,7 @@ export function BookCard({ book }: BookCardProps) {
         )}
 
         {/* Book cover image link */}
-        <Link href={`/books/${book.slug}`} className="block relative aspect-[2/3] w-full overflow-hidden bg-elevated border-b border-border">
+        <Link href={`/products/${book.slug}`} className="block relative aspect-[2/3] w-full overflow-hidden bg-elevated border-b border-border">
           <ProductImage
             src={coverImage}
             alt={book.name}
@@ -125,7 +125,7 @@ export function BookCard({ book }: BookCardProps) {
           />
           {/* Card Hover Actions Overlay */}
           {!isOutOfStock && (
-            <div className="absolute inset-0 bg-void/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 px-4 z-10 pointer-events-none">
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 px-4 z-10 pointer-events-none">
               <div className="w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto">
                 <Button
                   onClick={handleAddToCart}
@@ -153,7 +153,7 @@ export function BookCard({ book }: BookCardProps) {
           )}
 
           {/* Book Title */}
-          <Link href={`/books/${book.slug}`} className="block group-hover:text-gold transition-colors flex-grow">
+          <Link href={`/products/${book.slug}`} className="block group-hover:text-gold transition-colors flex-grow">
             <h4 className="text-card-title text-ink font-semibold line-clamp-2 leading-tight">
               {book.name}
             </h4>

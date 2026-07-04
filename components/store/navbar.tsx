@@ -3,9 +3,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Search, ShoppingBag, User, Menu, X, Heart, LogOut, ChevronDown, LayoutDashboard, Book } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, Heart, LogOut, ChevronDown, LayoutDashboard, Store } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/hooks/use-cart";
 import { useUiStore } from "@/store/ui";
@@ -22,7 +23,7 @@ export function Navbar() {
 
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "Shop", href: "/books" },
+    { label: "Shop", href: "/products" },
     { label: "Categories", href: "/categories" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
@@ -35,16 +36,20 @@ export function Navbar() {
   const isAdmin = (session?.user as any)?.role === "ADMIN";
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-void/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-white/90 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 w-full max-w-none items-center justify-between px-4 sm:px-8 md:px-12 lg:px-16">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="p-1.5 rounded-lg bg-gold-glow/5 border border-gold/15 group-hover:border-gold/30 group-hover:bg-gold-glow/10 transition-all duration-300">
-            <Book className="text-gold group-hover:scale-105 transition-transform duration-300" size={20} />
+        <Link href="/" className="flex items-center group">
+          <div className="relative w-36 h-10 flex-shrink-0">
+            <Image
+              src="/images/logo-horizontal.png"
+              alt={APP_NAME}
+              fill
+              sizes="144px"
+              priority
+              className="object-contain group-hover:scale-102 transition-transform duration-300"
+            />
           </div>
-          <span className="font-display text-lg sm:text-xl font-bold tracking-wide text-ink group-hover:text-gold transition-colors duration-300">
-            {APP_NAME}
-          </span>
         </Link>
 
         {/* Desktop Nav Links */}
@@ -84,7 +89,7 @@ export function Navbar() {
           >
             <ShoppingBag size={20} />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-void glow-gold">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white glow-gold">
                 {itemCount}
               </span>
             )}

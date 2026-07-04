@@ -8,10 +8,10 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-elevated text-muted",
-        gold: "bg-gold/20 text-gold",
-        crimson: "bg-crimson/20 text-crimson",
-        green: "bg-green-900/30 text-green-400",
-        blue: "bg-blue-900/30 text-blue-400",
+        gold: "bg-gold/10 text-gold",
+        crimson: "bg-crimson/10 text-crimson",
+        green: "bg-emerald-50 text-emerald-700",
+        blue: "bg-blue-50 text-blue-700",
         outline: "border border-border text-muted bg-transparent",
       },
     },

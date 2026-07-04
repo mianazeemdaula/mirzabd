@@ -12,7 +12,7 @@ interface ProductImageProps extends Omit<ImageProps, "src" | "onError"> {
 export function ProductImage({
   src,
   alt,
-  fallbackSrc = "/images/placeholder-book.png",
+  fallbackSrc = "/images/placeholder-product.jpg",
   className = "object-cover",
   ...props
 }: ProductImageProps) {

@@ -30,8 +30,8 @@ export function WishlistClient({ initialBooks }: WishlistClientProps) {
             Explore our collections and hit the heart icon to save your favorite products here.
           </p>
         </div>
-        <Link href="/books">
-          <button className="inline-flex items-center justify-center bg-gold hover:bg-gold-dim text-void font-bold transition-colors text-xs h-9 px-5 rounded-[var(--radius-btn)] cursor-pointer">
+        <Link href="/products">
+          <button className="inline-flex items-center justify-center bg-gold hover:bg-gold-dim text-white font-bold transition-colors text-xs h-9 px-5 rounded-[var(--radius-btn)] cursor-pointer">
             Explore Shop
           </button>
         </Link>

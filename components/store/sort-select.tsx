@@ -17,7 +17,7 @@ export function SortSelect({ sort }: SortSelectProps) {
           const search = new URLSearchParams(window.location.search);
           search.set("sort", val);
           search.delete("page"); // reset page
-          window.location.href = `/books?${search.toString()}`;
+          window.location.href = `/products?${search.toString()}`;
         }}
         className="bg-elevated border border-border text-ink text-xs rounded-[var(--radius-btn)] h-9 px-3 focus:outline-none focus:border-gold pr-8 cursor-pointer appearance-none"
       >

@@ -1,11 +1,12 @@
 // app/(store)/page.tsx
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Truck, ShieldCheck, Mail } from "lucide-react";
+import { ArrowRight, Package, Truck, ShieldCheck, Mail } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { Hero } from "@/components/store/hero";
 import { CategoryStrip } from "@/components/store/category-strip";
 import { BookGrid } from "@/components/store/book-grid";
+import { TagSection } from "@/components/store/tag-section";
 import { CountUp } from "@/components/motion/count-up";
 import { Button } from "@/components/ui/button";
 import { serializeProduct } from "@/lib/utils";
@@ -13,14 +14,31 @@ import { serializeProduct } from "@/lib/utils";
 export const revalidate = 60; // Revalidate page every minute
 
 export default async function HomePage() {
-  // Fetch active categories
-  const categories = await prisma.category.findMany({
+  // Fetch active categories and sort by total sales of products within them
+  const rawCategories = await prisma.category.findMany({
     where: { isActive: true },
-    orderBy: { displayOrder: "asc" },
-    take: 12,
+    include: {
+      products: {
+        where: { status: "publish" },
+        select: {
+          totalSales: true,
+        },
+      },
+    },
   });
 
-  // Fetch Featured Books
+  const categories = rawCategories
+    .map((cat) => {
+      const totalSales = cat.products.reduce((sum, p) => sum + p.totalSales, 0);
+      return {
+        ...cat,
+        totalSales,
+      };
+    })
+    .sort((a, b) => b.totalSales - a.totalSales)
+    .slice(0, 12);
+
+  // Fetch Featured Products
   const featuredBooks = await prisma.product.findMany({
     where: {
       status: "publish",
@@ -53,12 +71,64 @@ export default async function HomePage() {
     take: 4,
   });
 
+  // Fetch Tags with their products for "School Books" section
+  // Look for school-related tags (e.g. Allied School, AR Science School, etc.)
+  const schoolTags = await prisma.tag.findMany({
+    where: {
+      OR: [
+        { name: { contains: "school", mode: "insensitive" } },
+        { name: { contains: "allied", mode: "insensitive" } },
+        { name: { contains: "class", mode: "insensitive" } },
+        { name: { contains: "grade", mode: "insensitive" } },
+        { name: { contains: "academy", mode: "insensitive" } },
+      ],
+    },
+    include: {
+      products: {
+        where: { status: "publish" },
+        include: { categories: true },
+        take: 12,
+        orderBy: { updatedAt: "desc" },
+      },
+    },
+    orderBy: { name: "asc" },
+  });
+
+  // If no school-specific tags, fetch ALL tags that have products
+  const allTagsWithProducts = schoolTags.length > 0
+    ? schoolTags
+    : await prisma.tag.findMany({
+        where: {
+          products: {
+            some: { status: "publish" },
+          },
+        },
+        include: {
+          products: {
+            where: { status: "publish" },
+            include: { categories: true },
+            take: 12,
+            orderBy: { updatedAt: "desc" },
+          },
+        },
+        orderBy: { name: "asc" },
+        take: 10,
+      });
+
+  // Serialize tag products for client components
+  const serializedTags = allTagsWithProducts.map((tag) => ({
+    id: tag.id,
+    name: tag.name,
+    slug: tag.slug,
+    products: tag.products.map(serializeProduct),
+  }));
+
   return (
     <div className="w-full space-y-16 pb-16">
       {/* Section 1: Hero */}
       <Hero />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="mx-auto w-full max-w-none px-4 sm:px-8 md:px-12 lg:px-16 space-y-16">
         {/* Section 2: Category Strip */}
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-3">
@@ -72,14 +142,14 @@ export default async function HomePage() {
           <CategoryStrip categories={categories} />
         </div>
 
-        {/* Section 3: Featured Books */}
+        {/* Section 3: Featured Products */}
         {featuredBooks.length > 0 && (
           <div className="space-y-6">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide text-ink">
                 Featured Products
               </h2>
-              <Link href="/books?featured=true" className="text-xs font-bold text-gold hover:underline uppercase tracking-wider flex items-center gap-1">
+              <Link href="/products?featured=true" className="text-xs font-bold text-gold hover:underline uppercase tracking-wider flex items-center gap-1">
                 Explore All <ArrowRight size={14} />
               </Link>
             </div>
@@ -87,14 +157,23 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Section 4: New Arrivals */}
+        {/* Section 4: School Books / Tag-Based Sections */}
+        {serializedTags.length > 0 && (
+          <TagSection
+            title="School Books"
+            subtitle="Browse textbooks and guides organized by school — Allied School, AR Science School, and more."
+            tags={serializedTags}
+          />
+        )}
+
+        {/* Section 5: New Arrivals */}
         {newArrivals.length > 0 && (
           <div className="space-y-6">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide text-ink">
                 New Arrivals
               </h2>
-              <Link href="/books?sort=newest" className="text-xs font-bold text-gold hover:underline uppercase tracking-wider flex items-center gap-1">
+              <Link href="/products?sort=newest" className="text-xs font-bold text-gold hover:underline uppercase tracking-wider flex items-center gap-1">
                 View All <ArrowRight size={14} />
               </Link>
             </div>
@@ -102,25 +181,25 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Section 5: Promo Banner */}
-        <div className="relative rounded-[var(--radius-card)] overflow-hidden bg-gradient-to-r from-crimson-dim via-crimson to-[#5c1b12] p-8 sm:p-12 shadow-card">
+        {/* Section 6: Promo Banner */}
+        <div className="relative rounded-[var(--radius-card)] overflow-hidden bg-gradient-to-r from-gold-dim via-gold to-[#15A88C] p-8 sm:p-12 shadow-card">
           {/* Ambient overlays */}
-          <div className="absolute inset-0 bg-black/10 mix-blend-overlay" />
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[60px] pointer-events-none" />
+          <div className="absolute inset-0 bg-white/5 mix-blend-overlay" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[60px] pointer-events-none" />
 
           <div className="relative z-10 max-w-2xl space-y-4">
-            <span className="text-badge bg-gold text-void font-bold px-2 py-0.5 rounded shadow">
+            <span className="text-badge bg-white text-gold font-bold px-2 py-0.5 rounded shadow">
               Special Promotion
             </span>
-            <h3 className="font-display text-3xl sm:text-4xl italic text-ink leading-tight">
-              Urdu & Islamic Literature Deals
+            <h3 className="font-display text-3xl sm:text-4xl italic text-white leading-tight">
+              Back to School Deals
             </h3>
-            <p className="text-sm sm:text-base text-ink/80 leading-relaxed max-w-lg">
-              Unlock the secrets of classic Urdu prose and profound Islamic history. Enjoy up to <span className="font-bold text-gold">40% off</span> on selected titles this month.
+            <p className="text-sm sm:text-base text-white/85 leading-relaxed max-w-lg">
+              Get ready for the new academic year! Enjoy up to <span className="font-bold text-white">40% off</span> on school books, stationery, and sports items.
             </p>
             <div className="pt-2">
-              <Link href="/books?category=urdu-literature,islamic-books&on_sale=true">
-                <Button className="bg-gold text-void hover:bg-gold-dim font-bold shadow-lg hover:shadow-gold/10">
+              <Link href="/products?on_sale=true">
+                <Button className="bg-white text-gold hover:bg-white/90 font-bold shadow-lg">
                   Shop the Sale
                 </Button>
               </Link>
@@ -128,14 +207,14 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Section 6: Bestsellers */}
+        {/* Section 7: Bestsellers */}
         {bestsellers.length > 0 && (
           <div className="space-y-6">
             <div className="flex items-center justify-between border-b border-border pb-4">
               <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide text-ink">
                 Bestselling Products
               </h2>
-              <Link href="/books?sort=best-selling" className="text-xs font-bold text-gold hover:underline uppercase tracking-wider flex items-center gap-1">
+              <Link href="/products?sort=best-selling" className="text-xs font-bold text-gold hover:underline uppercase tracking-wider flex items-center gap-1">
                 View All <ArrowRight size={14} />
               </Link>
             </div>
@@ -143,19 +222,19 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Section 7: About Strip (Statistics) */}
+        {/* Section 8: About Strip (Statistics) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-border">
           {/* Col 1 */}
           <div className="flex flex-col items-center text-center p-6 bg-surface rounded-[var(--radius-card)] border border-border/40 shadow-sm space-y-3">
             <div className="p-3 bg-gold/10 rounded-full text-gold">
-              <BookOpen size={24} />
+              <Package size={24} />
             </div>
             <h3 className="font-display text-3xl font-bold text-ink">
               <CountUp target={10000} suffix="+" />
             </h3>
-            <p className="text-xs font-bold uppercase tracking-wider text-muted">Curated Titles</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-muted">Products Available</p>
             <p className="text-xs text-muted leading-relaxed max-w-[200px]">
-              Extensive catalog spanning local publications, academics, and international bestsellers.
+              Extensive catalog spanning books, stationery, sports equipment, and academic supplies.
             </p>
           </div>
 
@@ -188,17 +267,17 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Section 8: Newsletter (General Newsletter signup strip) */}
+        {/* Section 9: Newsletter */}
         <div className="bg-surface border border-border rounded-[var(--radius-card)] p-8 sm:p-12 text-center max-w-4xl mx-auto space-y-6">
           <div className="mx-auto w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center text-gold">
             <Mail size={24} />
           </div>
           <div className="space-y-2">
             <h3 className="font-display text-2xl sm:text-3xl font-bold text-ink">
-              Join Our Literary Circle
+              Stay Updated
             </h3>
             <p className="text-sm text-muted max-w-md mx-auto leading-relaxed">
-              Sign up for our email newsletter and get early notices on author signings, Urdu poetry journals, and discount codes.
+              Subscribe to our newsletter for new arrivals, school book updates, exclusive deals, and seasonal promotions.
             </p>
           </div>
           <div className="max-w-md mx-auto">

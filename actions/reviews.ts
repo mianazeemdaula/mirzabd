@@ -39,7 +39,7 @@ export async function toggleReviewApproval(formData: FormData) {
     });
 
     revalidatePath("/admin/reviews");
-    revalidatePath("/books");
+    revalidatePath("/products");
     revalidatePath("/");
   } catch (error) {
     console.error("Failed to toggle review approval:", error);
@@ -78,7 +78,7 @@ export async function deleteReview(formData: FormData) {
     });
 
     revalidatePath("/admin/reviews");
-    revalidatePath("/books");
+    revalidatePath("/products");
     revalidatePath("/");
   } catch (error) {
     console.error("Failed to delete review:", error);

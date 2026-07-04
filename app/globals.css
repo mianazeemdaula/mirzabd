@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  /* Backgrounds */
-  --color-void: #080A12;
-  --color-surface: #0F1120;
-  --color-elevated: #161929;
-  --color-border: #252A40;
+  /* Backgrounds — Light Mode */
+  --color-void:      #FFFFFF;  /* Page background — clean white */
+  --color-surface:   #F8F6F3;  /* Cards, panels — warm off-white */
+  --color-elevated:  #F0EDE8;  /* Elevated surfaces, inputs */
+  --color-border:    #E2DED6;  /* Borders, dividers */
 
-  /* Accent — Antique Gold */
-  --color-gold: #E8A83E;
-  --color-gold-dim: #A87028;
-  --color-gold-glow: #E8A83E33;
+  /* Accent — Rich Teal/Emerald (modern, professional) */
+  --color-gold:      #0D7C66;  /* Primary CTA, active states — rich teal */
+  --color-gold-dim:  #0A6352;  /* Hover darken */
+  --color-gold-glow: #0D7C6622;/* Glow/shadow */
 
-  /* Accent 2 — Spine Red */
-  --color-crimson: #C0392B;
-  --color-crimson-dim: #922B21;
+  /* Accent 2 — Warm Coral */
+  --color-crimson:   #E84855;  /* Sale badges, alerts */
+  --color-crimson-dim: #C73A46;
 
   /* Text */
-  --color-ink: #F5F0E8;
-  --color-muted: #8A8FA8;
-  --color-faint: #3D4260;
+  --color-ink:       #1A1A2E;  /* Primary text — near black */
+  --color-muted:     #6B7280;  /* Secondary text */
+  --color-faint:     #C4C0B8;  /* Disabled, placeholder */
 
   /* Typography */
   --font-display: var(--font-playfair), Georgia, serif;
@@ -27,12 +27,12 @@
   --font-mono: var(--font-jetbrains), monospace;
 
   /* Radii */
-  --radius-card: 12px;
-  --radius-btn: 8px;
+  --radius-card: 16px;
+  --radius-btn: 10px;
 
-  /* Shadows */
+  /* Shadows — Light mode appropriate */
   --shadow-glow: 0 0 40px var(--color-gold-glow);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
 /* Base layer overrides */

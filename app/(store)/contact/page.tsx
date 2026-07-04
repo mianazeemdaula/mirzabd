@@ -41,7 +41,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 space-y-12">
+    <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16 space-y-12">
       {/* Header */}
       <motion.div
         initial="hidden"
@@ -225,7 +225,7 @@ export default function ContactPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gold text-void hover:bg-gold-dim font-bold shadow-lg shadow-gold/5 flex items-center justify-center gap-2"
+                className="w-full bg-gold text-white hover:bg-gold-dim font-bold shadow-lg shadow-gold/5 flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>Sending...</>

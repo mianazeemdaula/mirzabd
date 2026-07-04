@@ -329,7 +329,7 @@ export function ChatBot() {
                           onClick={() => handleSendMessage(preset.query)}
                           className="flex items-center gap-2.5 p-2.5 bg-elevated hover:bg-border border border-border/60 hover:border-gold/45 rounded-lg text-xs text-left text-ink hover:text-gold transition-all duration-200 cursor-pointer"
                         >
-                          <span className="p-1 bg-void rounded-md shrink-0">
+                          <span className="p-1 bg-white rounded-md shrink-0">
                             {preset.icon}
                           </span>
                           <span className="line-clamp-1">{preset.text}</span>
@@ -356,7 +356,7 @@ export function ChatBot() {
                         <div
                           className={`max-w-[82%] px-3.5 py-2.5 rounded-xl text-sm ${
                             isUser
-                              ? "bg-gold text-void font-medium rounded-tr-none shadow-md"
+                              ? "bg-gold text-white font-medium rounded-tr-none shadow-md"
                               : "bg-elevated border border-border text-ink rounded-tl-none"
                           }`}
                         >
@@ -420,7 +420,7 @@ export function ChatBot() {
                 type="button"
                 onClick={() => handleSendMessage(input)}
                 disabled={!input.trim() || isLoading}
-                className="p-2 bg-gold hover:bg-gold-dim text-void rounded-lg font-medium transition-all duration-200 shrink-0 cursor-pointer disabled:opacity-50"
+                className="p-2 bg-gold hover:bg-gold-dim text-white rounded-lg font-medium transition-all duration-200 shrink-0 cursor-pointer disabled:opacity-50"
               >
                 <Send className="w-3.5 h-3.5" />
               </button>
@@ -434,7 +434,7 @@ export function ChatBot() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 rounded-full bg-gold hover:bg-gold-dim text-void flex items-center justify-center shadow-lg cursor-pointer relative glow-gold border border-gold/20"
+        className="w-14 h-14 rounded-full bg-gold hover:bg-gold-dim text-white flex items-center justify-center shadow-lg cursor-pointer relative glow-gold border border-gold/20"
       >
         {isOpen ? (
           <X className="w-6 h-6" />
@@ -442,7 +442,7 @@ export function ChatBot() {
           <MessageSquare className="w-6 h-6" />
         )}
         {unread && !isOpen && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-crimson rounded-full border-2 border-void flex items-center justify-center animate-pulse" />
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-crimson rounded-full border-2 border-white flex items-center justify-center animate-pulse" />
         )}
       </motion.button>
     </div>

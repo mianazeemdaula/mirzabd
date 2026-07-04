@@ -19,7 +19,7 @@ function Toaster() {
           title: "text-ink font-medium",
           description: "text-muted text-sm",
           actionButton:
-            "bg-gold text-void hover:bg-gold-dim font-medium text-sm px-3 py-1.5 rounded-[var(--radius-btn)]",
+            "bg-gold text-white hover:bg-gold-dim font-medium text-sm px-3 py-1.5 rounded-[var(--radius-btn)]",
           cancelButton:
             "bg-elevated text-muted hover:text-ink font-medium text-sm px-3 py-1.5 rounded-[var(--radius-btn)]",
           closeButton: "text-muted hover:text-ink",

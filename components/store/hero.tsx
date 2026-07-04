@@ -4,38 +4,38 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, Sparkles } from "lucide-react";
+import { Sparkles, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { spring, ease } from "@/lib/motion";
 import { APP_TAGLINE, APP_CITY } from "@/lib/constants";
 
 export function Hero() {
-  // Sample book spines data
-  const bookSpines = [
-    { title: "Peer-e-Kamil", color: "bg-[#2A475E]", text: "text-[#E8F0FE]", height: "h-[300px]", rotate: -6 },
-    { title: "Forty Rules of Love", color: "bg-[#7B241C]", text: "text-[#FDEDEC]", height: "h-[340px]", rotate: 4 },
-    { title: "Atomic Habits", color: "bg-[#1E8449]", text: "text-[#EAF2F8]", height: "h-[310px]", rotate: -3 },
-    { title: "Sapiens", color: "bg-[#A87028]", text: "text-[#FDF5E6]", height: "h-[330px]", rotate: 5 },
-    { title: "Jannat Kay Pattay", color: "bg-[#4A235A]", text: "text-[#EBDEF0]", height: "h-[360px]", rotate: -5 },
+  // Sample product category showcase items
+  const showcaseItems = [
+    { title: "Textbooks", color: "bg-teal-600", text: "text-white", height: "h-[300px]", rotate: -6, emoji: "📚" },
+    { title: "Notebooks", color: "bg-amber-500", text: "text-white", height: "h-[340px]", rotate: 4, emoji: "📓" },
+    { title: "Stationery", color: "bg-rose-500", text: "text-white", height: "h-[310px]", rotate: -3, emoji: "✏️" },
+    { title: "Sports", color: "bg-indigo-500", text: "text-white", height: "h-[330px]", rotate: 5, emoji: "⚽" },
+    { title: "Art Supplies", color: "bg-emerald-600", text: "text-white", height: "h-[360px]", rotate: -5, emoji: "🎨" },
   ];
 
   return (
-    <section className="relative w-full min-h-[85vh] flex items-center bg-void overflow-hidden py-16 sm:py-24">
-      {/* Floating gold dust particles layer */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 z-0">
-        <div className="absolute top-[20%] left-[10%] w-1.5 h-1.5 bg-gold rounded-full blur-[1px] animate-float-slow" />
-        <div className="absolute top-[50%] left-[25%] w-2 h-2 bg-gold rounded-full blur-[1px] animate-float-medium" />
-        <div className="absolute top-[80%] left-[15%] w-1 h-1 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
-        <div className="absolute top-[30%] right-[20%] w-1.5 h-1.5 bg-gold rounded-full blur-[1px] animate-float-slow" />
-        <div className="absolute top-[60%] right-[10%] w-2.5 h-2.5 bg-gold rounded-full blur-[1.5px] animate-float-medium" />
-        <div className="absolute top-[15%] left-[60%] w-1 h-1 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
+    <section className="relative w-full min-h-[85vh] flex items-center bg-gradient-to-br from-surface via-void to-surface overflow-hidden py-16 sm:py-24">
+      {/* Floating decorative particles layer */}
+      <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
+        <div className="absolute top-[20%] left-[10%] w-2 h-2 bg-gold rounded-full blur-[1px] animate-float-slow" />
+        <div className="absolute top-[50%] left-[25%] w-2.5 h-2.5 bg-gold rounded-full blur-[1px] animate-float-medium" />
+        <div className="absolute top-[80%] left-[15%] w-1.5 h-1.5 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
+        <div className="absolute top-[30%] right-[20%] w-2 h-2 bg-gold rounded-full blur-[1px] animate-float-slow" />
+        <div className="absolute top-[60%] right-[10%] w-3 h-3 bg-gold rounded-full blur-[1.5px] animate-float-medium" />
+        <div className="absolute top-[15%] left-[60%] w-1.5 h-1.5 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
       </div>
 
-      {/* Decorative ambient glowing background grids */}
+      {/* Decorative ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
-      <div className="relative mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        {/* Right side in markup, left visual panel: animated book spine stack (desktop only) */}
+      <div className="relative mx-auto w-full max-w-none px-4 sm:px-8 md:px-12 lg:px-16 z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        {/* Left panel: animated product showcase cards (desktop) */}
         <div className="lg:col-span-6 flex justify-center order-2 lg:order-1 h-[420px] items-end relative px-4">
           <motion.div
             initial="hidden"
@@ -48,9 +48,9 @@ export function Hero() {
                 },
               },
             }}
-            className="flex items-end gap-1.5 select-none"
+            className="flex items-end gap-2 select-none"
           >
-            {bookSpines.map((book, idx) => (
+            {showcaseItems.map((item, idx) => (
               <motion.div
                 key={idx}
                 variants={{
@@ -58,7 +58,7 @@ export function Hero() {
                   visible: {
                     y: 0,
                     opacity: 1,
-                    rotate: book.rotate,
+                    rotate: item.rotate,
                     transition: {
                       y: spring.gentle,
                       opacity: { duration: 0.4 },
@@ -70,42 +70,43 @@ export function Hero() {
                   rotate: 0,
                   transition: { ...spring.snappy },
                 }}
-                className={`relative w-14 sm:w-16 ${book.height} ${book.color} ${book.text} rounded-md border-r-4 border-black/30 shadow-card flex flex-col justify-between py-6 px-3 cursor-pointer`}
+                className={`relative w-14 sm:w-16 ${item.height} ${item.color} ${item.text} rounded-xl shadow-card flex flex-col justify-between py-6 px-3 cursor-pointer border border-white/20`}
                 style={{
                   transformOrigin: "bottom center",
-                  boxShadow: "5px 15px 35px rgba(0,0,0,0.5)",
+                  boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
                 }}
               >
-                {/* Book top detail */}
-                <div className="flex justify-center text-[10px] uppercase tracking-widest font-mono opacity-60">
-                  Vol. {idx + 1}
+                {/* Top detail */}
+                <div className="flex justify-center text-xl">
+                  {item.emoji}
                 </div>
 
                 {/* Vertical Title */}
                 <div
-                  className="font-display font-bold text-center text-sm sm:text-base tracking-wider vertical-text select-none my-auto leading-none"
+                  className="font-display font-bold text-center text-xs sm:text-sm tracking-wider select-none my-auto leading-none"
                   style={{
                     writingMode: "vertical-rl",
                     textOrientation: "mixed",
                     transform: "rotate(180deg)",
+                    textShadow: "0 1px 2px rgba(0,0,0,0.2)",
                   }}
                 >
-                  {book.title}
+                  {item.title}
                 </div>
 
-                {/* Book bottom detail */}
-                <div className="flex justify-center text-gold">
-                  <BookOpen size={14} className="opacity-80" />
+                {/* Bottom accent dot */}
+                <div className="flex justify-center">
+                  <div className="w-2 h-2 rounded-full bg-white/40" />
                 </div>
 
-                {/* Book bookmark string detail */}
-                <div className="absolute top-0 right-3 w-1 h-8 bg-gold rounded-b shadow-inner opacity-75" />
+                {/* Bookmark ribbon */}
+                <div className="absolute top-0 right-3 w-1 h-8 bg-white/50 rounded-b shadow-inner" />
               </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Left side in markup, right visual panel: Text & CTAs */}
+        {/* Right panel: Text & CTAs */}
         <div className="lg:col-span-6 space-y-6 order-1 lg:order-2 text-center lg:text-left">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -132,7 +133,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: ease.expo }}
             className="text-muted text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed font-body"
           >
-            Welcome to <span className="text-ink font-semibold">Mirza Book Depot</span>. Proudly serving the literary minds of {APP_CITY} and beyond with curated fiction, local poetry, rare Urdu literature, and academics.
+            Welcome to <span className="text-ink font-semibold">Mirza Book Depot</span>. Proudly serving the minds of {APP_CITY} and beyond with curated books, stationery, sports equipment, and academic supplies.
           </motion.p>
 
           <motion.div
@@ -141,12 +142,12 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.3, ease: ease.expo }}
             className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4"
           >
-            <Link href="/books">
+            <Link href="/products">
               <Button size="lg" className="px-8 font-semibold rounded-[var(--radius-btn)] h-12 shadow-md hover:shadow-gold/25 transition-all">
                 Browse Collection
               </Button>
             </Link>
-            <Link href="/books?on_sale=true">
+            <Link href="/products?on_sale=true">
               <Button variant="ghost" size="lg" className="px-8 font-semibold rounded-[var(--radius-btn)] h-12 hover:border-gold">
                 View Deals
               </Button>
@@ -155,22 +156,19 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Floating particles animations defined inline via Style tag to maintain component modularity */}
+      {/* Floating particles animations */}
       <style jsx global>{`
-        .vertical-text {
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
         @keyframes floatSlow {
           0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-          50% { transform: translateY(-40px) translateX(15px); opacity: 0.8; }
+          50% { transform: translateY(-40px) translateX(15px); opacity: 0.6; }
         }
         @keyframes floatMedium {
           0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
-          50% { transform: translateY(-60px) translateX(-20px); opacity: 0.9; }
+          50% { transform: translateY(-60px) translateX(-20px); opacity: 0.7; }
         }
         @keyframes floatFast {
           0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
-          50% { transform: translateY(-30px) translateX(-10px); opacity: 0.7; }
+          50% { transform: translateY(-30px) translateX(-10px); opacity: 0.5; }
         }
         .animate-float-slow {
           animation: floatSlow 15s infinite ease-in-out;

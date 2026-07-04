@@ -51,12 +51,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   });
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs sm:text-sm text-muted">
         <Link href="/" className="hover:text-gold transition-colors">Home</Link>
         <ChevronRight size={14} />
-        <Link href="/books" className="hover:text-gold transition-colors">Shop</Link>
+        <Link href="/products" className="hover:text-gold transition-colors">Shop</Link>
         <ChevronRight size={14} />
         <span className="text-ink">{category.name}</span>
       </nav>

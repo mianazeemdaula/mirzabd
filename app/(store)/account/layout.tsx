@@ -24,7 +24,7 @@ export default async function AccountLayout({
   ];
 
   return (
-    <div className="mx-auto max-w-7xl w-full px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <div className="mx-auto w-full max-w-none w-full px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       {/* Header */}
       <div className="space-y-1">
         <span className="text-badge text-gold font-bold">My Account Dashboard</span>

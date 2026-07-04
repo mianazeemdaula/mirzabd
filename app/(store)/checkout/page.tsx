@@ -164,10 +164,10 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-16 text-center space-y-4">
+      <div className="mx-auto w-full max-w-none px-4 py-16 text-center space-y-4">
         <h2 className="text-xl font-bold text-ink">Checkout</h2>
         <p className="text-muted">Your cart is empty. Please add products to proceed.</p>
-        <Link href="/books" className="inline-block mt-4">
+        <Link href="/products" className="inline-block mt-4">
           <Button variant="primary">Shop Products</Button>
         </Link>
       </div>
@@ -175,7 +175,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
       {/* Page Title & Breadcrumb */}
       <div className="border-b border-border pb-4">
         <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">Checkout</h1>
@@ -195,7 +195,7 @@ export default function CheckoutPage() {
 
           {/* Step 1: Shopping Bag */}
           <div className="relative flex flex-col items-center z-10">
-            <div className="w-10 h-10 rounded-full bg-gold text-void flex items-center justify-center border-2 border-gold shadow-glow transition-all duration-300">
+            <div className="w-10 h-10 rounded-full bg-gold text-white flex items-center justify-center border-2 border-gold shadow-glow transition-all duration-300">
               <CheckCircle2 size={18} className="stroke-[2.5]" />
             </div>
             <span className="text-[10px] sm:text-xs font-bold text-ink mt-2 text-center tracking-wide uppercase">Shopping Bag</span>
@@ -205,7 +205,7 @@ export default function CheckoutPage() {
           <div className="relative flex flex-col items-center z-10">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
               step === "payment" 
-                ? "bg-gold text-void border-gold shadow-glow" 
+                ? "bg-gold text-white border-gold shadow-glow" 
                 : "bg-elevated text-gold border-gold"
             }`}>
               {step === "payment" ? (
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
               <div key={item.id} className="flex gap-3 items-center">
                 <div className="relative w-12 aspect-[2/3] bg-void rounded overflow-hidden flex-shrink-0">
                   <ProductImage
-                    src={item.imageUrl || "/images/placeholder-book.png"}
+                    src={item.imageUrl || "/images/placeholder-product.jpg"}
                     alt={item.name}
                     fill
                     className="object-cover"

@@ -12,11 +12,16 @@ export const metadata = {
 };
 
 export default async function CategoriesPage() {
-  // Fetch active categories with count of published products
+  // Fetch active categories with count of published products and total sales
   const categoriesFromDb = await prisma.category.findMany({
     where: { isActive: true },
-    orderBy: { displayOrder: "asc" },
     include: {
+      products: {
+        where: { status: "publish" },
+        select: {
+          totalSales: true,
+        },
+      },
       _count: {
         select: {
           products: {
@@ -27,17 +32,20 @@ export default async function CategoriesPage() {
     },
   });
 
-  const categories = categoriesFromDb.map((cat) => ({
-    id: cat.id,
-    name: cat.name,
-    slug: cat.slug,
-    description: cat.description,
-    imageUrl: cat.imageUrl,
-    productCount: cat._count.products,
-  }));
+  const categories = categoriesFromDb
+    .map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+      description: cat.description,
+      imageUrl: cat.imageUrl,
+      productCount: cat._count.products,
+      totalSales: cat.products.reduce((sum, p) => sum + p.totalSales, 0),
+    }))
+    .sort((a, b) => b.totalSales - a.totalSales);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 space-y-12">
+    <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16 space-y-12">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <span className="text-badge text-gold tracking-widest font-bold uppercase inline-flex items-center gap-1.5">

@@ -3,7 +3,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Facebook, Instagram, Send, Book } from "lucide-react";
+import Image from "next/image";
+import { Mail, Phone, MapPin, Facebook, Instagram, Send, Store } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { APP_NAME, APP_TAGLINE, APP_ADDRESS, APP_CONTACT, APP_LANDLINE, APP_EMAIL } from "@/lib/constants";
@@ -23,15 +24,18 @@ export function Footer() {
 
   return (
     <footer className="w-full bg-surface border-t border-border mt-auto">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Brand details */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <Book className="text-gold" size={20} />
-              <h3 className="font-display text-xl font-bold tracking-wide text-ink">
-                {APP_NAME}
-              </h3>
+            <div className="relative w-36 h-10 flex-shrink-0">
+              <Image
+                src="/images/logo-horizontal.png"
+                alt={APP_NAME}
+                fill
+                sizes="144px"
+                className="object-contain"
+              />
             </div>
             <p className="text-sm font-medium italic text-gold">{APP_TAGLINE}</p>
             <div className="space-y-3 pt-2 text-sm text-muted">
@@ -63,7 +67,7 @@ export function Footer() {
                 href="https://facebook.com/mirzabookdepot"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted hover:text-gold transition-colors p-1.5 rounded-full bg-void"
+                className="text-muted hover:text-gold transition-colors p-1.5 rounded-full bg-white"
               >
                 <Facebook size={18} />
               </a>
@@ -71,7 +75,7 @@ export function Footer() {
                 href="https://instagram.com/mirzabookdepot"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted hover:text-gold transition-colors p-1.5 rounded-full bg-void"
+                className="text-muted hover:text-gold transition-colors p-1.5 rounded-full bg-white"
               >
                 <Instagram size={18} />
               </a>
@@ -90,7 +94,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/books" className="hover:text-gold transition-colors">
+                <Link href="/products" className="hover:text-gold transition-colors">
                   All Products
                 </Link>
               </li>
@@ -119,32 +123,32 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm text-muted">
               <li>
-                <Link href="/books?category=fiction" className="hover:text-gold transition-colors">
+                <Link href="/products?category=fiction" className="hover:text-gold transition-colors">
                   Fiction
                 </Link>
               </li>
               <li>
-                <Link href="/books?category=non-fiction" className="hover:text-gold transition-colors">
+                <Link href="/products?category=non-fiction" className="hover:text-gold transition-colors">
                   Non-Fiction
                 </Link>
               </li>
               <li>
-                <Link href="/books?category=urdu-literature" className="hover:text-gold transition-colors">
+                <Link href="/products?category=urdu-literature" className="hover:text-gold transition-colors">
                   Urdu Literature
                 </Link>
               </li>
               <li>
-                <Link href="/books?category=islamic-books" className="hover:text-gold transition-colors">
+                <Link href="/products?category=islamic-books" className="hover:text-gold transition-colors">
                   Islamic Books
                 </Link>
               </li>
               <li>
-                <Link href="/books?category=self-help-philosophy" className="hover:text-gold transition-colors">
+                <Link href="/products?category=self-help-philosophy" className="hover:text-gold transition-colors">
                   Self Help & Philosophy
                 </Link>
               </li>
               <li>
-                <Link href="/books?category=childrens-books" className="hover:text-gold transition-colors">
+                <Link href="/products?category=childrens-books" className="hover:text-gold transition-colors">
                   Children's Books
                 </Link>
               </li>
@@ -170,7 +174,7 @@ export function Footer() {
                 />
                 <button
                   type="submit"
-                  className="absolute right-1 top-1 flex h-8 w-8 items-center justify-center rounded-[var(--radius-btn)] bg-gold hover:bg-gold-dim text-void transition-colors cursor-pointer"
+                  className="absolute right-1 top-1 flex h-8 w-8 items-center justify-center rounded-[var(--radius-btn)] bg-gold hover:bg-gold-dim text-white transition-colors cursor-pointer"
                   aria-label="Subscribe button"
                 >
                   <Send size={14} />

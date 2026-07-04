@@ -13,7 +13,7 @@ export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotal, total, discount } = useCart();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
       {/* Header */}
       <div className="flex items-center gap-2 border-b border-border pb-4">
         <ShoppingBag size={24} className="text-gold" />
@@ -32,7 +32,7 @@ export default function CartPage() {
             Before you can proceed to checkout, you must add some products to your shopping cart. You will find a lot of interesting products on our shop page.
           </p>
           <div className="pt-2">
-            <Link href="/books">
+            <Link href="/products">
               <Button variant="primary" className="px-8 rounded-[var(--radius-btn)]">
                 Browse Products
               </Button>
@@ -51,7 +51,7 @@ export default function CartPage() {
                 {/* Image */}
                 <div className="relative w-20 aspect-[2/3] bg-void rounded overflow-hidden flex-shrink-0">
                   <ProductImage
-                    src={item.imageUrl || "/images/placeholder-book.png"}
+                    src={item.imageUrl || "/images/placeholder-product.jpg"}
                     alt={item.name}
                     fill
                     className="object-cover"
@@ -120,7 +120,7 @@ export default function CartPage() {
 
             {/* Back button */}
             <Link
-              href="/books"
+              href="/products"
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gold hover:underline pt-2"
             >
               <ArrowLeft size={14} />

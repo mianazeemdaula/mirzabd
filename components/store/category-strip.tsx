@@ -34,7 +34,7 @@ export function CategoryStrip({ categories, activeCategorySlug = null }: Categor
         {/* "All" Category Pill */}
         <motion.div variants={slideRight}>
           <Link
-            href="/books"
+            href="/products"
             className={`inline-block rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 border cursor-pointer ${
               !activeCategorySlug
                 ? "bg-gold/10 border-gold text-gold glow-gold"
@@ -51,7 +51,7 @@ export function CategoryStrip({ categories, activeCategorySlug = null }: Categor
           return (
             <motion.div key={category.id} variants={slideRight}>
               <Link
-                href={`/books?category=${category.slug}`}
+                href={`/products?category=${category.slug}`}
                 className={`inline-block rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 border cursor-pointer ${
                   isActive
                     ? "bg-gold/10 border-gold text-gold glow-gold"
@@ -61,7 +61,7 @@ export function CategoryStrip({ categories, activeCategorySlug = null }: Categor
                 {category.name}
                 {category.count !== undefined && (
                   <span className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[9px] ${
-                    isActive ? "bg-gold text-void" : "bg-elevated text-faint"
+                    isActive ? "bg-gold text-white" : "bg-elevated text-faint"
                   }`}>
                     {category.count}
                   </span>

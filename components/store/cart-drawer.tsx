@@ -35,7 +35,7 @@ export function CartDrawer() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-50 bg-void/80 backdrop-blur-sm cursor-pointer"
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm cursor-pointer"
           />
 
           {/* Cart Sidebar panel */}
@@ -92,9 +92,9 @@ export function CartDrawer() {
                     className="flex gap-4 p-3 rounded-lg bg-elevated border border-border/50 relative group"
                   >
                     {/* Image */}
-                    <div className="relative w-16 aspect-[2/3] flex-shrink-0 bg-void rounded overflow-hidden">
+                    <div className="relative w-16 aspect-[2/3] flex-shrink-0 bg-surface rounded overflow-hidden">
                       <ProductImage
-                        src={item.imageUrl || "/images/placeholder-book.png"}
+                        src={item.imageUrl || "/images/placeholder-product.jpg"}
                         alt={item.name}
                         fill
                         className="object-cover"
