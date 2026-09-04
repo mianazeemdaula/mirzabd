@@ -347,8 +347,8 @@ export const slideLeft = {
 │                           │                               │
 └───────────────────────────┼───────────────────────────────┘
                             │
-                   ┌────────▼─────────┐
-                   │   PostgreSQL DB   │
+                    ┌────────▼─────────┐
+                   │     MySQL DB      │
                    └──────────────────┘
 ```
 
@@ -381,7 +381,7 @@ Admin
 # .env.local
 
 # Database
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/book_depot"
+DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/book_depot"
 
 # Auth.js v5
 AUTH_SECRET="your-32-char-secret-here"
@@ -417,7 +417,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -1265,8 +1265,8 @@ export async function GET(req: NextRequest) {
 
   const where: any = { status };
   if (search) where.OR = [
-    { name: { contains: search, mode: "insensitive" } },
-    { sku: { contains: search, mode: "insensitive" } },
+    { name: { contains: search } },
+    { sku: { contains: search } },
   ];
   if (category) where.categories = { some: { id: Number(category) } };
   if (after) where.updatedAt = { gte: new Date(after) };
@@ -2775,7 +2775,7 @@ npm start
 
 1. Connect GitHub repo to Vercel
 2. Set all environment variables in Vercel dashboard
-3. Set `DATABASE_URL` to Neon/Supabase PostgreSQL connection string
+3. Set `DATABASE_URL` to PlanetScale / Railway / AWS RDS MySQL connection string
 4. Add Stripe webhook URL: `https://yourdomain.com/api/webhooks/stripe`
 5. Add Uploadthing token via dashboard
 

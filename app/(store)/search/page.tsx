@@ -16,17 +16,17 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q = "" } = await searchParams;
   const query = q.trim();
 
-  // Query PostgreSQL database if query has length
+  // Query MySQL database if query has length
   const books = query
     ? await prisma.product.findMany({
         where: {
           status: "publish",
           OR: [
-            { name: { contains: query, mode: "insensitive" } },
-            { author: { contains: query, mode: "insensitive" } },
-            { publisher: { contains: query, mode: "insensitive" } },
-            { isbn: { contains: query, mode: "insensitive" } },
-            { sku: { contains: query, mode: "insensitive" } },
+            { name: { contains: query } },
+            { author: { contains: query } },
+            { publisher: { contains: query } },
+            { isbn: { contains: query } },
+            { sku: { contains: query } },
           ],
         },
         include: {

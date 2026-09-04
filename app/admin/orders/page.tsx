@@ -27,8 +27,8 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
   const where: any = {};
   if (searchQuery) {
     where.OR = [
-      { orderNumber: { contains: searchQuery, mode: "insensitive" } },
-      { guestEmail: { contains: searchQuery, mode: "insensitive" } },
+      { orderNumber: { contains: searchQuery } },
+      { guestEmail: { contains: searchQuery } },
       {
         billingAddress: {
           path: ["name"],

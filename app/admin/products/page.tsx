@@ -28,11 +28,11 @@ export default async function AdminBooksPage({ searchParams }: AdminBooksPagePro
   const where: any = {};
   if (searchQuery) {
     where.OR = [
-      { name: { contains: searchQuery, mode: "insensitive" } },
-      { author: { contains: searchQuery, mode: "insensitive" } },
-      { publisher: { contains: searchQuery, mode: "insensitive" } },
-      { isbn: { contains: searchQuery, mode: "insensitive" } },
-      { sku: { contains: searchQuery, mode: "insensitive" } },
+      { name: { contains: searchQuery } },
+      { author: { contains: searchQuery } },
+      { publisher: { contains: searchQuery } },
+      { isbn: { contains: searchQuery } },
+      { sku: { contains: searchQuery } },
     ];
   }
 

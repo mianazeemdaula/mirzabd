@@ -15,7 +15,7 @@ const policies = [
   },
   {
     title: "Secure Processing & Storage",
-    description: "Your password is encrypted using high-entropy bcrypt hashing before saving to our PostgreSQL database. We use secure SSL (HTTPS) transport protocols for all data transfers.",
+    description: "Your password is encrypted using high-entropy bcrypt hashing before saving to our MySQL database. We use secure SSL (HTTPS) transport protocols for all data transfers.",
     icon: Key,
   },
   {

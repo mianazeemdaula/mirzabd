@@ -25,12 +25,12 @@ export default async function AdminReviewsPage({ searchParams }: AdminReviewsPag
   const where: any = {};
   if (searchQuery) {
     where.OR = [
-      { name: { contains: searchQuery, mode: "insensitive" } },
-      { email: { contains: searchQuery, mode: "insensitive" } },
-      { comment: { contains: searchQuery, mode: "insensitive" } },
+      { name: { contains: searchQuery } },
+      { email: { contains: searchQuery } },
+      { comment: { contains: searchQuery } },
       {
         product: {
-          name: { contains: searchQuery, mode: "insensitive" },
+          name: { contains: searchQuery },
         },
       },
     ];

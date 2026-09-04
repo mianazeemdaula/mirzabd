@@ -26,9 +26,9 @@ export default async function AdminCustomersPage({ searchParams }: AdminCustomer
   
   if (searchQuery) {
     where.OR = [
-      { name: { contains: searchQuery, mode: "insensitive" } },
-      { email: { contains: searchQuery, mode: "insensitive" } },
-      { phone: { contains: searchQuery, mode: "insensitive" } },
+      { name: { contains: searchQuery } },
+      { email: { contains: searchQuery } },
+      { phone: { contains: searchQuery } },
     ];
   }
 

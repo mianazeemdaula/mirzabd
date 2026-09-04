@@ -47,12 +47,12 @@ async function searchBooks(args: {
 
     if (args.query) {
       where.OR = [
-        { name: { contains: args.query, mode: "insensitive" } },
-        { description: { contains: args.query, mode: "insensitive" } },
-        { shortDescription: { contains: args.query, mode: "insensitive" } },
-        { author: { contains: args.query, mode: "insensitive" } },
-        { publisher: { contains: args.query, mode: "insensitive" } },
-        { isbn: { contains: args.query, mode: "insensitive" } },
+        { name: { contains: args.query } },
+        { description: { contains: args.query } },
+        { shortDescription: { contains: args.query } },
+        { author: { contains: args.query } },
+        { publisher: { contains: args.query } },
+        { isbn: { contains: args.query } },
       ];
     }
 
@@ -63,7 +63,7 @@ async function searchBooks(args: {
     }
 
     if (args.author) {
-      where.author = { contains: args.author, mode: "insensitive" };
+      where.author = { contains: args.author };
     }
 
     if (args.isFeatured !== undefined) {

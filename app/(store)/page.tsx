@@ -76,11 +76,11 @@ export default async function HomePage() {
   const schoolTags = await prisma.tag.findMany({
     where: {
       OR: [
-        { name: { contains: "school", mode: "insensitive" } },
-        { name: { contains: "allied", mode: "insensitive" } },
-        { name: { contains: "class", mode: "insensitive" } },
-        { name: { contains: "grade", mode: "insensitive" } },
-        { name: { contains: "academy", mode: "insensitive" } },
+        { name: { contains: "school" } },
+        { name: { contains: "allied" } },
+        { name: { contains: "class" } },
+        { name: { contains: "grade" } },
+        { name: { contains: "academy" } },
       ],
     },
     include: {

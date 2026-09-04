@@ -51,11 +51,11 @@ export default async function BooksPage({
   // Search keyword query (title, author, publisher, isbn)
   if (searchQuery) {
     where.OR = [
-      { name: { contains: searchQuery, mode: "insensitive" } },
-      { author: { contains: searchQuery, mode: "insensitive" } },
-      { publisher: { contains: searchQuery, mode: "insensitive" } },
-      { isbn: { contains: searchQuery, mode: "insensitive" } },
-      { sku: { contains: searchQuery, mode: "insensitive" } },
+      { name: { contains: searchQuery } },
+      { author: { contains: searchQuery } },
+      { publisher: { contains: searchQuery } },
+      { isbn: { contains: searchQuery } },
+      { sku: { contains: searchQuery } },
     ];
   }
 
@@ -72,7 +72,6 @@ export default async function BooksPage({
   if (languageFilter.length > 0) {
     where.language = {
       in: languageFilter,
-      mode: "insensitive",
     };
   }
 
