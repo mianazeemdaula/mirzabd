@@ -2,44 +2,42 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { spring, ease } from "@/lib/motion";
 
 export function Hero() {
-  // Sample product category showcase items with compact heights
+  // Sample product category showcase items with balanced heights
   const showcaseItems = [
-    { title: "Textbooks", color: "bg-sky-600", text: "text-white", height: "h-[220px]", rotate: -6, emoji: "📚" },
-    { title: "Notebooks", color: "bg-amber-500", text: "text-white", height: "h-[250px]", rotate: 4, emoji: "📓" },
-    { title: "Stationery", color: "bg-rose-500", text: "text-white", height: "h-[230px]", rotate: -3, emoji: "✏️" },
-    { title: "Sports", color: "bg-indigo-500", text: "text-white", height: "h-[245px]", rotate: 5, emoji: "⚽" },
-    { title: "Art Supplies", color: "bg-emerald-600", text: "text-white", height: "h-[265px]", rotate: -5, emoji: "🎨" },
+    { title: "Textbooks", color: "bg-sky-600", text: "text-white", height: "h-[250px]", rotate: -6, emoji: "📚" },
+    { title: "Notebooks", color: "bg-amber-500", text: "text-white", height: "h-[290px]", rotate: 4, emoji: "📓" },
+    { title: "Stationery", color: "bg-rose-500", text: "text-white", height: "h-[270px]", rotate: -3, emoji: "✏️" },
+    { title: "Sports", color: "bg-indigo-500", text: "text-white", height: "h-[285px]", rotate: 5, emoji: "⚽" },
+    { title: "Art Supplies", color: "bg-emerald-600", text: "text-white", height: "h-[310px]", rotate: -5, emoji: "🎨" },
   ];
 
   return (
-    <section className="relative w-full flex items-center bg-gradient-to-br from-surface via-void to-surface overflow-hidden py-8 sm:py-12">
-      {/* Dynamic Colorful Ambient Background Gradients */}
+    <section className="relative w-full flex items-center bg-gradient-to-br from-surface via-void to-surface overflow-hidden py-16 sm:py-24">
+      {/* Dynamic Rich Ambient Background Gradients with Higher Opacity */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Sky Blue Nebula Glow (Brand Primary) */}
-        <div className="absolute -top-32 left-1/4 w-[550px] h-[550px] bg-gradient-to-br from-sky-500/20 via-sky-600/10 to-transparent rounded-full blur-[110px]" />
+        {/* Sky Blue Nebula Glow (Brand Primary) - Rich */}
+        <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-sky-400/35 via-sky-600/20 to-transparent rounded-full blur-[110px]" />
 
-        {/* Warm Golden / Amber Glow (Top Right) */}
-        <div className="absolute -top-16 -right-16 w-[450px] h-[450px] bg-gradient-to-bl from-amber-400/20 via-yellow-500/10 to-transparent rounded-full blur-[100px]" />
+        {/* Warm Golden / Amber Glow (Top Right) - Vibrant */}
+        <div className="absolute -top-16 -right-16 w-[500px] h-[500px] bg-gradient-to-bl from-amber-400/35 via-yellow-500/22 to-transparent rounded-full blur-[100px]" />
 
-        {/* Emerald Jewel Tone Glow (Bottom Left) */}
-        <div className="absolute -bottom-20 -left-16 w-[400px] h-[400px] bg-gradient-to-tr from-emerald-500/15 via-teal-600/8 to-transparent rounded-full blur-[100px]" />
+        {/* Emerald Jewel Tone Glow (Bottom Left) - Rich */}
+        <div className="absolute -bottom-20 -left-16 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-500/28 via-teal-600/16 to-transparent rounded-full blur-[100px]" />
 
-        {/* Violet Velvet Glow (Bottom Right) */}
-        <div className="absolute -bottom-20 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-indigo-500/12 via-purple-600/6 to-transparent rounded-full blur-[110px]" />
+        {/* Violet Velvet Glow (Bottom Right) - Rich */}
+        <div className="absolute -bottom-20 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-indigo-500/25 via-purple-600/14 to-transparent rounded-full blur-[110px]" />
 
         {/* Center Core Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-amber-400/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-400/12 rounded-full blur-[120px]" />
       </div>
 
-      {/* Floating decorative sparkle particles */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
+      {/* Floating decorative sparkle particles with higher opacity */}
+      <div className="absolute inset-0 pointer-events-none opacity-45 z-0">
         <div className="absolute top-[20%] left-[10%] w-2 h-2 bg-gold rounded-full blur-[1px] animate-float-slow" />
         <div className="absolute top-[50%] left-[25%] w-2.5 h-2.5 bg-gold rounded-full blur-[1px] animate-float-medium" />
         <div className="absolute top-[80%] left-[15%] w-1.5 h-1.5 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
@@ -48,9 +46,9 @@ export function Hero() {
         <div className="absolute top-[15%] left-[60%] w-1.5 h-1.5 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-none px-4 sm:px-8 md:px-12 lg:px-16 z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-center">
+      <div className="relative mx-auto w-full max-w-none px-4 sm:px-8 md:px-12 lg:px-16 z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
         {/* Left panel: animated product showcase cards (desktop) */}
-        <div className="lg:col-span-5 flex justify-center order-3 lg:order-1 h-[310px] sm:h-[330px] items-end relative px-2">
+        <div className="lg:col-span-3 flex justify-center order-3 lg:order-1 h-[340px] sm:h-[360px] items-end relative px-2">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -84,7 +82,7 @@ export function Hero() {
                   rotate: 0,
                   transition: { ...spring.snappy },
                 }}
-                className={`relative w-14 sm:w-16 ${item.height} ${item.color} ${item.text} rounded-xl shadow-card flex flex-col justify-between py-5 px-3 cursor-pointer border border-white/20`}
+                className={`relative w-13 sm:w-15 ${item.height} ${item.color} ${item.text} rounded-xl shadow-card flex flex-col justify-between py-5 px-2.5 cursor-pointer border border-white/20`}
                 style={{
                   transformOrigin: "bottom center",
                   boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
@@ -114,14 +112,71 @@ export function Hero() {
                 </div>
 
                 {/* Bookmark ribbon */}
-                <div className="absolute top-0 right-3 w-1 h-7 bg-white/50 rounded-b shadow-inner" />
+                <div className="absolute top-0 right-2.5 w-1 h-7 bg-white/50 rounded-b shadow-inner" />
               </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Center panel: Sack of Gold Coins between text and books */}
-        <div className="lg:col-span-2 flex justify-center items-center order-2 lg:order-2 my-2 lg:my-0">
+        {/* Center panel: Urdu Dialogue (Prominent & Larger Text) */}
+        <div className="lg:col-span-6 space-y-5 order-1 lg:order-2 text-center lg:text-right" dir="rtl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: ease.expo }}
+            className="space-y-4 max-w-2xl mx-auto lg:mx-0"
+          >
+            {/* Urdu Rhyming Dialogue */}
+            <h1
+              dir="rtl"
+              lang="ur"
+              className="font-urdu text-right select-none"
+            >
+              <div className="space-y-3 sm:space-y-4">
+                {/* Step 1: خزانہ کیسے ملا؟ علم حاصل کرنے سے */}
+                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-x-5 gap-y-1.5 text-lg sm:text-xl md:text-2xl lg:text-[1.65rem] leading-loose">
+                  <span className="text-muted font-normal flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-gold/60" />
+                    خزانہ کیسے ملا؟
+                  </span>
+                  <span className="text-ink font-semibold flex items-center gap-2.5">
+                    <span className="text-gold/80 text-base sm:text-lg font-sans select-none">←</span>
+                    علم حاصل کرنے سے
+                  </span>
+                </div>
+
+                {/* Step 2: علم کہاں سے ملا؟ کتابوں سے */}
+                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-x-5 gap-y-1.5 text-lg sm:text-xl md:text-2xl lg:text-[1.65rem] leading-loose">
+                  <span className="text-muted font-normal flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-gold/60" />
+                    علم کہاں سے ملا؟
+                  </span>
+                  <span className="text-ink font-semibold flex items-center gap-2.5">
+                    <span className="text-gold/80 text-base sm:text-lg font-sans select-none">←</span>
+                    کتابوں سے
+                  </span>
+                </div>
+
+                {/* Elegant divider */}
+                <div className="h-px bg-gradient-to-l from-gold/35 via-gold/15 to-transparent my-2" />
+
+                {/* Step 3: کتابیں کہاں سے ملیں؟ مرزا بک ڈپو سے */}
+                <div className="flex flex-wrap items-baseline justify-between sm:justify-start gap-x-5 gap-y-2 pt-1">
+                  <span className="text-ink/90 text-xl sm:text-2xl md:text-3xl font-medium flex items-center gap-3 leading-relaxed">
+                    <span className="w-3 h-3 rounded-full bg-gold animate-pulse" />
+                    کتابیں کہاں سے ملیں؟
+                  </span>
+                  <span className="text-gold text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-normal drop-shadow-[0_2px_16px_rgba(2,132,199,0.4)] leading-relaxed">
+                    مرزا بک ڈپو سے
+                  </span>
+                </div>
+              </div>
+            </h1>
+          </motion.div>
+        </div>
+
+        {/* Right panel: Sack of Gold Coins */}
+        <div className="lg:col-span-3 flex justify-center items-center order-2 lg:order-3 my-4 lg:my-0">
           <motion.div
             initial={{ scale: 0.8, opacity: 0, y: 20 }}
             animate={{
@@ -138,94 +193,18 @@ export function Hero() {
             className="relative flex items-center justify-center select-none group"
           >
             {/* Radiant golden halo behind sack */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-amber-500/35 via-yellow-400/20 to-transparent rounded-full blur-2xl pointer-events-none scale-125 group-hover:scale-150 transition-transform duration-500" />
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-amber-500/25 via-yellow-400/15 to-transparent rounded-full blur-2xl pointer-events-none scale-125 group-hover:scale-150 transition-transform duration-500" />
 
-            <div className="relative w-36 sm:w-44 md:w-48 lg:w-40 xl:w-48 aspect-square">
+            <div className="relative w-44 sm:w-52 md:w-56 lg:w-48 xl:w-56 aspect-square">
               <Image
                 src="/images/gold-coin-sack.png"
                 alt="Treasure Sack of Gold Coins"
                 fill
-                sizes="(max-width: 768px) 176px, 192px"
-                className="object-contain drop-shadow-[0_12px_28px_rgba(232,168,62,0.4)]"
+                sizes="(max-width: 768px) 208px, 224px"
+                className="object-contain drop-shadow-[0_12px_28px_rgba(232,168,62,0.35)]"
                 priority
               />
             </div>
-          </motion.div>
-        </div>
-
-        {/* Right panel: Urdu Dialogue & CTAs */}
-        <div className="lg:col-span-5 space-y-4 sm:space-y-5 order-1 lg:order-3 text-center lg:text-right" dir="rtl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: ease.expo }}
-            className="space-y-3 max-w-xl mx-auto lg:mx-0"
-          >
-            {/* Urdu Rhyming Dialogue without background card */}
-            <h1
-              dir="rtl"
-              lang="ur"
-              className="font-urdu text-right select-none"
-            >
-              <div className="space-y-1.5 sm:space-y-2">
-                {/* Step 1: خزانہ کیسے ملا؟ علم حاصل کرنے سے */}
-                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-x-4 gap-y-1 text-base sm:text-lg md:text-xl leading-relaxed">
-                  <span className="text-muted font-normal flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-gold/50" />
-                    خزانہ کیسے ملا؟
-                  </span>
-                  <span className="text-ink font-semibold flex items-center gap-2">
-                    <span className="text-gold/70 text-sm font-sans select-none">←</span>
-                    علم حاصل کرنے سے
-                  </span>
-                </div>
-
-                {/* Step 2: علم کہاں سے ملا؟ کتابوں سے */}
-                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-x-4 gap-y-1 text-base sm:text-lg md:text-xl leading-relaxed">
-                  <span className="text-muted font-normal flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-gold/50" />
-                    علم کہاں سے ملا؟
-                  </span>
-                  <span className="text-ink font-semibold flex items-center gap-2">
-                    <span className="text-gold/70 text-sm font-sans select-none">←</span>
-                    کتابوں سے
-                  </span>
-                </div>
-
-                {/* Divider ornament */}
-                <div className="h-px bg-gradient-to-l from-gold/30 via-gold/15 to-transparent my-1" />
-
-                {/* Step 3: کتابیں کہاں سے ملیں؟ مرزا بک ڈپو سے */}
-                <div className="flex flex-wrap items-baseline justify-between sm:justify-start gap-x-4 gap-y-1 pt-0.5">
-                  <span className="text-ink/90 text-base sm:text-lg md:text-xl font-medium flex items-center gap-2 leading-relaxed">
-                    <span className="w-2.5 h-2.5 rounded-full bg-gold animate-pulse" />
-                    کتابیں کہاں سے ملیں؟
-                  </span>
-                  <span className="text-gold text-2xl sm:text-3xl md:text-4xl font-bold tracking-normal drop-shadow-[0_2px_14px_rgba(2,132,199,0.35)] leading-relaxed">
-                    مرزا بک ڈپو سے
-                  </span>
-                </div>
-              </div>
-            </h1>
-          </motion.div>
-
-          {/* Action buttons in English */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: ease.expo }}
-            className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-1"
-          >
-            <Link href="/products">
-              <Button size="lg" className="px-7 font-semibold rounded-[var(--radius-btn)] h-11 shadow-md hover:shadow-gold/25 transition-all text-sm sm:text-base">
-                Browse Collection
-              </Button>
-            </Link>
-            <Link href="/products?on_sale=true">
-              <Button variant="ghost" size="lg" className="px-7 font-semibold rounded-[var(--radius-btn)] h-11 hover:border-gold text-sm sm:text-base">
-                View Deals
-              </Button>
-            </Link>
           </motion.div>
         </div>
       </div>

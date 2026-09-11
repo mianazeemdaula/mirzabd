@@ -36,9 +36,9 @@ const sealSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" w
     <textPath href="#topArc" startOffset="50%" text-anchor="middle">MIRZA BOOK DEPOT</textPath>
   </text>
 
-  <!-- Bottom Text: ★ DEPALPUR • EST. 1990 ★ -->
+  <!-- Bottom Text: ★ DEPALPUR • EST. 1981 ★ -->
   <text font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif" font-size="10.5" font-weight="800" fill="#0284C7" letter-spacing="2.2">
-    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">★ DEPALPUR • EST. 1990 ★</textPath>
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">★ DEPALPUR • EST. 1981 ★</textPath>
   </text>
 
   <!-- Central Emblem: Open Book & Stars -->
@@ -101,9 +101,9 @@ const horizontalSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 
       <textPath href="#topArcH" startOffset="50%" text-anchor="middle">MIRZA BOOK DEPOT</textPath>
     </text>
 
-    <!-- Bottom Text: ★ EST. 1990 ★ -->
+    <!-- Bottom Text: ★ EST. 1981 ★ -->
     <text font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif" font-size="6.4" font-weight="800" fill="#0284C7" letter-spacing="1.2">
-      <textPath href="#bottomArcH" startOffset="50%" text-anchor="middle">★ DEPALPUR • 1990 ★</textPath>
+      <textPath href="#bottomArcH" startOffset="50%" text-anchor="middle">★ DEPALPUR • 1981 ★</textPath>
     </text>
 
     <!-- Open Book in Center -->
@@ -137,9 +137,9 @@ const horizontalSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 
     <line x1="2" y1="52" x2="325" y2="52" stroke="#E2E8F0" stroke-width="1.5" />
     <circle cx="162" cy="52" r="3" fill="#0284C7" />
 
-    <!-- Subtitle: DEPALPUR • EST. 1990 • EVERY PAGE A NEW WORLD -->
+    <!-- Subtitle: DEPALPUR • EST. 1981 • EVERY PAGE A NEW WORLD -->
     <text x="3" y="74" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif" font-size="11" font-weight="700" fill="#64748B" letter-spacing="3.2">
-      DEPALPUR • EST. 1990 • BOOKSTORE
+      DEPALPUR • EST. 1981 • BOOKSTORE
     </text>
   </g>
 </svg>`;

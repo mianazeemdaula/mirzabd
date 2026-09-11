@@ -11,7 +11,7 @@ This document serves as the official source of truth for the Mirza Book Depot AI
 * **Address:** Mirza Book Depot, Allah O Akbar Chowk, Deplapur, Punjab, Pakistan
 * **Phone Number (Mobile / WhatsApp):** +92 333 6566000
 * **Landline:** 0444540357
-* **Support Email:** support@mirzabd.com
+* **Support Email:** mirzabd8@gmail.com
 * **Official Website:** https://mirzabd.com
 
 ---
@@ -62,7 +62,7 @@ A: We accept:
 A: Yes! You can message us on WhatsApp at **+92 300 1234567** with the book names, your name, shipping address, and phone number, and our team will create the order for you.
 
 ### Q: What should I do if my book arrives damaged?
-A: We wrap all books in protective bubble mailers. However, if a book is damaged during transit, please email us photos of the damage at **support@mirzabd.com** within 24 hours of receipt, and we will send a replacement free of charge.
+A: We wrap all books in protective bubble mailers. However, if a book is damaged during transit, please email us photos of the damage at **mirzabd8@gmail.com** within 24 hours of receipt, and we will send a replacement free of charge.
 
 ### Q: Can I request a book that is currently out of stock or not listed?
 A: Absolutely! Please contact us via email or WhatsApp with the title and author. We have relationships with international publishers and can import custom titles within 3–4 weeks.

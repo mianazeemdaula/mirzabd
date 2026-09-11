@@ -8,7 +8,7 @@ export const APP_DESCRIPTION =
 // Contact & Address
 export const APP_CONTACT = "03336566000";
 export const APP_LANDLINE = "0444540357";
-export const APP_EMAIL = "admin@mirzabd.com";
+export const APP_EMAIL = "mirzabd8@gmail.com";
 export const APP_ADDRESS = "Allah o Akbar Chowk, Mirza Plaza, Depalpur, Pakistan";
 export const APP_CITY = "Depalpur";
 export const APP_COUNTRY = "Pakistan";

@@ -9,7 +9,7 @@ async function main() {
   console.log("Seeding database...");
 
   // 1. Create Admin User (only once)
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@bookdepot.com";
+  const adminEmail = process.env.ADMIN_EMAIL || "mirzabd8@gmail.com";
   const adminPassword = process.env.ADMIN_PASSWORD || "StrongPass123!";
 
   const existingAdmin = await prisma.user.findFirst({
@@ -22,9 +22,17 @@ async function main() {
   });
 
   if (existingAdmin) {
-    console.log(
-      `Admin user already exists (${existingAdmin.email}, role: ${existingAdmin.role}). Skipping seed user creation.`
-    );
+    if (existingAdmin.email !== adminEmail) {
+      await prisma.user.update({
+        where: { id: existingAdmin.id },
+        data: { email: adminEmail },
+      });
+      console.log(`Updated admin user email from ${existingAdmin.email} to ${adminEmail}`);
+    } else {
+      console.log(
+        `Admin user already exists (${existingAdmin.email}, role: ${existingAdmin.role}). Skipping seed user creation.`
+      );
+    }
   } else {
     const hashedAdminPassword = await hash(adminPassword, 12);
     const admin = await prisma.user.create({

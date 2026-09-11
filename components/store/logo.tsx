@@ -76,7 +76,7 @@ export function Logo({
         <div className="flex items-center gap-1.5 mt-1">
           <span className="h-[1px] w-2.5 sm:w-3 bg-border" />
           <span className={cn("text-muted font-bold uppercase", sizeMap.sub)}>
-            DEPALPUR • EST. 1990
+            DEPALPUR • EST. 1981
           </span>
           <span className="h-[1px] w-2.5 sm:w-3 bg-border" />
         </div>

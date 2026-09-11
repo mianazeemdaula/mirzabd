@@ -134,7 +134,7 @@ export default function ShippingPolicyPage() {
           <div className="p-5 bg-elevated/40 border border-border/80 rounded-[var(--radius-card)] space-y-2">
             <h4 className="font-semibold text-ink text-sm sm:text-base">Do you ship internationally?</h4>
             <p className="text-xs sm:text-sm text-muted leading-relaxed">
-              Currently, we only ship within Pakistan. For international order requests, please email us directly at <strong>admin@mirzabd.com</strong> with your book list, and our team will quote customized shipping rates.
+              Currently, we only ship within Pakistan. For international order requests, please email us directly at <strong>mirzabd8@gmail.com</strong> with your book list, and our team will quote customized shipping rates.
             </p>
           </div>
         </div>

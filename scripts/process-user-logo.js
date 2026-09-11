@@ -60,7 +60,7 @@ async function main() {
       <line x1="12" y1="88" x2="520" y2="88" stroke="#E2E8F0" stroke-width="2.5" />
       <circle cx="260" cy="88" r="4.5" fill="#0284C7" />
       <text x="14" y="125" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif" font-size="19" font-weight="700" fill="#64748B" letter-spacing="5">
-        DEPALPUR • EST. 1990 • BOOKSTORE
+        DEPALPUR • EST. 1981 • BOOKSTORE
       </text>
     </svg>
   `);
