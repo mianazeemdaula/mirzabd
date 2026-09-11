@@ -11,117 +11,126 @@ import { CountUp } from "@/components/motion/count-up";
 import { Button } from "@/components/ui/button";
 import { serializeProduct } from "@/lib/utils";
 
-export const revalidate = 60; // Revalidate page every minute
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  // Fetch active categories and sort by total sales of products within them
-  const rawCategories = await prisma.category.findMany({
-    where: { isActive: true },
-    include: {
-      products: {
-        where: { status: "publish" },
-        select: {
-          totalSales: true,
-        },
-      },
-    },
-  });
+  let categories: any[] = [];
+  let featuredBooks: any[] = [];
+  let newArrivals: any[] = [];
+  let bestsellers: any[] = [];
+  let serializedTags: any[] = [];
 
-  const categories = rawCategories
-    .map((cat) => {
-      const totalSales = cat.products.reduce((sum, p) => sum + p.totalSales, 0);
-      return {
-        ...cat,
-        totalSales,
-      };
-    })
-    .sort((a, b) => b.totalSales - a.totalSales)
-    .slice(0, 12);
-
-  // Fetch Featured Products
-  const featuredBooks = await prisma.product.findMany({
-    where: {
-      status: "publish",
-      isFeatured: true,
-    },
-    include: {
-      categories: true,
-    },
-    orderBy: { updatedAt: "desc" },
-    take: 8,
-  });
-
-  // Fetch New Arrivals (latest published products)
-  const newArrivals = await prisma.product.findMany({
-    where: { status: "publish" },
-    include: {
-      categories: true,
-    },
-    orderBy: { createdAt: "desc" },
-    take: 8,
-  });
-
-  // Fetch Bestsellers (sorted by total sales)
-  const bestsellers = await prisma.product.findMany({
-    where: { status: "publish" },
-    include: {
-      categories: true,
-    },
-    orderBy: { totalSales: "desc" },
-    take: 4,
-  });
-
-  // Fetch Tags with their products for "School Books" section
-  // Look for school-related tags (e.g. Allied School, AR Science School, etc.)
-  const schoolTags = await prisma.tag.findMany({
-    where: {
-      OR: [
-        { name: { contains: "school" } },
-        { name: { contains: "allied" } },
-        { name: { contains: "class" } },
-        { name: { contains: "grade" } },
-        { name: { contains: "academy" } },
-      ],
-    },
-    include: {
-      products: {
-        where: { status: "publish" },
-        include: { categories: true },
-        take: 12,
-        orderBy: { updatedAt: "desc" },
-      },
-    },
-    orderBy: { name: "asc" },
-  });
-
-  // If no school-specific tags, fetch ALL tags that have products
-  const allTagsWithProducts = schoolTags.length > 0
-    ? schoolTags
-    : await prisma.tag.findMany({
-        where: {
-          products: {
-            some: { status: "publish" },
+  try {
+    // Fetch active categories and sort by total sales of products within them
+    const rawCategories = await prisma.category.findMany({
+      where: { isActive: true },
+      include: {
+        products: {
+          where: { status: "publish" },
+          select: {
+            totalSales: true,
           },
         },
-        include: {
-          products: {
-            where: { status: "publish" },
-            include: { categories: true },
-            take: 12,
-            orderBy: { updatedAt: "desc" },
-          },
-        },
-        orderBy: { name: "asc" },
-        take: 10,
-      });
+      },
+    });
 
-  // Serialize tag products for client components
-  const serializedTags = allTagsWithProducts.map((tag) => ({
-    id: tag.id,
-    name: tag.name,
-    slug: tag.slug,
-    products: tag.products.map(serializeProduct),
-  }));
+    categories = rawCategories
+      .map((cat) => {
+        const totalSales = cat.products.reduce((sum, p) => sum + p.totalSales, 0);
+        return {
+          ...cat,
+          totalSales,
+        };
+      })
+      .sort((a, b) => b.totalSales - a.totalSales)
+      .slice(0, 12);
+
+    // Fetch Featured Products
+    featuredBooks = await prisma.product.findMany({
+      where: {
+        status: "publish",
+        isFeatured: true,
+      },
+      include: {
+        categories: true,
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 8,
+    });
+
+    // Fetch New Arrivals (latest published products)
+    newArrivals = await prisma.product.findMany({
+      where: { status: "publish" },
+      include: {
+        categories: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+    });
+
+    // Fetch Bestsellers (sorted by total sales)
+    bestsellers = await prisma.product.findMany({
+      where: { status: "publish" },
+      include: {
+        categories: true,
+      },
+      orderBy: { totalSales: "desc" },
+      take: 4,
+    });
+
+    // Fetch Tags with their products for "School Books" section
+    const schoolTags = await prisma.tag.findMany({
+      where: {
+        OR: [
+          { name: { contains: "school" } },
+          { name: { contains: "allied" } },
+          { name: { contains: "class" } },
+          { name: { contains: "grade" } },
+          { name: { contains: "academy" } },
+        ],
+      },
+      include: {
+        products: {
+          where: { status: "publish" },
+          include: { categories: true },
+          take: 12,
+          orderBy: { updatedAt: "desc" },
+        },
+      },
+      orderBy: { name: "asc" },
+    });
+
+    // If no school-specific tags, fetch ALL tags that have products
+    const allTagsWithProducts = schoolTags.length > 0
+      ? schoolTags
+      : await prisma.tag.findMany({
+          where: {
+            products: {
+              some: { status: "publish" },
+            },
+          },
+          include: {
+            products: {
+              where: { status: "publish" },
+              include: { categories: true },
+              take: 12,
+              orderBy: { updatedAt: "desc" },
+            },
+          },
+          orderBy: { name: "asc" },
+          take: 10,
+        });
+
+    // Serialize tag products for client components
+    serializedTags = allTagsWithProducts.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      slug: tag.slug,
+      products: tag.products.map(serializeProduct),
+    }));
+  } catch (err) {
+    console.warn("Home page: database queries skipped or unreachable:", err);
+  }
 
   return (
     <div className="w-full space-y-16 pb-16">

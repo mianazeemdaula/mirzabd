@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { CategoryGrid } from "@/components/store/category-grid";
 import { Layers } from "lucide-react";
 
-export const revalidate = 60; // Revalidate every minute
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Categories Catalog",
@@ -12,37 +12,51 @@ export const metadata = {
 };
 
 export default async function CategoriesPage() {
-  // Fetch active categories with count of published products and total sales
-  const categoriesFromDb = await prisma.category.findMany({
-    where: { isActive: true },
-    include: {
-      products: {
-        where: { status: "publish" },
-        select: {
-          totalSales: true,
+  let categories: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    imageUrl: string | null;
+    productCount: number;
+    totalSales: number;
+  }[] = [];
+
+  try {
+    // Fetch active categories with count of published products and total sales
+    const categoriesFromDb = await prisma.category.findMany({
+      where: { isActive: true },
+      include: {
+        products: {
+          where: { status: "publish" },
+          select: {
+            totalSales: true,
+          },
         },
-      },
-      _count: {
-        select: {
-          products: {
-            where: { status: "publish" },
+        _count: {
+          select: {
+            products: {
+              where: { status: "publish" },
+            },
           },
         },
       },
-    },
-  });
+    });
 
-  const categories = categoriesFromDb
-    .map((cat) => ({
-      id: cat.id,
-      name: cat.name,
-      slug: cat.slug,
-      description: cat.description,
-      imageUrl: cat.imageUrl,
-      productCount: cat._count.products,
-      totalSales: cat.products.reduce((sum, p) => sum + p.totalSales, 0),
-    }))
-    .sort((a, b) => b.totalSales - a.totalSales);
+    categories = categoriesFromDb
+      .map((cat) => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description,
+        imageUrl: cat.imageUrl,
+        productCount: cat._count.products,
+        totalSales: cat.products.reduce((sum, p) => sum + p.totalSales, 0),
+      }))
+      .sort((a, b) => b.totalSales - a.totalSales);
+  } catch (err) {
+    console.warn("Categories page: database query skipped or unreachable:", err);
+  }
 
   return (
     <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16 space-y-12">

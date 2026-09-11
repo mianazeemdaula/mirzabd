@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "node scripts/run.js dev",
     "postinstall": "prisma generate",
+    "db:push": "prisma db push",
     "index-vectors": "tsx scripts/index-vectors.ts",
-    "build": "prisma generate && npm run index-vectors && next build",
+    "build": "prisma db push --accept-data-loss && prisma generate && npm run index-vectors && next build",
     "start": "node scripts/run.js start",
     "lint": "eslint"
   },
