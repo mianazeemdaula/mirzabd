@@ -116,7 +116,7 @@ export default async function AdminSettingsPage() {
               label="Store Contact Phone *"
               name="contactPhone"
               defaultValue={settings.contactPhone}
-              placeholder="03336936666"
+              placeholder="03336566000"
               required
             />
           </div>

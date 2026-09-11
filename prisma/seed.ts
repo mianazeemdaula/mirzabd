@@ -33,7 +33,7 @@ async function main() {
         email: adminEmail,
         passwordHash: hashedAdminPassword,
         role: Role.ADMIN,
-        phone: "03336936666",
+        phone: "03336566000",
       },
     });
     console.log(`Seed admin user created: ${admin.email}`);

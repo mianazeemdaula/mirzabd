@@ -474,7 +474,7 @@ export async function POST(req: NextRequest) {
 
     // Fallback to minimal essential info if RAG didn't find specific chunks or had error
     if (!ragContext) {
-      ragContext = "Store Name: Mirza Book Depot.\nAddress: Allah O Akbar Chowk, Deplapur, Punjab, Pakistan.\nStandard delivery: Rs. 200 (Free over Rs. 2,000). 7-day returns policy. Cash on Delivery (COD) and Credit/Debit Cards accepted. Contact: +92 333 6936666.";
+      ragContext = "Store Name: Mirza Book Depot.\nAddress: Allah O Akbar Chowk, Deplapur, Punjab, Pakistan.\nStandard delivery: Rs. 200 (Free over Rs. 2,000). 7-day returns policy. Cash on Delivery (COD) and Credit/Debit Cards accepted. Contact: +92 333 6566000, Landline: 0444540357.";
     }
 
     let categoriesList = "";

@@ -7,10 +7,10 @@
   --color-elevated:  #F0EDE8;  /* Elevated surfaces, inputs */
   --color-border:    #E2DED6;  /* Borders, dividers */
 
-  /* Accent — Rich Teal/Emerald (modern, professional) */
-  --color-gold:      #0D7C66;  /* Primary CTA, active states — rich teal */
-  --color-gold-dim:  #0A6352;  /* Hover darken */
-  --color-gold-glow: #0D7C6622;/* Glow/shadow */
+  /* Accent — Sky Blue (Primary Brand Color) */
+  --color-gold:      #0284C7;  /* Primary CTA, active states — sky blue */
+  --color-gold-dim:  #0369A1;  /* Hover darken */
+  --color-gold-glow: #0284C726;/* Glow/shadow */
 
   /* Accent 2 — Warm Coral */
   --color-crimson:   #E84855;  /* Sale badges, alerts */
@@ -25,6 +25,7 @@
   --font-display: var(--font-playfair), Georgia, serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), monospace;
+  --font-urdu: var(--font-urdu), 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Urdu Typesetting', serif;
 
   /* Radii */
   --radius-card: 16px;
@@ -73,6 +74,10 @@
 @layer utilities {
   .text-display {
     font-family: var(--font-display);
+  }
+
+  .font-urdu {
+    font-family: var(--font-urdu);
   }
 
   .bg-surface {

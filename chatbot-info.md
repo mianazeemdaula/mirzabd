@@ -9,7 +9,8 @@ This document serves as the official source of truth for the Mirza Book Depot AI
 * **Store Name:** Mirza Book Depot
 * **Tagline:** *Every page, a new world.*
 * **Address:** Mirza Book Depot, Allah O Akbar Chowk, Deplapur, Punjab, Pakistan
-* **Phone Number:** +92 333 6936666
+* **Phone Number (Mobile / WhatsApp):** +92 333 6566000
+* **Landline:** 0444540357
 * **Support Email:** support@mirzabd.com
 * **Official Website:** https://mirzabd.com
 

@@ -8,6 +8,7 @@ import { Mail, Phone, MapPin, Facebook, Instagram, Send, Store } from "lucide-re
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { APP_NAME, APP_TAGLINE, APP_ADDRESS, APP_CONTACT, APP_LANDLINE, APP_EMAIL } from "@/lib/constants";
+import { Logo } from "@/components/store/logo";
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export function Footer() {
       toast.error("Please enter a valid email address");
       return;
     }
-    toast.success("Thank you for subscribing to our newsletter!");
+    toast.success("Thank you for subscribing to Mirza Book Depot newsletter!");
     setEmail("");
   };
 
@@ -28,15 +29,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Brand details */}
           <div className="space-y-4">
-            <div className="relative w-36 h-10 flex-shrink-0">
-              <Image
-                src="/images/logo-horizontal.png"
-                alt={APP_NAME}
-                fill
-                sizes="144px"
-                className="object-contain"
-              />
-            </div>
+            <Logo size="md" href="/" />
             <p className="text-sm font-medium italic text-gold">{APP_TAGLINE}</p>
             <div className="space-y-3 pt-2 text-sm text-muted">
               <div className="flex items-start gap-2">

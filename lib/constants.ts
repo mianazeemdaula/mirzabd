@@ -6,8 +6,8 @@ export const APP_DESCRIPTION =
   "Mirza Book Depot — Pakistan's trusted online bookstore. Discover thousands of books across fiction, non-fiction, academic, and children's categories.";
 
 // Contact & Address
-export const APP_CONTACT = "03336936666";
-export const APP_LANDLINE = "0444-4542057";
+export const APP_CONTACT = "03336566000";
+export const APP_LANDLINE = "0444540357";
 export const APP_EMAIL = "admin@mirzabd.com";
 export const APP_ADDRESS = "Allah o Akbar Chowk, Mirza Plaza, Depalpur, Pakistan";
 export const APP_CITY = "Depalpur";

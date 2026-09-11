@@ -12,6 +12,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useUiStore } from "@/store/ui";
 import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants";
+import { Logo } from "@/components/store/logo";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -23,9 +24,10 @@ export function Navbar() {
 
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "Shop", href: "/products" },
+    { label: "Books", href: "/products" },
     { label: "Categories", href: "/categories" },
-    { label: "About", href: "/about" },
+    { label: "New Arrivals", href: "/products?sort=newest" },
+    { label: "Best Sellers", href: "/products?sort=best-selling" },
     { label: "Contact", href: "/contact" },
   ];
 
@@ -39,18 +41,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-none items-center justify-between px-4 sm:px-8 md:px-12 lg:px-16">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center group">
-          <div className="relative w-36 h-10 flex-shrink-0">
-            <Image
-              src="/images/logo-horizontal.png"
-              alt={APP_NAME}
-              fill
-              sizes="144px"
-              priority
-              className="object-contain group-hover:scale-102 transition-transform duration-300"
-            />
-          </div>
-        </Link>
+        <Logo size="md" href="/" />
 
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-6">

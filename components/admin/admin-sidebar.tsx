@@ -20,6 +20,7 @@ import {
   Book,
 } from "lucide-react";
 import { APP_NAME } from "@/lib/constants";
+import { Logo } from "@/components/store/logo";
 
 export function AdminSidebar() {
   const pathname = usePathname();
@@ -40,13 +41,8 @@ export function AdminSidebar() {
   return (
     <aside className="fixed top-0 bottom-0 left-0 w-60 bg-surface border-r border-border flex flex-col h-screen select-none">
       {/* Brand Header */}
-      <div className="h-16 flex items-center px-6 border-b border-border">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <Book className="text-gold group-hover:scale-105 transition-transform duration-300" size={18} />
-          <span className="font-display font-bold text-base sm:text-lg text-ink tracking-wide group-hover:text-gold transition-colors duration-300">
-            Mirza Admin
-          </span>
-        </Link>
+      <div className="h-16 flex items-center px-4 border-b border-border overflow-hidden">
+        <Logo size="sm" href="/admin" />
       </div>
 
       {/* Nav list */}
