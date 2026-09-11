@@ -1,5 +1,6 @@
 // lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 // Helper to trigger vector cache updates in the background (non-blocking)
 function triggerVectorUpdate() {
@@ -13,7 +14,12 @@ function triggerVectorUpdate() {
 }
 
 function createPrismaClient() {
+  const connectionString =
+    process.env.DATABASE_URL || "mysql://localhost:3306/book_depot";
+  const adapter = new PrismaMariaDb(connectionString);
+
   const rawPrisma = new PrismaClient({
+    adapter,
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
