@@ -1,11 +1,20 @@
-// app/admin/settings/page.tsx
 import React from "react";
 import prisma from "@/lib/prisma";
-import { Settings, Save, AlertCircle, Bot } from "lucide-react";
+import { Settings, Save, AlertCircle, Bot, Clock, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { saveStoreSettings } from "@/actions/settings";
-import { APP_NAME, APP_CONTACT, APP_EMAIL, APP_ADDRESS, DEFAULT_CURRENCY } from "@/lib/constants";
+import {
+  APP_NAME,
+  APP_CONTACT,
+  APP_EMAIL,
+  APP_ADDRESS,
+  DEFAULT_CURRENCY,
+  DEFAULT_OPENING_TIME,
+  DEFAULT_CLOSING_TIME,
+  DEFAULT_OPERATING_DAYS,
+  DEFAULT_CLOSED_DAYS,
+} from "@/lib/constants";
 import fs from "fs";
 import path from "path";
 
@@ -24,6 +33,11 @@ export default async function AdminSettingsPage() {
     contactEmail: APP_EMAIL,
     contactPhone: APP_CONTACT,
     storeAddress: APP_ADDRESS,
+    openingTime: DEFAULT_OPENING_TIME,
+    closingTime: DEFAULT_CLOSING_TIME,
+    operatingDays: DEFAULT_OPERATING_DAYS,
+    closedDays: DEFAULT_CLOSED_DAYS,
+    closureNotice: "",
   };
 
   // 2. Fetch chatbot-info.md from filesystem
@@ -134,6 +148,104 @@ export default async function AdminSettingsPage() {
               required
               className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] p-3 focus:outline-none focus:border-gold placeholder:text-faint resize-none"
             />
+          </div>
+
+          {/* Store Timings & Closed Days Section */}
+          <div className="border-t border-border/60 pt-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clock size={22} className="text-gold" />
+                <h3 className="font-display text-lg font-bold text-ink">Store Timings & Operational Schedule</h3>
+              </div>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gold/10 text-gold border border-gold/20">
+                Operating Schedule
+              </span>
+            </div>
+            <p className="text-xs text-muted leading-relaxed">
+              Configure daily opening and closing hours, days of operation, weekly closed days, and optional holiday notices. These settings are updated across your storefront, contact page, and AI chatbot.
+            </p>
+
+            {/* Timings Inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+              <Input
+                label="Daily Opening Time *"
+                name="openingTime"
+                defaultValue={settings.openingTime || "07:00 AM"}
+                placeholder="07:00 AM"
+                required
+              />
+              <Input
+                label="Daily Closing Time *"
+                name="closingTime"
+                defaultValue={settings.closingTime || "09:00 PM"}
+                placeholder="09:00 PM"
+                required
+              />
+              <Input
+                label="Operating Days Summary *"
+                name="operatingDays"
+                defaultValue={settings.operatingDays || "Saturday – Thursday"}
+                placeholder="Saturday – Thursday"
+                required
+              />
+            </div>
+
+            {/* Closed Days Multi-Select / Checkbox Grid */}
+            <div className="space-y-2 pt-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                <Calendar size={14} className="text-gold" />
+                Weekly Closed Days (Select all that apply)
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
+                {[
+                  { key: "Monday", label: "Mon" },
+                  { key: "Tuesday", label: "Tue" },
+                  { key: "Wednesday", label: "Wed" },
+                  { key: "Thursday", label: "Thu" },
+                  { key: "Friday", label: "Fri" },
+                  { key: "Saturday", label: "Sat" },
+                  { key: "Sunday", label: "Sun" },
+                ].map((day) => {
+                  const isClosed = Array.isArray(settings.closedDays)
+                    ? settings.closedDays.includes(day.key)
+                    : day.key === "Friday";
+                  return (
+                    <label
+                      key={day.key}
+                      className="relative flex items-center justify-between p-3 rounded-lg border border-border bg-elevated/60 hover:bg-elevated cursor-pointer transition-colors group has-[:checked]:border-gold/60 has-[:checked]:bg-gold/10"
+                    >
+                      <span className="text-xs font-semibold text-ink group-hover:text-gold transition-colors">
+                        {day.key}
+                      </span>
+                      <input
+                        type="checkbox"
+                        name="closedDays"
+                        value={day.key}
+                        defaultChecked={isClosed}
+                        className="w-4 h-4 rounded border-border text-gold focus:ring-gold/30 bg-surface cursor-pointer"
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+              <p className="text-[11px] text-muted italic">
+                Checked days will be marked as "Closed" across customer pages and communicated to visitors by the AI assistant.
+              </p>
+            </div>
+
+            {/* Optional Special Closure Notice */}
+            <div className="space-y-1.5 pt-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted">
+                Special Holiday / Temporary Closure Notice (Optional)
+              </label>
+              <textarea
+                name="closureNotice"
+                defaultValue={settings.closureNotice || ""}
+                placeholder="e.g. Closed on Friday for Jumu'ah prayer. Re-opening Saturday at 7:00 AM. Or: Special holiday timings apply."
+                rows={2}
+                className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] p-3 focus:outline-none focus:border-gold placeholder:text-faint resize-none"
+              />
+            </div>
           </div>
 
           {/* Chatbot Knowledge Base */}

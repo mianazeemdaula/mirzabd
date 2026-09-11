@@ -13,6 +13,12 @@ export const APP_ADDRESS = "Allah o Akbar Chowk, Mirza Plaza, Depalpur, Pakistan
 export const APP_CITY = "Depalpur";
 export const APP_COUNTRY = "Pakistan";
 
+// Operational Schedule & Timings Defaults
+export const DEFAULT_OPENING_TIME = "07:00 AM";
+export const DEFAULT_CLOSING_TIME = "09:00 PM";
+export const DEFAULT_OPERATING_DAYS = "Saturday – Thursday";
+export const DEFAULT_CLOSED_DAYS = ["Friday"];
+
 // URLs
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

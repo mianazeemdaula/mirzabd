@@ -1,14 +1,23 @@
-// app/(store)/contact/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fadeUp, stagger, fadeIn } from "@/lib/motion";
-import { APP_NAME, APP_ADDRESS, APP_CONTACT, APP_LANDLINE, APP_EMAIL } from "@/lib/constants";
+import {
+  APP_NAME,
+  APP_ADDRESS,
+  APP_CONTACT,
+  APP_LANDLINE,
+  APP_EMAIL,
+  DEFAULT_OPENING_TIME,
+  DEFAULT_CLOSING_TIME,
+  DEFAULT_OPERATING_DAYS,
+  DEFAULT_CLOSED_DAYS,
+} from "@/lib/constants";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -16,6 +25,30 @@ export default function ContactPage() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [schedule, setSchedule] = useState({
+    openingTime: DEFAULT_OPENING_TIME,
+    closingTime: DEFAULT_CLOSING_TIME,
+    operatingDays: DEFAULT_OPERATING_DAYS,
+    closedDays: DEFAULT_CLOSED_DAYS,
+    closureNotice: "",
+  });
+
+  useEffect(() => {
+    fetch("/api/store/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setSchedule({
+            openingTime: data.openingTime || DEFAULT_OPENING_TIME,
+            closingTime: data.closingTime || DEFAULT_CLOSING_TIME,
+            operatingDays: data.operatingDays || DEFAULT_OPERATING_DAYS,
+            closedDays: Array.isArray(data.closedDays) ? data.closedDays : DEFAULT_CLOSED_DAYS,
+            closureNotice: data.closureNotice || "",
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,10 +172,25 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-ink uppercase tracking-wider">Business Hours</h3>
-                  <p className="text-sm text-muted mt-1 leading-relaxed">
-                    Saturday – Thursday: 07:00 AM – 09:00 PM <br />
-                    Friday: Closed
-                  </p>
+                  <div className="text-sm text-muted mt-1 leading-relaxed space-y-0.5">
+                    <p>
+                      <span className="text-ink font-medium">{schedule.operatingDays}:</span> {schedule.openingTime} – {schedule.closingTime}
+                    </p>
+                    <p>
+                      {schedule.closedDays.length > 0 ? (
+                        <span className="text-crimson font-medium">
+                          {schedule.closedDays.join(", ")}: Closed
+                        </span>
+                      ) : (
+                        <span className="text-emerald-400 font-medium">Open 7 Days a Week</span>
+                      )}
+                    </p>
+                    {schedule.closureNotice && (
+                      <p className="text-xs text-gold/90 mt-1.5 p-2 rounded bg-gold/10 border border-gold/20 leading-normal">
+                        ★ {schedule.closureNotice}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

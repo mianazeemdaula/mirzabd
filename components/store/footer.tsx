@@ -1,17 +1,55 @@
 // components/store/footer.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Facebook, Instagram, Send, Store } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, Send, Store, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { APP_NAME, APP_TAGLINE, APP_ADDRESS, APP_CONTACT, APP_LANDLINE, APP_EMAIL } from "@/lib/constants";
+import {
+  APP_NAME,
+  APP_TAGLINE,
+  APP_ADDRESS,
+  APP_CONTACT,
+  APP_LANDLINE,
+  APP_EMAIL,
+  DEFAULT_OPENING_TIME,
+  DEFAULT_CLOSING_TIME,
+  DEFAULT_OPERATING_DAYS,
+  DEFAULT_CLOSED_DAYS,
+} from "@/lib/constants";
 import { Logo } from "@/components/store/logo";
 
 export function Footer() {
   const [email, setEmail] = useState("");
+  const [schedule, setSchedule] = useState<{
+    openingTime: string;
+    closingTime: string;
+    operatingDays: string;
+    closedDays: string[];
+  }>({
+    openingTime: DEFAULT_OPENING_TIME,
+    closingTime: DEFAULT_CLOSING_TIME,
+    operatingDays: DEFAULT_OPERATING_DAYS,
+    closedDays: DEFAULT_CLOSED_DAYS,
+  });
+
+  useEffect(() => {
+    fetch("/api/store/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.openingTime) {
+          setSchedule({
+            openingTime: data.openingTime || DEFAULT_OPENING_TIME,
+            closingTime: data.closingTime || DEFAULT_CLOSING_TIME,
+            operatingDays: data.operatingDays || DEFAULT_OPERATING_DAYS,
+            closedDays: Array.isArray(data.closedDays) ? data.closedDays : DEFAULT_CLOSED_DAYS,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +90,21 @@ export function Footer() {
                 <a href={`mailto:${APP_EMAIL}`} className="hover:text-gold transition-colors">
                   {APP_EMAIL}
                 </a>
+              </div>
+              <div className="flex items-start gap-2">
+                <Clock size={16} className="mt-1 flex-shrink-0 text-gold" />
+                <div className="flex flex-col text-xs leading-relaxed">
+                  <span className="text-ink/90 font-medium">
+                    {schedule.operatingDays}: {schedule.openingTime} – {schedule.closingTime}
+                  </span>
+                  {schedule.closedDays.length > 0 ? (
+                    <span className="text-crimson font-medium">
+                      {schedule.closedDays.join(", ")}: Closed
+                    </span>
+                  ) : (
+                    <span className="text-emerald-400">Open Daily</span>
+                  )}
+                </div>
               </div>
             </div>
             {/* Social Icons */}

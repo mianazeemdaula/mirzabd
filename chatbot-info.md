@@ -18,9 +18,9 @@ This document serves as the official source of truth for the Mirza Book Depot AI
 
 ## 2. Business Hours & Timings
 
-* **Monday to Saturday:** 07:00 AM – 08:00 PM (PST)
-* **Sunday:** Closed (Online orders are accepted 24/7, processing starts Monday morning)
-* **Public Holidays:** Special timings apply, usually announced on our social media pages.
+* **Operating Hours:** Saturday to Thursday: 07:00 AM – 09:00 PM (PST)
+* **Weekly Closed Days:** Friday (Online orders are accepted 24/7 on the website)
+* **Special Notices / Public Holidays:** Special timings apply during holidays and are announced on our official channels.
 
 ---
 

@@ -1,10 +1,20 @@
-// app/api/chat/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import fs from "fs";
 import path from "path";
+import {
+  APP_NAME,
+  APP_CONTACT,
+  APP_LANDLINE,
+  APP_EMAIL,
+  APP_ADDRESS,
+  DEFAULT_OPENING_TIME,
+  DEFAULT_CLOSING_TIME,
+  DEFAULT_OPERATING_DAYS,
+  DEFAULT_CLOSED_DAYS,
+} from "@/lib/constants";
 
 // Ensure the endpoint is dynamic and doesn't cache
 export const dynamic = "force-dynamic";
@@ -244,18 +254,25 @@ async function getStoreInfo() {
       acc[curr.key] = curr.value;
       return acc;
     }, {});
+    const gen = settingsMap["general_settings"] || {};
+    const openingTime = gen.openingTime || DEFAULT_OPENING_TIME;
+    const closingTime = gen.closingTime || DEFAULT_CLOSING_TIME;
+    const operatingDays = gen.operatingDays || DEFAULT_OPERATING_DAYS;
+    const closedDays = Array.isArray(gen.closedDays) ? gen.closedDays : DEFAULT_CLOSED_DAYS;
+    const closedStr = closedDays.length > 0 ? `Closed on: ${closedDays.join(", ")}` : "Open 7 days a week";
 
     return {
-      storeName: process.env.NEXT_PUBLIC_APP_NAME || "Mirza Book Depot",
+      storeName: gen.storeName || process.env.NEXT_PUBLIC_APP_NAME || APP_NAME,
       url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4066",
       knowledgeBase: markdownKnowledgeBase || undefined,
       deliveryInfo: "Standard Delivery (COD & Pre-paid via Stripe) across Pakistan. Delivery charges are flat PKR 200. Orders above PKR 2,000 get Free Shipping! Orders usually arrive within 2-4 business days.",
       returnsPolicy: "Mirza Book Depot offers a 7-day hassle-free returns policy. Books must be returned in their original condition (unmarked and undamaged) for a full refund or exchange.",
       contact: {
-        email: "support@mirzabd.com",
-        phone: "+92 300 1234567",
-        address: "Mirza Book Depot, Mall Road, Lahore, Pakistan",
-        hours: "Monday to Saturday, 10:00 AM - 10:00 PM PST",
+        email: gen.contactEmail || APP_EMAIL,
+        phone: gen.contactPhone || APP_CONTACT,
+        landline: APP_LANDLINE,
+        address: gen.storeAddress || APP_ADDRESS,
+        hours: `${operatingDays}: ${openingTime} – ${closingTime} (PST). ${closedStr}.`,
       },
       settings: settingsMap,
     };
@@ -474,7 +491,7 @@ export async function POST(req: NextRequest) {
 
     // Fallback to minimal essential info if RAG didn't find specific chunks or had error
     if (!ragContext) {
-      ragContext = "Store Name: Mirza Book Depot.\nAddress: Allah O Akbar Chowk, Deplapur, Punjab, Pakistan.\nStandard delivery: Rs. 200 (Free over Rs. 2,000). 7-day returns policy. Cash on Delivery (COD) and Credit/Debit Cards accepted. Contact: +92 333 6566000, Landline: 0444540357.";
+      ragContext = `Store Name: ${APP_NAME}.\nAddress: ${APP_ADDRESS}.\nTimings: ${DEFAULT_OPERATING_DAYS} ${DEFAULT_OPENING_TIME} – ${DEFAULT_CLOSING_TIME} PST. Closed: ${DEFAULT_CLOSED_DAYS.join(", ")}.\nStandard delivery: Rs. 200 (Free over Rs. 2,000). 7-day returns policy. Cash on Delivery (COD) and Credit/Debit Cards accepted. Contact: ${APP_CONTACT}, Landline: ${APP_LANDLINE}, Email: ${APP_EMAIL}.`;
     }
 
     let categoriesList = "";
