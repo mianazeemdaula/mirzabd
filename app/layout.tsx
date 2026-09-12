@@ -1,20 +1,14 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, JetBrains_Mono, Noto_Nastaliq_Urdu } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono, Noto_Nastaliq_Urdu } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/toast";
 import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION } from "@/lib/constants";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -47,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} ${jetbrains.variable} ${notoNastaliqUrdu.variable} h-full antialiased`}
+      className={`${plusJakartaSans.variable} ${jetbrains.variable} ${notoNastaliqUrdu.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-void text-ink font-body">
         <Providers>

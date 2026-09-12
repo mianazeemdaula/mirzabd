@@ -24,7 +24,7 @@ export function Navbar() {
 
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "Books", href: "/products" },
+    { label: "Products", href: "/products" },
     { label: "Categories", href: "/categories" },
     { label: "New Arrivals", href: "/products?sort=newest" },
     { label: "Best Sellers", href: "/products?sort=best-selling" },

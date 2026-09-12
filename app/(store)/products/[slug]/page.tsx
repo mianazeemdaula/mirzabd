@@ -4,7 +4,7 @@ import Script from "next/script";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ProductImage } from "@/components/store/product-image";
-import { BookOpen, Calendar, Globe, FileText, CheckCircle2, ChevronRight } from "lucide-react";
+import { BookOpen, CheckCircle2, ChevronRight } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { PriceDisplay } from "@/components/store/price-display";
 import { StarRating } from "@/components/store/star-rating";
@@ -144,13 +144,13 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
                 {book.author}
               </span>
             )}
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-ink leading-tight">
+            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-ink leading-snug">
               {book.name}
             </h1>
 
             {/* Ratings & reviews sum */}
             <div className="flex items-center gap-3">
-              <StarRating rating={ratingAverage} size={16} />
+              <StarRating rating={ratingAverage} size={15} />
               <span className="text-sm font-semibold text-ink">{ratingAverage}</span>
               <span className="text-xs text-muted">({reviewsCount} customer reviews)</span>
             </div>
@@ -164,44 +164,21 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
             <span className="text-xs text-muted">Inclusive of all local sales taxes</span>
           </div>
 
+          {/* Publisher if available */}
+          {book.publisher && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface border border-border rounded-[var(--radius-btn)] text-xs text-muted">
+              <BookOpen size={13} className="text-gold shrink-0" />
+              <span>Publisher:</span>
+              <span className="text-ink font-semibold">{book.publisher}</span>
+            </div>
+          )}
+
           {/* Short description */}
           {book.shortDescription && (
             <p className="text-sm text-muted leading-relaxed font-body">
               {book.shortDescription}
             </p>
           )}
-
-          {/* Core Spec strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 px-4 bg-surface border border-border rounded-[var(--radius-card)]">
-            <div className="flex items-center gap-2.5 text-xs">
-              <BookOpen size={16} className="text-gold" />
-              <div>
-                <span className="text-muted block">Publisher</span>
-                <span className="text-ink font-semibold">{book.publisher || "N/A"}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 text-xs">
-              <Calendar size={16} className="text-gold" />
-              <div>
-                <span className="text-muted block">Year</span>
-                <span className="text-ink font-semibold">{book.publishYear || "N/A"}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 text-xs">
-              <Globe size={16} className="text-gold" />
-              <div>
-                <span className="text-muted block">Language</span>
-                <span className="text-ink font-semibold">{book.language}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 text-xs">
-              <FileText size={16} className="text-gold" />
-              <div>
-                <span className="text-muted block">Pages</span>
-                <span className="text-ink font-semibold">{book.pages || "N/A"}</span>
-              </div>
-            </div>
-          </div>
 
           {/* Stock / Buy Actions */}
           <div className="space-y-4 pt-2">

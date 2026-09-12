@@ -31,19 +31,32 @@ export default async function HomePage() {
             totalSales: true,
           },
         },
+        _count: {
+          select: {
+            products: {
+              where: { status: "publish" },
+            },
+          },
+        },
       },
+      orderBy: { displayOrder: "asc" },
     });
 
     categories = rawCategories
       .map((cat) => {
         const totalSales = cat.products.reduce((sum, p) => sum + p.totalSales, 0);
         return {
-          ...cat,
+          id: cat.id,
+          name: cat.name,
+          slug: cat.slug,
+          imageUrl: cat.imageUrl,
+          count: cat._count.products,
           totalSales,
+          displayOrder: cat.displayOrder,
         };
       })
-      .sort((a, b) => b.totalSales - a.totalSales)
-      .slice(0, 12);
+      .sort((a, b) => b.totalSales - a.totalSales || a.displayOrder - b.displayOrder)
+      .slice(0, 16);
 
     // Fetch Featured Products
     featuredBooks = await prisma.product.findMany({

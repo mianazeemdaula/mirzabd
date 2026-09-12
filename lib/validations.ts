@@ -80,7 +80,7 @@ export const CategorySchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   parentId: z.coerce.number().optional().nullable(),
   description: z.string().default(""),
-  imageUrl: z.string().url().optional().nullable(),
+  imageUrl: z.string().optional().nullable().or(z.literal("")),
   displayOrder: z.coerce.number().int().default(0),
   isActive: z.boolean().default(true),
 });

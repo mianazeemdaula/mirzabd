@@ -13,7 +13,6 @@ interface SearchParams {
   category?: string;
   min_price?: string;
   max_price?: string;
-  language?: string;
   in_stock?: string;
   featured?: string;
   on_sale?: string;
@@ -32,10 +31,12 @@ export default async function BooksPage({
   const params = await searchParams;
   
   // Extract and parse filters
-  const categoryFilter = params.category ? params.category.split(",") : [];
+  const rawCat = params.category ? decodeURIComponent(params.category) : "";
+  const categoryFilter = rawCat
+    ? rawCat.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean)
+    : [];
   const minPrice = params.min_price ? parseFloat(params.min_price) : undefined;
   const maxPrice = params.max_price ? parseFloat(params.max_price) : undefined;
-  const languageFilter = params.language ? params.language.split(",") : [];
   const inStockOnly = params.in_stock === "true";
   const featuredOnly = params.featured === "true";
   const onSaleOnly = params.on_sale === "true";
@@ -59,19 +60,15 @@ export default async function BooksPage({
     ];
   }
 
-  // Category filter
+  // Category filter (supports multiple categories, slug or name)
   if (categoryFilter.length > 0) {
     where.categories = {
       some: {
-        slug: { in: categoryFilter },
+        OR: [
+          { slug: { in: categoryFilter } },
+          { name: { in: categoryFilter } },
+        ],
       },
-    };
-  }
-
-  // Language filter
-  if (languageFilter.length > 0) {
-    where.language = {
-      in: languageFilter,
     };
   }
 
@@ -144,9 +141,18 @@ export default async function BooksPage({
 
   const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
 
-  // Fetch all active categories for the sidebar filter
+  // Fetch all active categories for the sidebar filter and circular category strip
   const allCategories = await prisma.category.findMany({
     where: { isActive: true },
+    include: {
+      _count: {
+        select: {
+          products: {
+            where: { status: "publish" },
+          },
+        },
+      },
+    },
     orderBy: { displayOrder: "asc" },
   });
 
@@ -159,7 +165,6 @@ export default async function BooksPage({
     if (params.category) queryParams.set("category", params.category);
     if (params.min_price) queryParams.set("min_price", params.min_price);
     if (params.max_price) queryParams.set("max_price", params.max_price);
-    if (params.language) queryParams.set("language", params.language);
     if (params.in_stock) queryParams.set("in_stock", params.in_stock);
     if (params.featured) queryParams.set("featured", params.featured);
     if (params.on_sale) queryParams.set("on_sale", params.on_sale);
@@ -168,6 +173,14 @@ export default async function BooksPage({
     queryParams.set("page", String(pageNumber));
     return `/products?${queryParams.toString()}`;
   };
+
+  const formattedCategories = allCategories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    imageUrl: c.imageUrl,
+    count: c._count.products,
+  }));
 
   return (
     <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
@@ -182,8 +195,8 @@ export default async function BooksPage({
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar Filters */}
-        <FilterSidebar categories={allCategories} />
+        {/* Sidebar Filters with accurate counts */}
+        <FilterSidebar categories={formattedCategories} />
 
         {/* Catalog List Content */}
         <div className="flex-1 space-y-6">

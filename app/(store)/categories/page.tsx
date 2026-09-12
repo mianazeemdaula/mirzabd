@@ -41,6 +41,7 @@ export default async function CategoriesPage() {
           },
         },
       },
+      orderBy: { displayOrder: "asc" },
     });
 
     categories = categoriesFromDb
@@ -52,8 +53,9 @@ export default async function CategoriesPage() {
         imageUrl: cat.imageUrl,
         productCount: cat._count.products,
         totalSales: cat.products.reduce((sum, p) => sum + p.totalSales, 0),
+        displayOrder: cat.displayOrder,
       }))
-      .sort((a, b) => b.totalSales - a.totalSales);
+      .sort((a, b) => b.totalSales - a.totalSales || a.displayOrder - b.displayOrder);
   } catch (err) {
     console.warn("Categories page: database query skipped or unreachable:", err);
   }

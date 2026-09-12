@@ -87,52 +87,52 @@ export function BookCard({ book }: BookCardProps) {
 
   return (
     <BookCardHover className="h-full">
-      <div className="group relative flex flex-col h-full bg-surface border border-border rounded-[var(--radius-card)] overflow-hidden transition-all duration-300 hover:border-gold/40 hover:shadow-card">
+      <div className="group relative flex flex-col h-full bg-surface border border-border rounded-lg sm:rounded-[var(--radius-card)] overflow-hidden transition-all duration-300 hover:border-gold/40 hover:shadow-card">
         {/* Wishlist button */}
         <button
           onClick={handleWishlistToggle}
-          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-white/60 text-muted hover:text-gold backdrop-blur-sm transition-colors border border-border/30 hover:border-gold/40 cursor-pointer"
+          className="absolute top-2 right-2 z-20 p-1.5 rounded-full bg-white/70 text-muted hover:text-gold backdrop-blur-sm transition-colors border border-border/30 hover:border-gold/40 cursor-pointer shadow-xs"
           aria-label="Add to wishlist"
         >
-          <Heart size={16} className={isWishlisted ? "fill-gold text-gold" : ""} />
+          <Heart size={13} className={isWishlisted ? "fill-gold text-gold" : ""} />
         </button>
 
         {/* Sale badge */}
         {isSale && !isOutOfStock && (
-          <div className="absolute top-3 left-3 z-20 bg-crimson text-ink font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded shadow-md">
+          <div className="absolute top-2 left-2 z-20 bg-crimson text-ink font-bold text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">
             Sale
           </div>
         )}
 
         {/* Out of stock badge */}
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center p-4">
-            <span className="bg-border text-muted font-bold text-xs uppercase tracking-widest px-3 py-1 rounded border border-border">
+          <div className="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center p-3">
+            <span className="bg-border text-muted font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border border-border">
               Out of Stock
             </span>
           </div>
         )}
 
         {/* Book cover image link */}
-        <Link href={`/products/${book.slug}`} className="block relative aspect-[2/3] w-full overflow-hidden bg-elevated border-b border-border">
+        <Link href={`/products/${book.slug}`} className="block relative aspect-[3/4] sm:aspect-[2/3] w-full overflow-hidden bg-elevated border-b border-border">
           <ProductImage
             src={coverImage}
             alt={book.name}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             priority={false}
           />
           {/* Card Hover Actions Overlay */}
           {!isOutOfStock && (
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 px-4 z-10 pointer-events-none">
-              <div className="w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto">
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2.5 px-2.5 z-10 pointer-events-none">
+              <div className="w-full transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto">
                 <Button
                   onClick={handleAddToCart}
                   variant="primary"
-                  className="w-full flex items-center justify-center gap-2 text-xs py-2.5 rounded-[var(--radius-btn)]"
+                  className="w-full flex items-center justify-center gap-1.5 text-[11px] h-8 py-1 rounded-[var(--radius-btn)] font-semibold"
                 >
-                  <ShoppingCart size={14} />
+                  <ShoppingCart size={13} />
                   Add to Cart
                 </Button>
               </div>
@@ -141,35 +141,35 @@ export function BookCard({ book }: BookCardProps) {
         </Link>
 
         {/* Card Metadata info */}
-        <div className="p-4 flex flex-col flex-grow space-y-2">
+        <div className="p-2.5 sm:p-3 flex flex-col flex-grow space-y-1 sm:space-y-1.5">
           {/* Author name */}
           {book.author ? (
-            <span className="text-xs text-muted font-medium hover:text-gold transition-colors inline-flex items-center gap-1">
-              <BookOpen size={11} className="text-gold/60" />
-              {book.author}
+            <span className="text-[10px] sm:text-[11px] text-muted font-medium hover:text-gold transition-colors inline-flex items-center gap-1 truncate">
+              <BookOpen size={10} className="text-gold/70 shrink-0" />
+              <span className="truncate">{book.author}</span>
             </span>
           ) : (
-            <span className="text-xs text-muted">Unknown Author</span>
+            <span className="text-[10px] sm:text-[11px] text-muted truncate">Unknown Author</span>
           )}
 
           {/* Book Title */}
           <Link href={`/products/${book.slug}`} className="block group-hover:text-gold transition-colors flex-grow">
-            <h4 className="text-card-title text-ink font-semibold line-clamp-2 leading-tight">
+            <h4 className="text-xs sm:text-[13px] text-ink font-semibold line-clamp-2 leading-snug">
               {book.name}
             </h4>
           </Link>
 
           {/* Review Stars if count > 0 */}
           {book.ratingCount > 0 && (
-            <div className="flex items-center gap-1.5 pt-0.5">
-              <StarRating rating={book.averageRating} size={13} />
-              <span className="text-[11px] text-muted">({book.ratingCount})</span>
+            <div className="flex items-center gap-1 pt-0.5">
+              <StarRating rating={book.averageRating} size={11} />
+              <span className="text-[10px] text-muted">({book.ratingCount})</span>
             </div>
           )}
 
           {/* Pricing display */}
-          <div className="pt-1 flex items-center justify-between">
-            <PriceDisplay regularPrice={book.regularPrice} salePrice={book.salePrice} size="md" />
+          <div className="pt-0.5 flex items-center justify-between">
+            <PriceDisplay regularPrice={book.regularPrice} salePrice={book.salePrice} size="sm" />
           </div>
         </div>
       </div>

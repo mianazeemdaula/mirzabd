@@ -26,9 +26,9 @@ export function PriceDisplay({
   const hasSale = salePrice !== null && salePrice < regularPrice;
 
   const sizeClasses = {
-    sm: "text-sm",
-    md: "text-base",
-    lg: "text-xl",
+    sm: "text-xs sm:text-sm",
+    md: "text-sm sm:text-base",
+    lg: "text-lg sm:text-xl",
   };
 
   const discountPercent = hasSale
@@ -36,16 +36,16 @@ export function PriceDisplay({
     : 0;
 
   return (
-    <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-1.5 ${className}`}>
       {hasSale ? (
         <>
           <span className={`text-gold font-bold ${sizeClasses[size]}`}>
             {formatPKR(salePrice!)}
           </span>
-          <span className="text-muted line-through text-xs sm:text-sm">
+          <span className="text-muted line-through text-[10px] sm:text-xs">
             {formatPKR(regularPrice)}
           </span>
-          <span className="bg-crimson/15 text-crimson text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded uppercase tracking-wide">
+          <span className="bg-crimson/15 text-crimson text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wide">
             {discountPercent}% OFF
           </span>
         </>

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CategorySchema, CategoryFormValues } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CategoryImageUpload } from "@/components/admin/category-image-upload";
 import { slugify_safe } from "@/lib/utils";
 
 interface CategoryFormProps {
@@ -105,12 +106,11 @@ export function CategoryForm({
         />
       </div>
 
-      {/* Image URL */}
-      <Input
-        label="Image URL"
-        {...register("imageUrl")}
-        placeholder="e.g. https://images.unsplash.com/..."
-        error={errors.imageUrl?.message}
+      {/* Category Logo Upload */}
+      <CategoryImageUpload
+        value={watch("imageUrl") || null}
+        onChange={(url) => setValue("imageUrl", url, { shouldValidate: true })}
+        categoryName={categoryName}
       />
 
       {/* Display Order */}
