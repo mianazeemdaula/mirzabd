@@ -14,6 +14,8 @@ const buttonVariants = cva(
           "bg-gold text-white hover:bg-gold-dim active:bg-gold-dim rounded-[var(--radius-btn)] font-semibold",
         ghost:
           "border border-border text-ink hover:border-gold hover:text-gold rounded-[var(--radius-btn)] bg-transparent",
+        outline:
+          "border border-border text-ink hover:border-gold hover:text-gold rounded-[var(--radius-btn)] bg-transparent",
         crimson:
           "bg-crimson text-white hover:bg-crimson-dim active:bg-crimson-dim rounded-[var(--radius-btn)] font-semibold",
         muted:

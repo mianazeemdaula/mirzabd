@@ -511,7 +511,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
             {editingCategory && (
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={resetForm}
                 className="h-11 px-4 text-xs"
               >

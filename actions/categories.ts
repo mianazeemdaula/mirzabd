@@ -31,8 +31,7 @@ function parseCategoryInput(input: FormData | CategoryPayload): CategoryPayload 
     const isActive =
       isActiveRaw === "on" ||
       isActiveRaw === "true" ||
-      isActiveRaw === "1" ||
-      isActiveRaw === true;
+      isActiveRaw === "1";
 
     const parentId = parentIdStr && parentIdStr !== "" ? parseInt(parentIdStr, 10) : null;
     const displayOrder = displayOrderStr ? parseInt(displayOrderStr, 10) : 0;
