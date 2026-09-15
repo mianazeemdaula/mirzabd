@@ -30,7 +30,8 @@ import {
   DEFAULT_CLOSED_DAYS,
   SOCIAL_LINKS,
 } from "@/lib/constants";
-import { formatWhatsAppUrl, CustomSocialLink } from "@/actions/settings";
+import { formatWhatsAppUrl } from "@/lib/utils";
+import type { CustomSocialLink } from "@/types/settings";
 import { Logo } from "@/components/store/logo";
 
 export function Footer() {
@@ -346,33 +347,38 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm text-muted">
               <li>
-                <Link href="/products?category=fiction" className="hover:text-gold transition-colors">
-                  Fiction
+                <Link href="/products?category=school-and-college-books" className="hover:text-gold transition-colors">
+                  School &amp; College Books
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=non-fiction" className="hover:text-gold transition-colors">
-                  Non-Fiction
+                <Link href="/products?category=holy-quran-and-tafseer" className="hover:text-gold transition-colors">
+                  Holy Quran &amp; Tafseer
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=urdu-literature" className="hover:text-gold transition-colors">
-                  Urdu Literature
+                <Link href="/products?category=hadith-and-islamic-books" className="hover:text-gold transition-colors">
+                  Hadith &amp; Islamic Books
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=islamic-books" className="hover:text-gold transition-colors">
-                  Islamic Books
+                <Link href="/products?category=school-stationery" className="hover:text-gold transition-colors">
+                  School Stationery
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=self-help-philosophy" className="hover:text-gold transition-colors">
-                  Self Help & Philosophy
+                <Link href="/products?category=office-supplies" className="hover:text-gold transition-colors">
+                  Office Supplies
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=childrens-books" className="hover:text-gold transition-colors">
-                  Children&apos;s Books
+                <Link href="/products?category=novels-fiction-and-poetry" className="hover:text-gold transition-colors">
+                  Novels, Fiction &amp; Poetry
+                </Link>
+              </li>
+              <li className="pt-1">
+                <Link href="/categories" className="hover:text-gold transition-colors text-xs font-semibold text-gold/90 flex items-center gap-1">
+                  View All Departments &rarr;
                 </Link>
               </li>
             </ul>

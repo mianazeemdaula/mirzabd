@@ -546,9 +546,9 @@ Guidelines:
 - Keep answers polite, brief, and highly informative.`,
     };
 
-    let messages = [systemPrompt, ...clientMessages];
+    const messages = [systemPrompt, ...clientMessages];
 
-    let loopLimit = 5;
+    const loopLimit = 5;
     let toolExecutionCount = 0;
     let keepLooping = true;
     let lastResponseJson: any = null;

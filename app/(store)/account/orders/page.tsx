@@ -39,7 +39,7 @@ export default async function OrdersHistoryPage() {
           <div>
             <h4 className="text-sm font-semibold text-ink">No orders found</h4>
             <p className="text-xs text-muted mt-1 max-w-[240px]">
-              You haven't placed any orders with us yet. Start browsing our books collection today!
+              You haven&apos;t placed any orders with us yet. Start browsing our books collection today!
             </p>
           </div>
           <Link href="/products">

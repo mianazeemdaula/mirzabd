@@ -8,7 +8,7 @@
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "index-vectors": "tsx scripts/index-vectors.ts",
-    "build": "prisma db push --accept-data-loss && prisma db seed && prisma generate && npm run index-vectors && next build",
+    "build": "prisma generate && npm run index-vectors && next build",
     "start": "node scripts/run.js start",
     "lint": "eslint"
   },

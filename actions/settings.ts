@@ -21,65 +21,11 @@ import {
   DEFAULT_CLOSED_DAYS,
   SOCIAL_LINKS,
 } from "@/lib/constants";
-
-export interface SocialLinks {
-  facebook: string;
-  instagram: string;
-  whatsapp: string;
-  twitter: string;
-  youtube: string;
-  linkedin: string;
-  tiktok: string;
-}
-
-export interface CustomSocialLink {
-  id: string;
-  platform: string;
-  url: string;
-}
-
-export interface StoreSettingsData {
-  storeName: string;
-  currency: string;
-  shippingFlatRate: number;
-  contactEmail: string;
-  contactPhone: string;     // Mobile / WhatsApp number
-  contactLandline: string;  // Telephone / Landline number
-  storeAddress: string;     // Physical address
-  storeCity: string;
-  storeCountry: string;
-  socialLinks: SocialLinks;
-  customSocialLinks: CustomSocialLink[];
-  openingTime: string;
-  closingTime: string;
-  operatingDays: string;
-  closedDays: string[];
-  closureNotice: string;
-}
-
-/**
- * Format a WhatsApp phone number or URL into a valid https://wa.me/... link
- */
-export function formatWhatsAppUrl(input?: string): string {
-  if (!input) return "";
-  const trimmed = input.trim();
-  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
-    return trimmed;
-  }
-  if (trimmed.startsWith("wa.me/")) {
-    return `https://${trimmed}`;
-  }
-  // Strip all non-digit characters
-  const digits = trimmed.replace(/\D/g, "");
-  if (!digits) return "";
-  if (digits.startsWith("0")) {
-    return `https://wa.me/92${digits.slice(1)}`;
-  }
-  if (digits.startsWith("92")) {
-    return `https://wa.me/${digits}`;
-  }
-  return `https://wa.me/${digits}`;
-}
+import type {
+  SocialLinks,
+  CustomSocialLink,
+  StoreSettingsData,
+} from "@/types/settings";
 
 /**
  * Fetch current store settings with reliable fallbacks

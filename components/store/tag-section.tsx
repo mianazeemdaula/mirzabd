@@ -117,7 +117,7 @@ export function TagSection({ title, subtitle, tags }: TagSectionProps) {
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <Tag size={32} className="text-faint mb-3" />
           <p className="text-muted text-sm">
-            No products tagged with "{activeTagData.name}" yet.
+            No products tagged with &quot;{activeTagData.name}&quot; yet.
           </p>
         </div>
       )}

@@ -33,7 +33,8 @@ import {
   DEFAULT_CLOSED_DAYS,
   SOCIAL_LINKS,
 } from "@/lib/constants";
-import { formatWhatsAppUrl, CustomSocialLink } from "@/actions/settings";
+import { formatWhatsAppUrl } from "@/lib/utils";
+import type { CustomSocialLink } from "@/types/settings";
 
 export default function ContactPage() {
   const [name, setName] = useState("");

@@ -37,6 +37,30 @@ export function slugify_safe(text: string): string {
 }
 
 /**
+ * Format a WhatsApp phone number or URL into a valid https://wa.me/... link
+ */
+export function formatWhatsAppUrl(input?: string): string {
+  if (!input) return "";
+  const trimmed = input.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  if (trimmed.startsWith("wa.me/")) {
+    return `https://${trimmed}`;
+  }
+  // Strip all non-digit characters
+  const digits = trimmed.replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("0")) {
+    return `https://wa.me/92${digits.slice(1)}`;
+  }
+  if (digits.startsWith("92")) {
+    return `https://wa.me/${digits}`;
+  }
+  return `https://wa.me/${digits}`;
+}
+
+/**
  * Truncate a string to a given length with ellipsis.
  */
 export function truncate(str: string, maxLength: number): string {

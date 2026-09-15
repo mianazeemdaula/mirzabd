@@ -1,4 +1,3 @@
-// app/(store)/categories/[slug]/page.tsx
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -7,6 +6,8 @@ import prisma from "@/lib/prisma";
 import { BookGrid } from "@/components/store/book-grid";
 import { CategoryStrip } from "@/components/store/category-strip";
 import { serializeProduct } from "@/lib/utils";
+import { PRODUCTS_PER_PAGE } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 import {
   ChevronRight,
   BookOpen,
@@ -16,10 +17,12 @@ import {
   Bookmark,
   Compass,
   Library,
+  SlidersHorizontal,
 } from "lucide-react";
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
@@ -85,8 +88,13 @@ function getCategoryFallbackIcon(name: string, slug: string) {
   return Library;
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: CategoryPageProps) {
   const { slug } = await params;
+  const { page: pageStr } = await searchParams;
+  const page = pageStr ? Math.max(1, parseInt(pageStr) || 1) : 1;
 
   // 1. Fetch category details
   const category = await prisma.category.findUnique({
@@ -97,18 +105,37 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  // 2. Fetch books under this category
-  const books = await prisma.product.findMany({
-    where: {
-      status: "publish",
-      categories: {
-        some: {
-          id: category.id,
+  // 2. Fetch books under this category with pagination
+  const skip = (page - 1) * PRODUCTS_PER_PAGE;
+  const take = PRODUCTS_PER_PAGE;
+
+  const [books, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      where: {
+        status: "publish",
+        categories: {
+          some: {
+            id: category.id,
+          },
         },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+      skip,
+      take,
+    }),
+    prisma.product.count({
+      where: {
+        status: "publish",
+        categories: {
+          some: {
+            id: category.id,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
 
   // 3. Fetch sibling categories for circular navigation strip
   const allCategories = await prisma.category.findMany({
@@ -124,8 +151,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     },
     orderBy: { displayOrder: "asc" },
   });
-
-  const FallbackIcon = getCategoryFallbackIcon(category.name, category.slug);
 
   return (
     <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
@@ -163,7 +188,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center text-gold">
-                  <FallbackIcon size={40} className="stroke-[1.6]" />
+                  {React.createElement(getCategoryFallbackIcon(category.name, category.slug), {
+                    size: 40,
+                    className: "stroke-[1.6]",
+                  })}
                 </div>
               )}
             </div>
@@ -176,7 +204,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 Department Collection
               </span>
               <span className="text-xs text-muted font-medium">
-                {books.length} {books.length === 1 ? "Product" : "Products"}
+                {totalCount} {totalCount === 1 ? "Product" : "Products"}
               </span>
             </div>
 
@@ -193,6 +221,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 {category.description}
               </p>
             )}
+
+            <div className="pt-2">
+              <Link
+                href={`/products?category=${category.slug}`}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-[var(--radius-btn)] bg-gold/15 border border-gold/30 text-gold hover:bg-gold hover:text-white transition-all text-xs font-semibold"
+              >
+                <SlidersHorizontal size={14} /> Filter &amp; Sort in Catalog
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -227,8 +264,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <div className="space-y-6 pt-4">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
-            Available Products ({books.length})
+            Available Products ({totalCount})
           </h2>
+          <span className="text-xs text-muted">
+            Showing {books.length} of {totalCount} items
+          </span>
         </div>
 
         {books.length === 0 ? (
@@ -243,6 +283,47 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         ) : (
           <BookGrid books={books.map(serializeProduct)} />
+        )}
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 pt-6 border-t border-border flex-wrap">
+            {page > 1 && (
+              <Link href={`/categories/${slug}?page=${page - 1}`}>
+                <Button variant="ghost" size="sm" className="h-9 px-3 rounded-[var(--radius-btn)] text-xs border border-border text-ink hover:border-gold cursor-pointer">
+                  Previous
+                </Button>
+              </Link>
+            )}
+
+            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+              const p = i + 1;
+              const isCurrent = p === page;
+              return (
+                <Link key={p} href={`/categories/${slug}?page=${p}`}>
+                  <Button
+                    variant={isCurrent ? "primary" : "ghost"}
+                    size="sm"
+                    className={`h-9 w-9 rounded-[var(--radius-btn)] text-xs font-semibold cursor-pointer ${
+                      isCurrent
+                        ? "bg-gold text-white font-bold shadow-md"
+                        : "border border-border text-ink hover:border-gold"
+                    }`}
+                  >
+                    {p}
+                  </Button>
+                </Link>
+              );
+            })}
+
+            {page < totalPages && (
+              <Link href={`/categories/${slug}?page=${page + 1}`}>
+                <Button variant="ghost" size="sm" className="h-9 px-3 rounded-[var(--radius-btn)] text-xs border border-border text-ink hover:border-gold cursor-pointer">
+                  Next
+                </Button>
+              </Link>
+            )}
+          </div>
         )}
       </div>
     </div>

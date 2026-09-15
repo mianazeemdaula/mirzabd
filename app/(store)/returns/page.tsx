@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { RefreshCcw, HelpCircle, AlertTriangle, MessageSquare } from "lucide-react";
 import { fadeUp, stagger } from "@/lib/motion";
 import { APP_CONTACT, APP_EMAIL, APP_ADDRESS } from "@/lib/constants";
-import { formatWhatsAppUrl } from "@/actions/settings";
+import { formatWhatsAppUrl } from "@/lib/utils";
 
 const conditions = [
   {

@@ -2,18 +2,19 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { spring, ease } from "@/lib/motion";
 
 export function Hero() {
-  // Sample product category showcase items with balanced heights
+  // Category showcase items linked directly to catalog filters
   const showcaseItems = [
-    { title: "Textbooks", color: "bg-sky-600", text: "text-white", height: "h-[250px]", rotate: -6, emoji: "📚" },
-    { title: "Notebooks", color: "bg-amber-500", text: "text-white", height: "h-[290px]", rotate: 4, emoji: "📓" },
-    { title: "Stationery", color: "bg-rose-500", text: "text-white", height: "h-[270px]", rotate: -3, emoji: "✏️" },
-    { title: "Sports", color: "bg-indigo-500", text: "text-white", height: "h-[285px]", rotate: 5, emoji: "⚽" },
-    { title: "Art Supplies", color: "bg-emerald-600", text: "text-white", height: "h-[310px]", rotate: -5, emoji: "🎨" },
+    { title: "Textbooks", slug: "school-and-college-books", color: "bg-sky-600", text: "text-white", height: "h-[250px]", rotate: -6, emoji: "📚" },
+    { title: "Notebooks", slug: "school-registers-and-account-books", color: "bg-amber-500", text: "text-white", height: "h-[290px]", rotate: 4, emoji: "📓" },
+    { title: "Stationery", slug: "school-stationery", color: "bg-rose-500", text: "text-white", height: "h-[270px]", rotate: -3, emoji: "✏️" },
+    { title: "Bags", slug: "school-and-college-bags", color: "bg-indigo-500", text: "text-white", height: "h-[285px]", rotate: 5, emoji: "🎒" },
+    { title: "Art Supplies", slug: "art-materials", color: "bg-emerald-600", text: "text-white", height: "h-[310px]", rotate: -5, emoji: "🎨" },
   ];
 
   return (
@@ -63,57 +64,58 @@ export function Hero() {
             className="flex items-end gap-2 select-none"
           >
             {showcaseItems.map((item, idx) => (
-              <motion.div
-                key={idx}
-                variants={{
-                  hidden: { y: 120, opacity: 0, rotate: 0 },
-                  visible: {
-                    y: 0,
-                    opacity: 1,
-                    rotate: item.rotate,
-                    transition: {
-                      y: spring.gentle,
-                      opacity: { duration: 0.4 },
+              <Link key={idx} href={`/products?category=${item.slug}`} className="block focus:outline-none">
+                <motion.div
+                  variants={{
+                    hidden: { y: 120, opacity: 0, rotate: 0 },
+                    visible: {
+                      y: 0,
+                      opacity: 1,
+                      rotate: item.rotate,
+                      transition: {
+                        y: spring.gentle,
+                        opacity: { duration: 0.4 },
+                      },
                     },
-                  },
-                }}
-                whileHover={{
-                  y: -20,
-                  rotate: 0,
-                  transition: { ...spring.snappy },
-                }}
-                className={`relative w-13 sm:w-15 ${item.height} ${item.color} ${item.text} rounded-xl shadow-card flex flex-col justify-between py-5 px-2.5 cursor-pointer border border-white/20`}
-                style={{
-                  transformOrigin: "bottom center",
-                  boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
-                }}
-              >
-                {/* Top detail */}
-                <div className="flex justify-center text-xl">
-                  {item.emoji}
-                </div>
-
-                {/* Vertical Title */}
-                <div
-                  className="font-display font-bold text-center text-xs sm:text-sm tracking-wider select-none my-auto leading-none"
+                  }}
+                  whileHover={{
+                    y: -20,
+                    rotate: 0,
+                    transition: { ...spring.snappy },
+                  }}
+                  className={`relative w-13 sm:w-15 ${item.height} ${item.color} ${item.text} rounded-xl shadow-card flex flex-col justify-between py-5 px-2.5 cursor-pointer border border-white/20`}
                   style={{
-                    writingMode: "vertical-rl",
-                    textOrientation: "mixed",
-                    transform: "rotate(180deg)",
-                    textShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                    transformOrigin: "bottom center",
+                    boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
                   }}
                 >
-                  {item.title}
-                </div>
+                  {/* Top detail */}
+                  <div className="flex justify-center text-xl">
+                    {item.emoji}
+                  </div>
 
-                {/* Bottom accent dot */}
-                <div className="flex justify-center">
-                  <div className="w-2 h-2 rounded-full bg-white/40" />
-                </div>
+                  {/* Vertical Title */}
+                  <div
+                    className="font-display font-bold text-center text-xs sm:text-sm tracking-wider select-none my-auto leading-none"
+                    style={{
+                      writingMode: "vertical-rl",
+                      textOrientation: "mixed",
+                      transform: "rotate(180deg)",
+                      textShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                    }}
+                  >
+                    {item.title}
+                  </div>
 
-                {/* Bookmark ribbon */}
-                <div className="absolute top-0 right-2.5 w-1 h-7 bg-white/50 rounded-b shadow-inner" />
-              </motion.div>
+                  {/* Bottom accent dot */}
+                  <div className="flex justify-center">
+                    <div className="w-2 h-2 rounded-full bg-white/40" />
+                  </div>
+
+                  {/* Bookmark ribbon */}
+                  <div className="absolute top-0 right-2.5 w-1 h-7 bg-white/50 rounded-b shadow-inner" />
+                </motion.div>
+              </Link>
             ))}
           </motion.div>
         </div>

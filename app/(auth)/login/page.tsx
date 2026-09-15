@@ -101,7 +101,7 @@ function LoginForm() {
 
       {/* Alternative links */}
       <div className="text-center text-xs space-y-1">
-        <span className="text-muted">Don't have an account? </span>
+        <span className="text-muted">Don&apos;t have an account? </span>
         <Link href="/register" className="text-gold font-semibold hover:underline">
           Create an account
         </Link>

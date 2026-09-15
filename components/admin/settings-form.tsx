@@ -27,7 +27,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WhatsAppIcon, TikTokIcon, XTwitterIcon } from "@/components/ui/social-icons";
-import { saveStoreSettings, StoreSettingsData, CustomSocialLink, formatWhatsAppUrl } from "@/actions/settings";
+import { saveStoreSettings } from "@/actions/settings";
+import type { StoreSettingsData, CustomSocialLink } from "@/types/settings";
+import { formatWhatsAppUrl } from "@/lib/utils";
 
 interface SettingsFormProps {
   initialSettings: StoreSettingsData;
