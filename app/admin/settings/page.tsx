@@ -1,46 +1,15 @@
 import React from "react";
-import prisma from "@/lib/prisma";
-import { Settings, Save, AlertCircle, Bot, Clock, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { saveStoreSettings } from "@/actions/settings";
-import {
-  APP_NAME,
-  APP_CONTACT,
-  APP_EMAIL,
-  APP_ADDRESS,
-  DEFAULT_CURRENCY,
-  DEFAULT_OPENING_TIME,
-  DEFAULT_CLOSING_TIME,
-  DEFAULT_OPERATING_DAYS,
-  DEFAULT_CLOSED_DAYS,
-} from "@/lib/constants";
+import { Settings } from "lucide-react";
+import { getStoreSettings } from "@/actions/settings";
+import { SettingsForm } from "@/components/admin/settings-form";
 import fs from "fs";
 import path from "path";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
-  // 1. Fetch settings from database
-  const settingsRecord = await prisma.setting.findUnique({
-    where: { key: "general_settings" },
-  });
+  const settings = await getStoreSettings();
 
-  const settings = (settingsRecord?.value as any) || {
-    storeName: APP_NAME,
-    currency: DEFAULT_CURRENCY,
-    shippingFlatRate: 0,
-    contactEmail: APP_EMAIL,
-    contactPhone: APP_CONTACT,
-    storeAddress: APP_ADDRESS,
-    openingTime: DEFAULT_OPENING_TIME,
-    closingTime: DEFAULT_CLOSING_TIME,
-    operatingDays: DEFAULT_OPERATING_DAYS,
-    closedDays: DEFAULT_CLOSED_DAYS,
-    closureNotice: "",
-  };
-
-  // 2. Fetch chatbot-info.md from filesystem
   let chatbotInfoContent = "";
   try {
     const kbPath = path.join(process.cwd(), "chatbot-info.md");
@@ -52,235 +21,21 @@ export default async function AdminSettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink flex items-center gap-2">
             <Settings size={28} className="text-gold" />
-            General Settings
+            Store Configuration & Social Settings
           </h1>
-          <p className="text-xs text-muted">Configure store branding, currency units, flat delivery shipping costs, shop locations, and the AI chatbot knowledge base.</p>
-        </div>
-      </div>
-
-      <div className="max-w-4xl bg-surface border border-border p-6 rounded-[var(--radius-card)] space-y-6 shadow-sm">
-        
-        {/* Info Box */}
-        <div className="flex gap-3 bg-gold/5 border border-gold/20 p-4 rounded-lg text-xs leading-relaxed text-gold">
-          <AlertCircle size={16} className="flex-shrink-0" />
-          <p>
-            These properties define global storefront metadata. Make sure to double check contact details, flat shipping rates, and the AI chatbot knowledge base to avoid checkout errors and customer support mismatches.
+          <p className="text-xs text-muted">
+            Configure store branding, contact phone numbers (mobile & landline), physical address, social media links, operating schedule, and AI chatbot knowledge base.
           </p>
         </div>
-
-        <form action={saveStoreSettings} className="space-y-4">
-          
-          {/* Store Name */}
-          <Input
-            label="Store Branding Name *"
-            name="storeName"
-            defaultValue={settings.storeName}
-            placeholder="Mirza Book Depot"
-            required
-          />
-
-          {/* Grid fields */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Currency */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted">
-                Shop Currency
-              </label>
-              <select
-                name="currency"
-                defaultValue={settings.currency}
-                className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] h-10 px-3 focus:outline-none focus:border-gold cursor-pointer"
-              >
-                <option value="PKR">Pakistani Rupee (PKR)</option>
-                <option value="USD">United States Dollar (USD)</option>
-                <option value="EUR">Euro (EUR)</option>
-              </select>
-            </div>
-
-            {/* Shipping rate */}
-            <Input
-              label="Flat Shipping Cost (PKR) *"
-              name="shippingFlatRate"
-              type="number"
-              defaultValue={String(settings.shippingFlatRate)}
-              placeholder="0"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            {/* Contact Email */}
-            <Input
-              label="Store Contact Email *"
-              name="contactEmail"
-              type="email"
-              defaultValue={settings.contactEmail}
-              placeholder="info@mirzabookdepot.com"
-              required
-            />
-
-            {/* Contact Phone */}
-            <Input
-              label="Store Contact Phone *"
-              name="contactPhone"
-              defaultValue={settings.contactPhone}
-              placeholder="03336566000"
-              required
-            />
-          </div>
-
-          {/* Shop Address */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-muted">
-              Store Physical Address
-            </label>
-            <textarea
-              name="storeAddress"
-              defaultValue={settings.storeAddress}
-              placeholder="Allah o Akbar Chowk, Mirza Plaza, Depalpur"
-              rows={3}
-              required
-              className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] p-3 focus:outline-none focus:border-gold placeholder:text-faint resize-none"
-            />
-          </div>
-
-          {/* Store Timings & Closed Days Section */}
-          <div className="border-t border-border/60 pt-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Clock size={22} className="text-gold" />
-                <h3 className="font-display text-lg font-bold text-ink">Store Timings & Operational Schedule</h3>
-              </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gold/10 text-gold border border-gold/20">
-                Operating Schedule
-              </span>
-            </div>
-            <p className="text-xs text-muted leading-relaxed">
-              Configure daily opening and closing hours, days of operation, weekly closed days, and optional holiday notices. These settings are updated across your storefront, contact page, and AI chatbot.
-            </p>
-
-            {/* Timings Inputs */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-              <Input
-                label="Daily Opening Time *"
-                name="openingTime"
-                defaultValue={settings.openingTime || "07:00 AM"}
-                placeholder="07:00 AM"
-                required
-              />
-              <Input
-                label="Daily Closing Time *"
-                name="closingTime"
-                defaultValue={settings.closingTime || "09:00 PM"}
-                placeholder="09:00 PM"
-                required
-              />
-              <Input
-                label="Operating Days Summary *"
-                name="operatingDays"
-                defaultValue={settings.operatingDays || "Saturday – Thursday"}
-                placeholder="Saturday – Thursday"
-                required
-              />
-            </div>
-
-            {/* Closed Days Multi-Select / Checkbox Grid */}
-            <div className="space-y-2 pt-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
-                <Calendar size={14} className="text-gold" />
-                Weekly Closed Days (Select all that apply)
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
-                {[
-                  { key: "Monday", label: "Mon" },
-                  { key: "Tuesday", label: "Tue" },
-                  { key: "Wednesday", label: "Wed" },
-                  { key: "Thursday", label: "Thu" },
-                  { key: "Friday", label: "Fri" },
-                  { key: "Saturday", label: "Sat" },
-                  { key: "Sunday", label: "Sun" },
-                ].map((day) => {
-                  const isClosed = Array.isArray(settings.closedDays)
-                    ? settings.closedDays.includes(day.key)
-                    : day.key === "Friday";
-                  return (
-                    <label
-                      key={day.key}
-                      className="relative flex items-center justify-between p-3 rounded-lg border border-border bg-elevated/60 hover:bg-elevated cursor-pointer transition-colors group has-[:checked]:border-gold/60 has-[:checked]:bg-gold/10"
-                    >
-                      <span className="text-xs font-semibold text-ink group-hover:text-gold transition-colors">
-                        {day.key}
-                      </span>
-                      <input
-                        type="checkbox"
-                        name="closedDays"
-                        value={day.key}
-                        defaultChecked={isClosed}
-                        className="w-4 h-4 rounded border-border text-gold focus:ring-gold/30 bg-surface cursor-pointer"
-                      />
-                    </label>
-                  );
-                })}
-              </div>
-              <p className="text-[11px] text-muted italic">
-                Checked days will be marked as "Closed" across customer pages and communicated to visitors by the AI assistant.
-              </p>
-            </div>
-
-            {/* Optional Special Closure Notice */}
-            <div className="space-y-1.5 pt-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted">
-                Special Holiday / Temporary Closure Notice (Optional)
-              </label>
-              <textarea
-                name="closureNotice"
-                defaultValue={settings.closureNotice || ""}
-                placeholder="e.g. Closed on Friday for Jumu'ah prayer. Re-opening Saturday at 7:00 AM. Or: Special holiday timings apply."
-                rows={2}
-                className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] p-3 focus:outline-none focus:border-gold placeholder:text-faint resize-none"
-              />
-            </div>
-          </div>
-
-          {/* Chatbot Knowledge Base */}
-          <div className="border-t border-border/60 pt-6 space-y-4">
-            <div className="flex items-center gap-2">
-              <Bot size={22} className="text-gold" />
-              <h3 className="font-display text-lg font-bold text-ink">Chatbot Knowledge Base</h3>
-            </div>
-            <p className="text-xs text-muted leading-relaxed">
-              This markdown document provides context to the AI Assistant. Use it to document store information, operating hours, delivery timelines, return policies, contact methods, and general FAQs. The chatbot uses this context directly to respond to customer inquiries.
-            </p>
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted">
-                Knowledge Base Content (Markdown Format)
-              </label>
-              <textarea
-                name="chatbotInfo"
-                defaultValue={chatbotInfoContent}
-                placeholder="# Store Policies..."
-                rows={14}
-                className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] p-3 focus:outline-none focus:border-gold placeholder:text-faint font-mono leading-relaxed resize-y"
-              />
-            </div>
-          </div>
-
-          {/* Action button */}
-          <div className="pt-4 border-t border-border/60 flex justify-end">
-            <Button type="submit" variant="primary" className="px-6 h-11 rounded-[var(--radius-btn)] font-semibold flex items-center gap-1.5 cursor-pointer">
-              <Save size={16} />
-              Save Configuration Settings
-            </Button>
-          </div>
-
-        </form>
       </div>
+
+      <SettingsForm initialSettings={settings} initialChatbotInfo={chatbotInfoContent} />
     </div>
   );
 }

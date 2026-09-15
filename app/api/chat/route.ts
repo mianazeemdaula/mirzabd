@@ -14,6 +14,7 @@ import {
   DEFAULT_CLOSING_TIME,
   DEFAULT_OPERATING_DAYS,
   DEFAULT_CLOSED_DAYS,
+  SOCIAL_LINKS,
 } from "@/lib/constants";
 
 // Ensure the endpoint is dynamic and doesn't cache
@@ -270,9 +271,14 @@ async function getStoreInfo() {
       contact: {
         email: gen.contactEmail || APP_EMAIL,
         phone: gen.contactPhone || APP_CONTACT,
-        landline: APP_LANDLINE,
+        landline: gen.contactLandline || APP_LANDLINE,
         address: gen.storeAddress || APP_ADDRESS,
         hours: `${operatingDays}: ${openingTime} – ${closingTime} (PST). ${closedStr}.`,
+        socialLinks: gen.socialLinks || {
+          facebook: SOCIAL_LINKS.facebook,
+          instagram: SOCIAL_LINKS.instagram,
+          whatsapp: SOCIAL_LINKS.whatsapp,
+        },
       },
       settings: settingsMap,
     };

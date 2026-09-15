@@ -3,10 +3,20 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Mail, Phone, MapPin, Facebook, Instagram, Send, Store, Clock } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Globe,
+  Send,
+  Clock,
+} from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { WhatsAppIcon, TikTokIcon, XTwitterIcon } from "@/components/ui/social-icons";
 import {
   APP_NAME,
   APP_TAGLINE,
@@ -18,33 +28,68 @@ import {
   DEFAULT_CLOSING_TIME,
   DEFAULT_OPERATING_DAYS,
   DEFAULT_CLOSED_DAYS,
+  SOCIAL_LINKS,
 } from "@/lib/constants";
+import { formatWhatsAppUrl, CustomSocialLink } from "@/actions/settings";
 import { Logo } from "@/components/store/logo";
 
 export function Footer() {
   const [email, setEmail] = useState("");
-  const [schedule, setSchedule] = useState<{
-    openingTime: string;
-    closingTime: string;
-    operatingDays: string;
-    closedDays: string[];
-  }>({
-    openingTime: DEFAULT_OPENING_TIME,
-    closingTime: DEFAULT_CLOSING_TIME,
-    operatingDays: DEFAULT_OPERATING_DAYS,
-    closedDays: DEFAULT_CLOSED_DAYS,
+  const [storeInfo, setStoreInfo] = useState({
+    storeName: APP_NAME,
+    storeAddress: APP_ADDRESS,
+    contactPhone: APP_CONTACT,
+    contactLandline: APP_LANDLINE,
+    contactEmail: APP_EMAIL,
+    socialLinks: {
+      facebook: SOCIAL_LINKS.facebook,
+      instagram: SOCIAL_LINKS.instagram,
+      whatsapp: SOCIAL_LINKS.whatsapp,
+      twitter: "",
+      youtube: "",
+      linkedin: "",
+      tiktok: "",
+    },
+    customSocialLinks: [] as CustomSocialLink[],
+    schedule: {
+      openingTime: DEFAULT_OPENING_TIME,
+      closingTime: DEFAULT_CLOSING_TIME,
+      operatingDays: DEFAULT_OPERATING_DAYS,
+      closedDays: DEFAULT_CLOSED_DAYS,
+    },
   });
 
   useEffect(() => {
     fetch("/api/store/settings")
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.openingTime) {
-          setSchedule({
-            openingTime: data.openingTime || DEFAULT_OPENING_TIME,
-            closingTime: data.closingTime || DEFAULT_CLOSING_TIME,
-            operatingDays: data.operatingDays || DEFAULT_OPERATING_DAYS,
-            closedDays: Array.isArray(data.closedDays) ? data.closedDays : DEFAULT_CLOSED_DAYS,
+        if (data && !data.error) {
+          setStoreInfo({
+            storeName: data.storeName || APP_NAME,
+            storeAddress: data.storeAddress || APP_ADDRESS,
+            contactPhone: data.contactPhone || APP_CONTACT,
+            contactLandline: data.contactLandline || APP_LANDLINE,
+            contactEmail: data.contactEmail || APP_EMAIL,
+            socialLinks: {
+              facebook: data.socialLinks?.facebook ?? SOCIAL_LINKS.facebook,
+              instagram: data.socialLinks?.instagram ?? SOCIAL_LINKS.instagram,
+              whatsapp: data.socialLinks?.whatsapp ?? SOCIAL_LINKS.whatsapp,
+              twitter: data.socialLinks?.twitter || "",
+              youtube: data.socialLinks?.youtube || "",
+              linkedin: data.socialLinks?.linkedin || "",
+              tiktok: data.socialLinks?.tiktok || "",
+            },
+            customSocialLinks: Array.isArray(data.customSocialLinks)
+              ? data.customSocialLinks
+              : [],
+            schedule: {
+              openingTime: data.openingTime || DEFAULT_OPENING_TIME,
+              closingTime: data.closingTime || DEFAULT_CLOSING_TIME,
+              operatingDays: data.operatingDays || DEFAULT_OPERATING_DAYS,
+              closedDays: Array.isArray(data.closedDays)
+                ? data.closedDays
+                : DEFAULT_CLOSED_DAYS,
+            },
           });
         }
       })
@@ -57,40 +102,65 @@ export function Footer() {
       toast.error("Please enter a valid email address");
       return;
     }
-    toast.success("Thank you for subscribing to Mirza Book Depot newsletter!");
+    toast.success(`Thank you for subscribing to ${storeInfo.storeName} newsletter!`);
     setEmail("");
   };
+
+  const { socialLinks, customSocialLinks, schedule } = storeInfo;
 
   return (
     <footer className="w-full bg-surface border-t border-border mt-auto">
       <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Column 1: Brand details */}
+          {/* Column 1: Brand & Contact Info */}
           <div className="space-y-4">
             <Logo size="md" href="/" />
             <p className="text-sm font-medium italic text-gold">{APP_TAGLINE}</p>
+
             <div className="space-y-3 pt-2 text-sm text-muted">
+              {/* Address */}
               <div className="flex items-start gap-2">
                 <MapPin size={16} className="mt-1 flex-shrink-0 text-gold" />
-                <span>{APP_ADDRESS}</span>
+                <span className="leading-relaxed">{storeInfo.storeAddress}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone size={16} className="flex-shrink-0 text-gold" />
-                <div className="flex flex-col">
-                  <a href={`tel:${APP_CONTACT}`} className="hover:text-gold transition-colors">
-                    {APP_CONTACT} (Mobile)
-                  </a>
-                  <a href={`tel:${APP_LANDLINE}`} className="hover:text-gold transition-colors">
-                    {APP_LANDLINE} (Landline)
-                  </a>
+
+              {/* Phone Numbers: Mobile & Landline */}
+              <div className="flex items-start gap-2">
+                <Phone size={16} className="mt-0.5 flex-shrink-0 text-gold" />
+                <div className="flex flex-col space-y-0.5">
+                  {storeInfo.contactPhone && (
+                    <a
+                      href={`tel:${storeInfo.contactPhone}`}
+                      className="hover:text-gold transition-colors"
+                      title="Call Mobile / WhatsApp"
+                    >
+                      {storeInfo.contactPhone} <span className="text-xs text-muted/70">(Mobile)</span>
+                    </a>
+                  )}
+                  {storeInfo.contactLandline && (
+                    <a
+                      href={`tel:${storeInfo.contactLandline}`}
+                      className="hover:text-gold transition-colors"
+                      title="Call Office Landline"
+                    >
+                      {storeInfo.contactLandline} <span className="text-xs text-muted/70">(Landline)</span>
+                    </a>
+                  )}
                 </div>
               </div>
+
+              {/* Email */}
               <div className="flex items-center gap-2">
                 <Mail size={16} className="flex-shrink-0 text-gold" />
-                <a href={`mailto:${APP_EMAIL}`} className="hover:text-gold transition-colors">
-                  {APP_EMAIL}
+                <a
+                  href={`mailto:${storeInfo.contactEmail}`}
+                  className="hover:text-gold transition-colors break-all"
+                >
+                  {storeInfo.contactEmail}
                 </a>
               </div>
+
+              {/* Hours / Schedule */}
               <div className="flex items-start gap-2">
                 <Clock size={16} className="mt-1 flex-shrink-0 text-gold" />
                 <div className="flex flex-col text-xs leading-relaxed">
@@ -107,24 +177,126 @@ export function Footer() {
                 </div>
               </div>
             </div>
-            {/* Social Icons */}
-            <div className="flex items-center gap-4 pt-2">
-              <a
-                href="https://facebook.com/mirzabookdepot"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-gold transition-colors p-1.5 rounded-full bg-white"
-              >
-                <Facebook size={18} />
-              </a>
-              <a
-                href="https://instagram.com/mirzabookdepot"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-gold transition-colors p-1.5 rounded-full bg-white"
-              >
-                <Instagram size={18} />
-              </a>
+
+            {/* Dynamic Social Icons Strip */}
+            <div className="pt-2">
+              <span className="text-[11px] uppercase font-bold tracking-wider text-muted block mb-2">
+                Connect With Us
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {/* WhatsApp */}
+                {socialLinks.whatsapp && (
+                  <a
+                    href={formatWhatsAppUrl(socialLinks.whatsapp)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-white transition-transform hover:scale-110 p-2 rounded-full bg-[#25D366] shadow-sm flex items-center justify-center"
+                    aria-label="Chat on WhatsApp"
+                    title="WhatsApp"
+                  >
+                    <WhatsAppIcon size={16} />
+                  </a>
+                )}
+
+                {/* Facebook */}
+                {socialLinks.facebook && (
+                  <a
+                    href={socialLinks.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-white transition-transform hover:scale-110 p-2 rounded-full bg-[#1877F2] shadow-sm flex items-center justify-center"
+                    aria-label="Mirza Book Depot on Facebook"
+                    title="Facebook"
+                  >
+                    <Facebook size={16} />
+                  </a>
+                )}
+
+                {/* Instagram */}
+                {socialLinks.instagram && (
+                  <a
+                    href={socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-white transition-transform hover:scale-110 p-2 rounded-full bg-gradient-to-tr from-[#FD1D1D] via-[#E1306C] to-[#C13584] shadow-sm flex items-center justify-center"
+                    aria-label="Mirza Book Depot on Instagram"
+                    title="Instagram"
+                  >
+                    <Instagram size={16} />
+                  </a>
+                )}
+
+                {/* X / Twitter */}
+                {socialLinks.twitter && (
+                  <a
+                    href={socialLinks.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink hover:text-gold transition-transform hover:scale-110 p-2 rounded-full bg-elevated border border-border shadow-sm flex items-center justify-center"
+                    aria-label="Follow us on X"
+                    title="X / Twitter"
+                  >
+                    <XTwitterIcon size={16} />
+                  </a>
+                )}
+
+                {/* YouTube */}
+                {socialLinks.youtube && (
+                  <a
+                    href={socialLinks.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-white transition-transform hover:scale-110 p-2 rounded-full bg-[#FF0000] shadow-sm flex items-center justify-center"
+                    aria-label="Watch us on YouTube"
+                    title="YouTube"
+                  >
+                    <Youtube size={16} />
+                  </a>
+                )}
+
+                {/* LinkedIn */}
+                {socialLinks.linkedin && (
+                  <a
+                    href={socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-white transition-transform hover:scale-110 p-2 rounded-full bg-[#0A66C2] shadow-sm flex items-center justify-center"
+                    aria-label="Connect on LinkedIn"
+                    title="LinkedIn"
+                  >
+                    <Linkedin size={16} />
+                  </a>
+                )}
+
+                {/* TikTok */}
+                {socialLinks.tiktok && (
+                  <a
+                    href={socialLinks.tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink hover:text-teal-400 transition-transform hover:scale-110 p-2 rounded-full bg-elevated border border-border shadow-sm flex items-center justify-center"
+                    aria-label="Follow us on TikTok"
+                    title="TikTok"
+                  >
+                    <TikTokIcon size={16} />
+                  </a>
+                )}
+
+                {/* Custom Links */}
+                {customSocialLinks.map((custom) => (
+                  <a
+                    key={custom.id}
+                    href={custom.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink hover:text-gold transition-transform hover:scale-110 p-2 rounded-full bg-elevated border border-border shadow-sm flex items-center justify-center"
+                    aria-label={custom.platform}
+                    title={custom.platform}
+                  >
+                    <Globe size={16} />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -157,6 +329,11 @@ export function Footer() {
               <li>
                 <Link href="/shipping" className="hover:text-gold transition-colors">
                   Shipping & Delivery
+                </Link>
+              </li>
+              <li>
+                <Link href="/returns" className="hover:text-gold transition-colors">
+                  Return Policy
                 </Link>
               </li>
             </ul>
@@ -195,7 +372,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/products?category=childrens-books" className="hover:text-gold transition-colors">
-                  Children's Books
+                  Children&apos;s Books
                 </Link>
               </li>
             </ul>
@@ -233,7 +410,7 @@ export function Footer() {
         <hr className="my-8 border-border" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-muted gap-4">
-          <p>© {new Date().getFullYear()} {APP_NAME}. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {storeInfo.storeName}. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-gold transition-colors">
               Privacy Policy

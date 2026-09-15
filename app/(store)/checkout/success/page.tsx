@@ -1,11 +1,12 @@
 // app/(store)/checkout/success/page.tsx
 import React from "react";
 import Link from "next/link";
-import { CheckCircle2, ShoppingBag, Phone, MapPin } from "lucide-react";
+import { CheckCircle2, Phone, MapPin } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { formatPKR } from "@/lib/utils";
-import { APP_CONTACT, APP_NAME } from "@/lib/constants";
+import { APP_NAME } from "@/lib/constants";
+import { getStoreSettings } from "@/actions/settings";
 
 interface SuccessPageProps {
   searchParams: Promise<{ order_id?: string }>;
@@ -14,7 +15,10 @@ interface SuccessPageProps {
 export const dynamic = "force-dynamic";
 
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
-  const params = await searchParams;
+  const [params, settings] = await Promise.all([
+    searchParams,
+    getStoreSettings(),
+  ]);
   const orderId = params.order_id;
 
   // Fetch order details if ID is present
@@ -27,8 +31,12 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
       })
     : null;
 
-  const billingAddress = order?.billingAddress ? (order.billingAddress as any) : null;
-  const shippingAddress = order?.shippingAddress ? (order.shippingAddress as any) : null;
+  const billingAddress = order?.billingAddress && typeof order.billingAddress === "object"
+    ? (order.billingAddress as Record<string, string | undefined>)
+    : null;
+  const shippingAddress = order?.shippingAddress && typeof order.shippingAddress === "object"
+    ? (order.shippingAddress as Record<string, string | undefined>)
+    : null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 text-center space-y-8">
@@ -123,9 +131,9 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
       {/* Support strip */}
       <div className="p-4 bg-elevated border border-border rounded-[var(--radius-card)] flex flex-col sm:flex-row items-center justify-center gap-4 text-xs max-w-md mx-auto">
         <span className="text-muted">Need to modify shipping details or cancel order?</span>
-        <a href={`tel:${APP_CONTACT}`} className="font-bold text-gold hover:underline inline-flex items-center gap-1">
+        <a href={`tel:${settings.contactPhone}`} className="font-bold text-gold hover:underline inline-flex items-center gap-1">
           <Phone size={12} />
-          Call Support: {APP_CONTACT}
+          Call Support: {settings.contactPhone}
         </a>
       </div>
 

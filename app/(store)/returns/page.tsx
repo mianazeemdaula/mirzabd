@@ -1,11 +1,12 @@
 // app/(store)/returns/page.tsx
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RefreshCcw, HelpCircle, CheckCircle, AlertTriangle, MessageSquare } from "lucide-react";
+import { RefreshCcw, HelpCircle, AlertTriangle, MessageSquare } from "lucide-react";
 import { fadeUp, stagger } from "@/lib/motion";
-import { APP_CONTACT, APP_EMAIL } from "@/lib/constants";
+import { APP_CONTACT, APP_EMAIL, APP_ADDRESS } from "@/lib/constants";
+import { formatWhatsAppUrl } from "@/actions/settings";
 
 const conditions = [
   {
@@ -23,6 +24,31 @@ const conditions = [
 ];
 
 export default function ReturnPolicyPage() {
+  const [info, setInfo] = useState({
+    contactPhone: APP_CONTACT,
+    contactEmail: APP_EMAIL,
+    storeAddress: APP_ADDRESS,
+    whatsapp: APP_CONTACT,
+  });
+
+  useEffect(() => {
+    fetch("/api/store/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setInfo({
+            contactPhone: data.contactPhone || APP_CONTACT,
+            contactEmail: data.contactEmail || APP_EMAIL,
+            storeAddress: data.storeAddress || APP_ADDRESS,
+            whatsapp: data.socialLinks?.whatsapp || data.contactPhone || APP_CONTACT,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const whatsappLink = formatWhatsAppUrl(info.whatsapp);
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 space-y-12">
       {/* Page Header */}
@@ -88,7 +114,23 @@ export default function ReturnPolicyPage() {
               1
             </div>
             <p className="text-muted leading-relaxed mt-0.5">
-              Contact our customer support team via WhatsApp at <strong className="text-gold">{APP_CONTACT}</strong> or email us at <strong className="text-ink">{APP_EMAIL}</strong> within 7 days of receiving your package. Share your order number and photos/videos of the defect or book.
+              Contact our customer support team via WhatsApp at{" "}
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold hover:underline font-bold"
+              >
+                {info.contactPhone}
+              </a>{" "}
+              or email us at{" "}
+              <a
+                href={`mailto:${info.contactEmail}`}
+                className="text-ink hover:text-gold transition-colors font-bold"
+              >
+                {info.contactEmail}
+              </a>{" "}
+              within 7 days of receiving your package. Share your order number and photos/videos of the defect or book.
             </p>
           </div>
           <div className="flex gap-4 items-start text-xs sm:text-sm">
@@ -96,7 +138,8 @@ export default function ReturnPolicyPage() {
               2
             </div>
             <p className="text-muted leading-relaxed mt-0.5">
-              Once approved, package the books securely in the original packaging. Send them to our distribution depot: <strong>Allah o Akbar Chowk, Mirza Plaza, Depalpur, Pakistan</strong>.
+              Once approved, package the books securely in the original packaging. Send them to our distribution depot:{" "}
+              <strong className="text-ink">{info.storeAddress}</strong>.
             </p>
           </div>
           <div className="flex gap-4 items-start text-xs sm:text-sm">

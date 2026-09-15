@@ -3,32 +3,82 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import fs from "fs";
 import path from "path";
 import {
   APP_NAME,
   APP_CONTACT,
+  APP_LANDLINE,
   APP_EMAIL,
   APP_ADDRESS,
+  APP_CITY,
+  APP_COUNTRY,
   DEFAULT_CURRENCY,
   DEFAULT_OPENING_TIME,
   DEFAULT_CLOSING_TIME,
   DEFAULT_OPERATING_DAYS,
   DEFAULT_CLOSED_DAYS,
+  SOCIAL_LINKS,
 } from "@/lib/constants";
+
+export interface SocialLinks {
+  facebook: string;
+  instagram: string;
+  whatsapp: string;
+  twitter: string;
+  youtube: string;
+  linkedin: string;
+  tiktok: string;
+}
+
+export interface CustomSocialLink {
+  id: string;
+  platform: string;
+  url: string;
+}
 
 export interface StoreSettingsData {
   storeName: string;
   currency: string;
   shippingFlatRate: number;
   contactEmail: string;
-  contactPhone: string;
-  storeAddress: string;
+  contactPhone: string;     // Mobile / WhatsApp number
+  contactLandline: string;  // Telephone / Landline number
+  storeAddress: string;     // Physical address
+  storeCity: string;
+  storeCountry: string;
+  socialLinks: SocialLinks;
+  customSocialLinks: CustomSocialLink[];
   openingTime: string;
   closingTime: string;
   operatingDays: string;
   closedDays: string[];
   closureNotice: string;
+}
+
+/**
+ * Format a WhatsApp phone number or URL into a valid https://wa.me/... link
+ */
+export function formatWhatsAppUrl(input?: string): string {
+  if (!input) return "";
+  const trimmed = input.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  if (trimmed.startsWith("wa.me/")) {
+    return `https://${trimmed}`;
+  }
+  // Strip all non-digit characters
+  const digits = trimmed.replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("0")) {
+    return `https://wa.me/92${digits.slice(1)}`;
+  }
+  if (digits.startsWith("92")) {
+    return `https://wa.me/${digits}`;
+  }
+  return `https://wa.me/${digits}`;
 }
 
 /**
@@ -39,30 +89,102 @@ export async function getStoreSettings(): Promise<StoreSettingsData> {
     const record = await prisma.setting.findUnique({
       where: { key: "general_settings" },
     });
-    const val = record?.value as any;
+    const val = (record?.value && typeof record.value === "object"
+      ? (record.value as Record<string, unknown>)
+      : {}) as Record<string, unknown>;
+    const sl = (val.socialLinks && typeof val.socialLinks === "object"
+      ? (val.socialLinks as Record<string, unknown>)
+      : {}) as Record<string, unknown>;
+
+    const socialLinks: SocialLinks = {
+      facebook:
+        typeof sl.facebook === "string"
+          ? sl.facebook
+          : typeof val.socialFacebook === "string"
+          ? val.socialFacebook
+          : SOCIAL_LINKS.facebook,
+      instagram:
+        typeof sl.instagram === "string"
+          ? sl.instagram
+          : typeof val.socialInstagram === "string"
+          ? val.socialInstagram
+          : SOCIAL_LINKS.instagram,
+      whatsapp:
+        typeof sl.whatsapp === "string"
+          ? sl.whatsapp
+          : typeof val.socialWhatsapp === "string"
+          ? val.socialWhatsapp
+          : SOCIAL_LINKS.whatsapp,
+      twitter:
+        typeof sl.twitter === "string"
+          ? sl.twitter
+          : typeof val.socialTwitter === "string"
+          ? val.socialTwitter
+          : "",
+      youtube:
+        typeof sl.youtube === "string"
+          ? sl.youtube
+          : typeof val.socialYoutube === "string"
+          ? val.socialYoutube
+          : "",
+      linkedin:
+        typeof sl.linkedin === "string"
+          ? sl.linkedin
+          : typeof val.socialLinkedin === "string"
+          ? val.socialLinkedin
+          : "",
+      tiktok:
+        typeof sl.tiktok === "string"
+          ? sl.tiktok
+          : typeof val.socialTiktok === "string"
+          ? val.socialTiktok
+          : "",
+    };
+
+    const customSocialLinks: CustomSocialLink[] = Array.isArray(val.customSocialLinks)
+      ? (val.customSocialLinks as CustomSocialLink[])
+      : [];
 
     return {
-      storeName: val?.storeName || APP_NAME,
-      currency: val?.currency || DEFAULT_CURRENCY,
-      shippingFlatRate: typeof val?.shippingFlatRate === "number" ? val.shippingFlatRate : 0,
-      contactEmail: val?.contactEmail || APP_EMAIL,
-      contactPhone: val?.contactPhone || APP_CONTACT,
-      storeAddress: val?.storeAddress || APP_ADDRESS,
-      openingTime: val?.openingTime || DEFAULT_OPENING_TIME,
-      closingTime: val?.closingTime || DEFAULT_CLOSING_TIME,
-      operatingDays: val?.operatingDays || DEFAULT_OPERATING_DAYS,
-      closedDays: Array.isArray(val?.closedDays) ? val.closedDays : DEFAULT_CLOSED_DAYS,
-      closureNotice: val?.closureNotice || "",
+      storeName: (typeof val.storeName === "string" ? val.storeName : null) || APP_NAME,
+      currency: (typeof val.currency === "string" ? val.currency : null) || DEFAULT_CURRENCY,
+      shippingFlatRate: typeof val.shippingFlatRate === "number" ? val.shippingFlatRate : 200,
+      contactEmail: (typeof val.contactEmail === "string" ? val.contactEmail : null) || APP_EMAIL,
+      contactPhone: (typeof val.contactPhone === "string" ? val.contactPhone : null) || APP_CONTACT,
+      contactLandline: (typeof val.contactLandline === "string" ? val.contactLandline : null) || APP_LANDLINE,
+      storeAddress: (typeof val.storeAddress === "string" ? val.storeAddress : null) || APP_ADDRESS,
+      storeCity: (typeof val.storeCity === "string" ? val.storeCity : null) || APP_CITY,
+      storeCountry: (typeof val.storeCountry === "string" ? val.storeCountry : null) || APP_COUNTRY,
+      socialLinks,
+      customSocialLinks,
+      openingTime: (typeof val.openingTime === "string" ? val.openingTime : null) || DEFAULT_OPENING_TIME,
+      closingTime: (typeof val.closingTime === "string" ? val.closingTime : null) || DEFAULT_CLOSING_TIME,
+      operatingDays: (typeof val.operatingDays === "string" ? val.operatingDays : null) || DEFAULT_OPERATING_DAYS,
+      closedDays: Array.isArray(val.closedDays) ? (val.closedDays as string[]) : DEFAULT_CLOSED_DAYS,
+      closureNotice: (typeof val.closureNotice === "string" ? val.closureNotice : null) || "",
     };
   } catch (error) {
     console.error("Failed to fetch store settings:", error);
     return {
       storeName: APP_NAME,
       currency: DEFAULT_CURRENCY,
-      shippingFlatRate: 0,
+      shippingFlatRate: 200,
       contactEmail: APP_EMAIL,
       contactPhone: APP_CONTACT,
+      contactLandline: APP_LANDLINE,
       storeAddress: APP_ADDRESS,
+      storeCity: APP_CITY,
+      storeCountry: APP_COUNTRY,
+      socialLinks: {
+        facebook: SOCIAL_LINKS.facebook,
+        instagram: SOCIAL_LINKS.instagram,
+        whatsapp: SOCIAL_LINKS.whatsapp,
+        twitter: "",
+        youtube: "",
+        linkedin: "",
+        tiktok: "",
+      },
+      customSocialLinks: [],
       openingTime: DEFAULT_OPENING_TIME,
       closingTime: DEFAULT_CLOSING_TIME,
       operatingDays: DEFAULT_OPERATING_DAYS,
@@ -78,10 +200,32 @@ export async function getStoreSettings(): Promise<StoreSettingsData> {
 export async function saveStoreSettings(formData: FormData) {
   const storeName = (formData.get("storeName") as string) || APP_NAME;
   const currency = (formData.get("currency") as string) || DEFAULT_CURRENCY;
-  const shippingFlatRate = parseFloat((formData.get("shippingFlatRate") as string) || "0");
+  const shippingFlatRate = parseFloat((formData.get("shippingFlatRate") as string) || "200");
   const contactEmail = (formData.get("contactEmail") as string) || APP_EMAIL;
   const contactPhone = (formData.get("contactPhone") as string) || APP_CONTACT;
+  const contactLandline = (formData.get("contactLandline") as string) || APP_LANDLINE;
   const storeAddress = (formData.get("storeAddress") as string) || APP_ADDRESS;
+  const storeCity = (formData.get("storeCity") as string) || APP_CITY;
+  const storeCountry = (formData.get("storeCountry") as string) || APP_COUNTRY;
+
+  // Social Media Links
+  const socialFacebook = ((formData.get("socialFacebook") as string) || "").trim();
+  const socialInstagram = ((formData.get("socialInstagram") as string) || "").trim();
+  const socialWhatsapp = ((formData.get("socialWhatsapp") as string) || "").trim();
+  const socialTwitter = ((formData.get("socialTwitter") as string) || "").trim();
+  const socialYoutube = ((formData.get("socialYoutube") as string) || "").trim();
+  const socialLinkedin = ((formData.get("socialLinkedin") as string) || "").trim();
+  const socialTiktok = ((formData.get("socialTiktok") as string) || "").trim();
+
+  let customSocialLinks: CustomSocialLink[] = [];
+  const customLinksRaw = formData.get("customSocialLinks") as string;
+  if (customLinksRaw) {
+    try {
+      customSocialLinks = JSON.parse(customLinksRaw);
+    } catch (e) {
+      console.error("Failed to parse customSocialLinks:", e);
+    }
+  }
 
   // Store Timings & Closed Days options
   const openingTime = (formData.get("openingTime") as string) || DEFAULT_OPENING_TIME;
@@ -96,10 +240,23 @@ export async function saveStoreSettings(formData: FormData) {
     const settingsData: StoreSettingsData = {
       storeName,
       currency,
-      shippingFlatRate: isNaN(shippingFlatRate) ? 0 : shippingFlatRate,
+      shippingFlatRate: isNaN(shippingFlatRate) ? 200 : shippingFlatRate,
       contactEmail,
       contactPhone,
+      contactLandline,
       storeAddress,
+      storeCity,
+      storeCountry,
+      socialLinks: {
+        facebook: socialFacebook,
+        instagram: socialInstagram,
+        whatsapp: socialWhatsapp,
+        twitter: socialTwitter,
+        youtube: socialYoutube,
+        linkedin: socialLinkedin,
+        tiktok: socialTiktok,
+      },
+      customSocialLinks,
       openingTime,
       closingTime,
       operatingDays,
@@ -111,12 +268,12 @@ export async function saveStoreSettings(formData: FormData) {
     await prisma.setting.upsert({
       where: { key: "general_settings" },
       update: {
-        value: settingsData as any,
+        value: settingsData as unknown as Prisma.InputJsonValue,
         updatedAt: new Date(),
       },
       create: {
         key: "general_settings",
-        value: settingsData as any,
+        value: settingsData as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -128,9 +285,15 @@ export async function saveStoreSettings(formData: FormData) {
 
     revalidatePath("/admin/settings");
     revalidatePath("/contact");
+    revalidatePath("/about");
+    revalidatePath("/shipping");
+    revalidatePath("/returns");
+    revalidatePath("/checkout/success");
     revalidatePath("/");
-  } catch (error) {
-    console.error("Failed to save store settings:", error);
-    throw new Error("Failed to save configuration settings.");
+    return { success: true, message: "Store settings saved successfully!" };
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error("Failed to save store settings:", err);
+    throw new Error(err.message || "Failed to save configuration settings.");
   }
 }
