@@ -35,7 +35,7 @@ export function TagSection({ title, subtitle, tags }: TagSectionProps) {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Tag size={18} className="text-gold" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-wide text-ink">
+            <h2 className="font-display text-xl sm:text-2xl font-bold tracking-wide text-ink">
               {title}
             </h2>
           </div>

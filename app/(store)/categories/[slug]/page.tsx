@@ -153,7 +153,7 @@ export default async function CategoryPage({
   });
 
   return (
-    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
+    <div className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-8 md:px-12 lg:px-16 space-y-6">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs sm:text-sm text-muted">
         <Link href="/" className="hover:text-gold transition-colors">
@@ -168,12 +168,12 @@ export default async function CategoryPage({
       </nav>
 
       {/* Category Header Banner with Circular Logo & Bottom Line Title */}
-      <div className="bg-surface border border-border p-6 sm:p-10 rounded-[var(--radius-card)] relative overflow-hidden shadow-card">
+      <div className="bg-surface border border-border p-5 sm:p-7 rounded-[var(--radius-card)] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 relative z-10 text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
           {/* Circular Category Logo / Avatar */}
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full p-[2.5px] border-2 border-gold shadow-[0_0_25px_rgba(232,168,62,0.35)] flex-shrink-0">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[2px] border-2 border-gold/60 flex-shrink-0">
             <div className="w-full h-full rounded-full bg-gradient-to-b from-elevated via-surface to-void p-3 flex items-center justify-center relative overflow-hidden">
               {category.imageUrl ? (
                 <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
@@ -189,7 +189,7 @@ export default async function CategoryPage({
               ) : (
                 <div className="flex flex-col items-center justify-center text-gold">
                   {React.createElement(getCategoryFallbackIcon(category.name, category.slug), {
-                    size: 40,
+                    size: 28,
                     className: "stroke-[1.6]",
                   })}
                 </div>
@@ -210,10 +210,10 @@ export default async function CategoryPage({
 
             {/* Title with Bottom Line */}
             <div className="flex flex-col items-center sm:items-start">
-              <h1 className="font-display text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink">
+              <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-ink">
                 {category.name}
               </h1>
-              <div className="h-1 w-16 bg-gold shadow-[0_0_12px_rgba(232,168,62,0.6)] rounded-full mt-2.5" />
+              <div className="h-1 w-16 bg-gold  rounded-full mt-2.5" />
             </div>
 
             {category.description && (
@@ -272,7 +272,7 @@ export default async function CategoryPage({
         </div>
 
         {books.length === 0 ? (
-          <div className="py-16 text-center bg-surface/40 border border-border rounded-[var(--radius-card)] space-y-3">
+          <div className="py-12 text-center bg-surface/40 border border-border rounded-[var(--radius-card)] space-y-3">
             <p className="text-muted text-sm">No products found in this category yet.</p>
             <Link
               href="/products"

@@ -3,7 +3,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ProductImage } from "@/components/store/product-image";
+import { ProductCover } from "@/components/store/product-cover";
 import { ShoppingBag, ArrowLeft, Trash2, Plus, Minus } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
@@ -17,13 +17,13 @@ export default function CartPage() {
       {/* Header */}
       <div className="flex items-center gap-2 border-b border-border pb-4">
         <ShoppingBag size={24} className="text-gold" />
-        <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink">
           Shopping Cart
         </h1>
       </div>
 
       {items.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-surface border border-border rounded-[var(--radius-card)]">
+        <div className="flex flex-col items-center justify-center py-14 text-center space-y-4 bg-surface border border-border rounded-[var(--radius-card)]">
           <div className="p-4 rounded-full bg-elevated border border-border/40 text-muted">
             <ShoppingBag size={48} />
           </div>
@@ -50,11 +50,11 @@ export default function CartPage() {
               >
                 {/* Image */}
                 <div className="relative w-20 aspect-[2/3] bg-void rounded overflow-hidden flex-shrink-0">
-                  <ProductImage
-                    src={item.imageUrl || "/images/placeholder-product.jpg"}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
+                  <ProductCover
+                    compact
+                    name={item.name}
+                    imageSrc={item.imageUrl && !item.imageUrl.includes("/images/placeholder") ? item.imageUrl : null}
+                    sizes="80px"
                   />
                 </div>
 

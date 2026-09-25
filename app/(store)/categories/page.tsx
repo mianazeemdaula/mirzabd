@@ -24,15 +24,11 @@ export default async function CategoriesPage() {
 
   try {
     // Fetch active categories with count of published products and total sales
-    const categoriesFromDb = await prisma.category.findMany({
+    // Sales totals are summed in SQL rather than loading every product row
+    const [categoriesFromDb, salesRows] = await Promise.all([
+      prisma.category.findMany({
       where: { isActive: true },
       include: {
-        products: {
-          where: { status: "publish" },
-          select: {
-            totalSales: true,
-          },
-        },
         _count: {
           select: {
             products: {
@@ -42,7 +38,15 @@ export default async function CategoriesPage() {
         },
       },
       orderBy: { displayOrder: "asc" },
-    });
+      }),
+      prisma.$queryRaw<{ categoryId: number; total: number | null }[]>`
+        SELECT pc.A AS categoryId, SUM(p.totalSales) AS total
+        FROM _ProductCategories pc
+        JOIN products p ON p.id = pc.B
+        WHERE p.status = 'publish'
+        GROUP BY pc.A`,
+    ]);
+    const salesByCategory = new Map(salesRows.map((r) => [Number(r.categoryId), Number(r.total ?? 0)]));
 
     categories = categoriesFromDb
       .map((cat) => ({
@@ -52,7 +56,7 @@ export default async function CategoriesPage() {
         description: cat.description,
         imageUrl: cat.imageUrl,
         productCount: cat._count.products,
-        totalSales: cat.products.reduce((sum, p) => sum + p.totalSales, 0),
+        totalSales: salesByCategory.get(cat.id) ?? 0,
         displayOrder: cat.displayOrder,
       }))
       .sort((a, b) => b.totalSales - a.totalSales || a.displayOrder - b.displayOrder);
@@ -61,13 +65,13 @@ export default async function CategoriesPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16 space-y-12">
+    <div className="mx-auto w-full max-w-[1440px] px-4 py-10 sm:px-8 md:px-12 lg:px-16 space-y-8">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <span className="text-badge text-gold tracking-widest font-bold uppercase inline-flex items-center gap-1.5">
           <Layers size={12} /> Categories
         </span>
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink">
+        <h1 className="font-display text-xl sm:text-2xl font-bold text-ink">
           Browse Departments
         </h1>
         <p className="text-muted text-sm sm:text-base leading-relaxed">

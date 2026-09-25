@@ -4,15 +4,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getCategoryVisual } from "@/lib/category-visuals";
 import { motion } from "framer-motion";
 import {
-  BookOpen,
-  Sparkles,
-  GraduationCap,
-  Scroll,
-  Bookmark,
-  Compass,
-  Library,
   Search,
 } from "lucide-react";
 import { stagger, scaleIn } from "@/lib/motion";
@@ -30,66 +24,20 @@ interface CategoryGridProps {
   categories: Category[];
 }
 
-function getCategoryFallbackIcon(name: string, slug: string) {
-  const combined = (name + " " + slug).toLowerCase();
-  if (combined.includes("quran") || combined.includes("islam") || combined.includes("deen")) {
-    return Sparkles;
-  }
-  if (
-    combined.includes("school") ||
-    combined.includes("class") ||
-    combined.includes("grade") ||
-    combined.includes("academy") ||
-    combined.includes("textbook")
-  ) {
-    return GraduationCap;
-  }
-  if (
-    combined.includes("fiction") ||
-    combined.includes("novel") ||
-    combined.includes("literature") ||
-    combined.includes("poetry")
-  ) {
-    return BookOpen;
-  }
-  if (
-    combined.includes("history") ||
-    combined.includes("biography") ||
-    combined.includes("ancient")
-  ) {
-    return Scroll;
-  }
-  if (
-    combined.includes("stationery") ||
-    combined.includes("pen") ||
-    combined.includes("pencil") ||
-    combined.includes("notebook")
-  ) {
-    return Bookmark;
-  }
-  if (
-    combined.includes("science") ||
-    combined.includes("tech") ||
-    combined.includes("computer")
-  ) {
-    return Compass;
-  }
-  return Library;
-}
 
 function CircularCategoryCard({ category }: { category: Category }) {
   const [imgError, setImgError] = useState(false);
-  const FallbackIcon = getCategoryFallbackIcon(category.name, category.slug);
+  const { icon: FallbackIcon, tone } = getCategoryVisual(category.name, category.slug);
 
   return (
     <motion.div variants={scaleIn} className="w-full flex justify-center">
       <Link
         href={`/categories/${encodeURIComponent(category.slug)}`}
-        className="group flex flex-col items-center w-full max-w-[180px] focus:outline-none select-none text-center"
+        className="group flex flex-col items-center w-full max-w-[150px] focus:outline-none select-none text-center"
       >
         {/* 1. Circular Avatar Container */}
-        <div className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full p-[2.5px] border-2 border-border/80 group-hover:border-gold group-hover:shadow-[0_0_30px_rgba(232,168,62,0.4)] group-hover:-translate-y-2 transition-all duration-300">
-          <div className="w-full h-full rounded-full bg-gradient-to-b from-elevated via-surface to-void p-3.5 sm:p-4 flex items-center justify-center relative overflow-hidden shadow-card">
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] border-2 border-border/80 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(27,95,181,0.25)] group-hover:-translate-y-1 transition-all duration-300">
+          <div className="w-full h-full rounded-full bg-white p-1 flex items-center justify-center relative overflow-hidden shadow-card">
             {category.imageUrl && !imgError ? (
               <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
                 <Image
@@ -103,8 +51,11 @@ function CircularCategoryCard({ category }: { category: Category }) {
                 />
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center text-gold group-hover:scale-110 transition-transform duration-300">
-                <FallbackIcon size={42} className="stroke-[1.6]" />
+              <div
+              className="w-full h-full rounded-full flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-300"
+              style={{ background: tone.soft, color: tone.text }}
+            >
+                <FallbackIcon size={30} className="stroke-[1.7]" />
               </div>
             )}
 
@@ -114,9 +65,9 @@ function CircularCategoryCard({ category }: { category: Category }) {
         </div>
 
         {/* 2. Bottom Line Title Container */}
-        <div className="mt-4 flex flex-col items-center w-full px-2">
+        <div className="mt-3 flex flex-col items-center w-full px-1">
           {/* Title Text */}
-          <h3 className="font-display text-sm sm:text-base md:text-lg font-bold text-ink group-hover:text-gold transition-colors duration-200 line-clamp-2 max-w-[140px] sm:max-w-[170px] leading-snug">
+          <h3 className="text-[13px] sm:text-sm font-semibold text-ink group-hover:text-gold transition-colors duration-200 line-clamp-2 max-w-[140px] leading-snug">
             {category.name}
           </h3>
 
@@ -124,7 +75,7 @@ function CircularCategoryCard({ category }: { category: Category }) {
           <div className="h-[2.5px] w-7 group-hover:w-16 bg-gold/45 group-hover:bg-gold transition-all duration-300 rounded-full mt-2" />
 
           {/* Product Count Badge */}
-          <span className="text-[11px] text-muted font-semibold mt-2 px-2.5 py-0.5 rounded-full bg-surface border border-border/80 group-hover:border-gold/30 transition-colors">
+          <span className="text-[10.5px] text-muted font-medium mt-1.5 px-2 py-0.5 rounded-full bg-surface border border-border/80 group-hover:border-gold/30 transition-colors">
             {category.productCount} {category.productCount === 1 ? "Product" : "Products"}
           </span>
 
@@ -167,7 +118,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
 
       {/* Circular Categories Grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16 bg-surface/50 border border-border rounded-[var(--radius-card)] max-w-lg mx-auto">
+        <div className="text-center py-12 bg-surface/50 border border-border rounded-[var(--radius-card)] max-w-lg mx-auto">
           <p className="text-sm text-muted">No categories match &quot;{search}&quot;</p>
         </div>
       ) : (
@@ -175,7 +126,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
           initial="hidden"
           animate="visible"
           variants={stagger(0.04)}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8 md:gap-10 justify-items-center"
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-3 gap-y-6 sm:gap-y-8 justify-items-center"
         >
           {filtered.map((category) => (
             <CircularCategoryCard key={category.id} category={category} />

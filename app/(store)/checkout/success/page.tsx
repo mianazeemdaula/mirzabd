@@ -39,7 +39,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
     : null;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 text-center space-y-8">
+    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8 text-center space-y-8">
       {/* Checkmark Animation */}
       <div className="flex flex-col items-center space-y-4">
         <div className="p-3 bg-green-500/10 rounded-full text-green-500 animate-bounce">
@@ -48,7 +48,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
         <span className="text-badge text-green-400 font-bold bg-green-500/10 px-2 py-0.5 rounded">
           Order Placed Successfully
         </span>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+        <h1 className="font-display text-2xl sm:text-[1.75rem] font-bold tracking-tight text-ink">
           Thank you for your purchase!
         </h1>
         <p className="text-sm text-muted max-w-md mx-auto">

@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ProductImage } from "@/components/store/product-image";
+import { ProductCover } from "@/components/store/product-cover";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -164,7 +164,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto w-full max-w-none px-4 py-16 text-center space-y-4">
+      <div className="mx-auto w-full max-w-none px-4 py-12 text-center space-y-4">
         <h2 className="text-xl font-bold text-ink">Checkout</h2>
         <p className="text-muted">Your cart is empty. Please add products to proceed.</p>
         <Link href="/products" className="inline-block mt-4">
@@ -178,7 +178,7 @@ export default function CheckoutPage() {
     <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
       {/* Page Title & Breadcrumb */}
       <div className="border-b border-border pb-4">
-        <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">Checkout</h1>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink">Checkout</h1>
       </div>
 
       {/* Steps Indicator */}
@@ -473,11 +473,11 @@ export default function CheckoutPage() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3 items-center">
                 <div className="relative w-12 aspect-[2/3] bg-void rounded overflow-hidden flex-shrink-0">
-                  <ProductImage
-                    src={item.imageUrl || "/images/placeholder-product.jpg"}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
+                  <ProductCover
+                    compact
+                    name={item.name}
+                    imageSrc={item.imageUrl && !item.imageUrl.includes("/images/placeholder") ? item.imageUrl : null}
+                    sizes="80px"
                   />
                 </div>
                 <div className="flex-1 min-w-0">

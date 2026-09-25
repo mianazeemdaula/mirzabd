@@ -3,12 +3,12 @@ import React from "react";
 import Script from "next/script";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ProductImage } from "@/components/store/product-image";
+import { ProductCover, getCoverSrc } from "@/components/store/product-cover";
+import { ProductRail } from "@/components/store/product-rail";
 import { BookOpen, CheckCircle2, ChevronRight } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { PriceDisplay } from "@/components/store/price-display";
 import { StarRating } from "@/components/store/star-rating";
-import { BookGrid } from "@/components/store/book-grid";
 import { ReviewForm } from "@/components/store/review-form";
 import { Button } from "@/components/ui/button";
 import { AddToBagButton } from "@/components/store/add-to-bag-button";
@@ -88,8 +88,8 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
     include: {
       categories: true,
     },
-    take: 4,
-    orderBy: { totalSales: "desc" },
+    take: 14,
+    orderBy: [{ totalSales: "desc" }, { updatedAt: "desc" }],
   });
 
   // Calculate average review rating
@@ -99,9 +99,9 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
     : Number(book.averageRating || 0);
 
   return (
-    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-12">
+    <div className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-8 md:px-12 lg:px-16 space-y-10">
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-xs sm:text-sm text-muted">
+      <nav className="flex items-center gap-1.5 text-xs text-muted">
         <Link href="/" className="hover:text-gold transition-colors">Home</Link>
         <ChevronRight size={14} />
         <Link href="/products" className="hover:text-gold transition-colors">Shop</Link>
@@ -124,27 +124,27 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column: Book Cover Image */}
         <div className="md:col-span-5 lg:col-span-4 flex justify-center">
-          <div className="relative aspect-[2/3] w-full max-w-[320px] rounded-[var(--radius-card)] overflow-hidden bg-surface border border-border shadow-card">
-            <ProductImage
-              src={coverImage}
-              alt={book.name}
-              fill
-              className="object-cover"
+          <div className="relative aspect-[3/4] w-full max-w-[340px] rounded-[var(--radius-card)] overflow-hidden border border-border shadow-[var(--shadow-lift)]">
+            <ProductCover
+              name={book.name}
+              imageSrc={getCoverSrc(book.images)}
+              category={book.categories[0] ?? null}
+              sizes="(max-width: 768px) 90vw, 340px"
               priority
             />
           </div>
         </div>
 
         {/* Right Column: Book Metadata & Buying Panel */}
-        <div className="md:col-span-7 lg:col-span-8 space-y-6">
-          <div className="space-y-3">
-            {/* Author */}
-            {book.author && (
-              <span className="text-sm text-gold font-semibold uppercase tracking-wider">
-                {book.author}
+        <div className="md:col-span-7 lg:col-span-8 space-y-5 rounded-[var(--radius-card)] border border-border bg-white p-5 sm:p-7">
+          <div className="space-y-2.5">
+            {/* Author, or department when there's no author */}
+            {(book.author || book.categories[0]) && (
+              <span className="text-xs text-gold font-semibold uppercase tracking-wider">
+                {book.author || book.categories[0].name}
               </span>
             )}
-            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-ink leading-snug">
+            <h1 className="font-display text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-ink leading-snug">
               {book.name}
             </h1>
 
@@ -196,7 +196,7 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
 
             {/* Simulated Form for checkout add actions */}
             <div className="flex flex-wrap items-center gap-4">
-              {!isOutOfStock && (
+              {!isOutOfStock && Number(book.salePrice ?? book.regularPrice) > 0 && (
                 <AddToBagButton book={serializedBook} coverImage={coverImage} />
               )}
               <AddToWishlistButton productId={book.id} />
@@ -206,7 +206,7 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
       </div>
 
       {/* Tabs description / specs / reviews */}
-      <div className="border-t border-border pt-12 space-y-8">
+      <div className="border-t border-border pt-8 space-y-6">
         <div className="border-b border-border">
           <div className="flex gap-8 text-sm font-semibold uppercase tracking-wider pb-3">
             <span className="text-gold border-b-2 border-gold pb-3 cursor-pointer">Product Description</span>
@@ -214,16 +214,16 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
         </div>
 
         {/* Tab content: Description & Specs */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           {/* Left panel: Description details */}
           <div className="lg:col-span-8 space-y-6">
-            <div className="prose prose-invert max-w-none text-muted text-sm sm:text-base leading-relaxed space-y-4 font-body">
+            <div className="prose prose-invert max-w-none text-muted text-sm leading-relaxed space-y-4 font-body">
               <p>{book.description || "No full description available for this title."}</p>
             </div>
 
             {/* Review Listings */}
-            <div className="pt-8 border-t border-border space-y-6">
-              <h3 className="font-display text-xl font-bold text-ink">
+            <div className="pt-6 border-t border-border space-y-5">
+              <h3 className="font-display text-lg font-bold text-ink">
                 Customer Reviews ({reviewsCount})
               </h3>
 
@@ -260,11 +260,11 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
 
       {/* Related Books */}
       {relatedBooks.length > 0 && (
-        <div className="border-t border-border pt-12 space-y-6">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink">
-            Related Collections
+        <div className="border-t border-border pt-8 space-y-5">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">
+            You may also like
           </h2>
-          <BookGrid books={relatedBooks.map(serializeProduct)} />
+          <ProductRail books={relatedBooks.map(serializeProduct)} />
         </div>
       )}
 

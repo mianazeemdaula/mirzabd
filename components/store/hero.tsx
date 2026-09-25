@@ -1,240 +1,280 @@
 // components/store/hero.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "framer-motion";
+import { Search, ArrowRight, BadgePercent, Truck, Banknote, ShieldCheck } from "lucide-react";
 import { spring, ease } from "@/lib/motion";
+import { getCategoryVisual } from "@/lib/category-visuals";
 
-export function Hero() {
-  // Category showcase items linked directly to catalog filters
-  const showcaseItems = [
-    { title: "Textbooks", slug: "school-and-college-books", color: "bg-sky-600", text: "text-white", height: "h-[250px]", rotate: -6, emoji: "📚" },
-    { title: "Notebooks", slug: "school-registers-and-account-books", color: "bg-amber-500", text: "text-white", height: "h-[290px]", rotate: 4, emoji: "📓" },
-    { title: "Stationery", slug: "school-stationery", color: "bg-rose-500", text: "text-white", height: "h-[270px]", rotate: -3, emoji: "✏️" },
-    { title: "Bags", slug: "school-and-college-bags", color: "bg-indigo-500", text: "text-white", height: "h-[285px]", rotate: 5, emoji: "🎒" },
-    { title: "Art Supplies", slug: "art-materials", color: "bg-emerald-600", text: "text-white", height: "h-[310px]", rotate: -5, emoji: "🎨" },
+interface HeroProps {
+  productCount?: number;
+  categoryCount?: number;
+  dealCount?: number;
+}
+
+// Category showcase spines linked directly to catalog filters
+const SHOWCASE = [
+  { title: "Textbooks", slug: "school-and-college-books", height: 190, rotate: -5 },
+  { title: "Notebooks", slug: "school-registers-and-account-books", height: 222, rotate: 3 },
+  { title: "Stationery", slug: "school-stationery", height: 204, rotate: -2 },
+  { title: "Bags", slug: "school-and-college-bags", height: 214, rotate: 4 },
+  { title: "Art Supplies", slug: "art-materials", height: 238, rotate: -4 },
+];
+
+const QUICK_SEARCHES = ["Quran", "Past Papers", "Registers", "Geometry Box", "Urdu Novel"];
+
+export function Hero({ productCount = 0, categoryCount = 0, dealCount = 0 }: HeroProps) {
+  const router = useRouter();
+  const reduceMotion = useReducedMotion();
+  const [query, setQuery] = useState("");
+
+  const search = (q: string) => {
+    const term = q.trim();
+    router.push(term ? `/products?q=${encodeURIComponent(term)}` : "/products");
+  };
+
+  const rise = (delay: number) => ({
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.7, delay, ease: ease.expo },
+  });
+
+  const stats = [
+    { value: productCount > 0 ? `${productCount.toLocaleString()}+` : "10,000+", label: "Products in stock" },
+    { value: categoryCount > 0 ? String(categoryCount) : "16", label: "Departments" },
+    { value: "1981", label: "Serving since" },
   ];
 
   return (
-    <section className="relative w-full flex items-center bg-gradient-to-br from-surface via-void to-surface overflow-hidden py-16 sm:py-24">
-      {/* Dynamic Rich Ambient Background Gradients with Higher Opacity */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Sky Blue Nebula Glow (Brand Primary) - Rich */}
-        <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-sky-400/35 via-sky-600/20 to-transparent rounded-full blur-[110px]" />
+    <section className="theme-navy relative isolate overflow-hidden bg-navy-deep">
+      {/* Brand backdrop */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_85%_10%,#1B5FB5_0%,transparent_55%),radial-gradient(90%_80%_at_0%_100%,#0A9BDB55_0%,transparent_60%),linear-gradient(160deg,#0E2A6B_0%,#081C4A_70%)]" />
+      <div className="absolute inset-0 -z-10 bg-dots opacity-60" />
+      <Image
+        src="/images/logo.png"
+        alt=""
+        aria-hidden
+        width={620}
+        height={620}
+        className="pointer-events-none absolute -right-40 -bottom-48 -z-10 w-[560px] opacity-[0.05] rotate-12 select-none"
+      />
 
-        {/* Warm Golden / Amber Glow (Top Right) - Vibrant */}
-        <div className="absolute -top-16 -right-16 w-[500px] h-[500px] bg-gradient-to-bl from-amber-400/35 via-yellow-500/22 to-transparent rounded-full blur-[100px]" />
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-8 md:px-12 lg:px-16 pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-12 lg:pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+          {/* Left: message, search, CTAs */}
+          <div className="lg:col-span-7 space-y-5">
+            <motion.div {...rise(0)}>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] font-semibold tracking-wide text-white/85 backdrop-blur">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber animate-pulse" />
+                Depalpur&apos;s trusted book depot · Est. 1981
+              </span>
+            </motion.div>
 
-        {/* Emerald Jewel Tone Glow (Bottom Left) - Rich */}
-        <div className="absolute -bottom-20 -left-16 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-500/28 via-teal-600/16 to-transparent rounded-full blur-[100px]" />
-
-        {/* Violet Velvet Glow (Bottom Right) - Rich */}
-        <div className="absolute -bottom-20 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-indigo-500/25 via-purple-600/14 to-transparent rounded-full blur-[110px]" />
-
-        {/* Center Core Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-400/12 rounded-full blur-[120px]" />
-      </div>
-
-      {/* Floating decorative sparkle particles with higher opacity */}
-      <div className="absolute inset-0 pointer-events-none opacity-45 z-0">
-        <div className="absolute top-[20%] left-[10%] w-2 h-2 bg-gold rounded-full blur-[1px] animate-float-slow" />
-        <div className="absolute top-[50%] left-[25%] w-2.5 h-2.5 bg-gold rounded-full blur-[1px] animate-float-medium" />
-        <div className="absolute top-[80%] left-[15%] w-1.5 h-1.5 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
-        <div className="absolute top-[30%] right-[20%] w-2 h-2 bg-gold rounded-full blur-[1px] animate-float-slow" />
-        <div className="absolute top-[60%] right-[10%] w-3 h-3 bg-gold rounded-full blur-[1.5px] animate-float-medium" />
-        <div className="absolute top-[15%] left-[60%] w-1.5 h-1.5 bg-gold rounded-full blur-[0.5px] animate-float-fast" />
-      </div>
-
-      <div className="relative mx-auto w-full max-w-none px-4 sm:px-8 md:px-12 lg:px-16 z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
-        {/* Left panel: animated product showcase cards (desktop) */}
-        <div className="lg:col-span-3 flex justify-center order-3 lg:order-1 h-[340px] sm:h-[360px] items-end relative px-2">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={{
-              visible: {
-                transition: {
-                  staggerChildren: 0.12,
-                  delayChildren: 0.2,
-                },
-              },
-            }}
-            className="flex items-end gap-2 select-none"
-          >
-            {showcaseItems.map((item, idx) => (
-              <Link key={idx} href={`/products?category=${encodeURIComponent(item.slug)}`} className="block focus:outline-none">
-                <motion.div
-                  variants={{
-                    hidden: { y: 120, opacity: 0, rotate: 0 },
-                    visible: {
-                      y: 0,
-                      opacity: 1,
-                      rotate: item.rotate,
-                      transition: {
-                        y: spring.gentle,
-                        opacity: { duration: 0.4 },
-                      },
-                    },
-                  }}
-                  whileHover={{
-                    y: -20,
-                    rotate: 0,
-                    transition: { ...spring.snappy },
-                  }}
-                  className={`relative w-13 sm:w-15 ${item.height} ${item.color} ${item.text} rounded-xl shadow-card flex flex-col justify-between py-5 px-2.5 cursor-pointer border border-white/20`}
-                  style={{
-                    transformOrigin: "bottom center",
-                    boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
-                  }}
-                >
-                  {/* Top detail */}
-                  <div className="flex justify-center text-xl">
-                    {item.emoji}
-                  </div>
-
-                  {/* Vertical Title */}
-                  <div
-                    className="font-display font-bold text-center text-xs sm:text-sm tracking-wider select-none my-auto leading-none"
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "mixed",
-                      transform: "rotate(180deg)",
-                      textShadow: "0 1px 2px rgba(0,0,0,0.2)",
-                    }}
-                  >
-                    {item.title}
-                  </div>
-
-                  {/* Bottom accent dot */}
-                  <div className="flex justify-center">
-                    <div className="w-2 h-2 rounded-full bg-white/40" />
-                  </div>
-
-                  {/* Bookmark ribbon */}
-                  <div className="absolute top-0 right-2.5 w-1 h-7 bg-white/50 rounded-b shadow-inner" />
-                </motion.div>
-              </Link>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Center panel: Urdu Dialogue (Prominent & Larger Text) */}
-        <div className="lg:col-span-6 space-y-5 order-1 lg:order-2 text-center lg:text-right" dir="rtl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: ease.expo }}
-            className="space-y-4 max-w-2xl mx-auto lg:mx-0"
-          >
-            {/* Urdu Rhyming Dialogue */}
-            <h1
-              dir="rtl"
-              lang="ur"
-              className="font-urdu text-right select-none"
-            >
-              <div className="space-y-3 sm:space-y-4">
-                {/* Step 1: خزانہ کیسے ملا؟ علم حاصل کرنے سے */}
-                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-x-5 gap-y-1.5 text-lg sm:text-xl md:text-2xl lg:text-[1.65rem] leading-loose">
-                  <span className="text-muted font-normal flex items-center gap-2.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-gold/60" />
-                    خزانہ کیسے ملا؟
-                  </span>
-                  <span className="text-ink font-semibold flex items-center gap-2.5">
-                    <span className="text-gold/80 text-base sm:text-lg font-sans select-none">←</span>
-                    علم حاصل کرنے سے
-                  </span>
-                </div>
-
-                {/* Step 2: علم کہاں سے ملا؟ کتابوں سے */}
-                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-x-5 gap-y-1.5 text-lg sm:text-xl md:text-2xl lg:text-[1.65rem] leading-loose">
-                  <span className="text-muted font-normal flex items-center gap-2.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-gold/60" />
-                    علم کہاں سے ملا؟
-                  </span>
-                  <span className="text-ink font-semibold flex items-center gap-2.5">
-                    <span className="text-gold/80 text-base sm:text-lg font-sans select-none">←</span>
-                    کتابوں سے
-                  </span>
-                </div>
-
-                {/* Elegant divider */}
-                <div className="h-px bg-gradient-to-l from-gold/35 via-gold/15 to-transparent my-2" />
-
-                {/* Step 3: کتابیں کہاں سے ملیں؟ مرزا بک ڈپو سے */}
-                <div className="flex flex-wrap items-baseline justify-between sm:justify-start gap-x-5 gap-y-2 pt-1">
-                  <span className="text-ink/90 text-xl sm:text-2xl md:text-3xl font-medium flex items-center gap-3 leading-relaxed">
-                    <span className="w-3 h-3 rounded-full bg-gold animate-pulse" />
+            {/* Urdu dialogue */}
+            <motion.div {...rise(0.08)}>
+              <h1 dir="rtl" lang="ur" className="font-urdu select-none space-y-1 sm:space-y-2 w-fit max-w-full">
+                <span className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-base sm:text-lg md:text-xl leading-loose">
+                  <span className="text-white/60 font-normal">خزانہ کیسے ملا؟</span>
+                  <span className="text-white/35 font-sans text-base" aria-hidden>←</span>
+                  <span className="text-white font-semibold">علم حاصل کرنے سے</span>
+                </span>
+                <span className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-base sm:text-lg md:text-xl leading-loose">
+                  <span className="text-white/60 font-normal">علم کہاں سے ملا؟</span>
+                  <span className="text-white/35 font-sans text-base" aria-hidden>←</span>
+                  <span className="text-white font-semibold">کتابوں سے</span>
+                </span>
+                <span className="block h-px w-full max-w-xl bg-gradient-to-l from-amber/60 via-white/15 to-transparent my-1" aria-hidden />
+                <span className="flex flex-wrap items-baseline gap-x-5 gap-y-1 pt-1">
+                  <span className="text-white/85 text-lg sm:text-xl md:text-2xl font-medium leading-relaxed">
                     کتابیں کہاں سے ملیں؟
                   </span>
-                  <span className="text-gold text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-normal drop-shadow-[0_2px_16px_rgba(2,132,199,0.4)] leading-relaxed">
+                  <span className="text-amber text-3xl sm:text-4xl md:text-[2.6rem] font-bold leading-relaxed drop-shadow-[0_4px_24px_rgba(245,165,36,0.35)]">
                     مرزا بک ڈپو سے
                   </span>
-                </div>
+                </span>
+              </h1>
+            </motion.div>
+
+            <motion.p {...rise(0.16)} className="max-w-xl text-sm sm:text-[15px] text-white/75 leading-relaxed">
+              Textbooks, Quran &amp; Islamic books, past papers, stationery and school essentials,
+              all under one roof and delivered across Pakistan.
+            </motion.p>
+
+            {/* Search */}
+            <motion.form
+              {...rise(0.22)}
+              onSubmit={(e) => {
+                e.preventDefault();
+                search(query);
+              }}
+              className="max-w-xl"
+              role="search"
+            >
+              <div className="flex items-center gap-2 rounded-xl bg-white p-1 pl-3.5 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] ring-1 ring-white/10 focus-within:ring-4 focus-within:ring-azure/40 transition-shadow">
+                <Search size={18} className="shrink-0 text-[#5A6680]" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search books, stationery, class or subject…"
+                  aria-label="Search products"
+                  className="min-w-0 flex-1 bg-transparent py-2 text-sm text-[#0F1B35] placeholder:text-[#8A96AC] focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 rounded-lg bg-[#1B5FB5] px-4 sm:px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#154A93] cursor-pointer"
+                >
+                  Search
+                </button>
               </div>
-            </h1>
-          </motion.div>
-        </div>
+              <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[11px] sm:text-xs">
+                <span className="text-white/55">Popular:</span>
+                {QUICK_SEARCHES.map((term) => (
+                  <button
+                    key={term}
+                    type="button"
+                    onClick={() => search(term)}
+                    className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-0.5 text-white/80 transition-colors hover:border-amber/60 hover:text-white cursor-pointer"
+                  >
+                    {term}
+                  </button>
+                ))}
+              </div>
+            </motion.form>
 
-        {/* Right panel: Sack of Gold Coins */}
-        <div className="lg:col-span-3 flex justify-center items-center order-2 lg:order-3 my-4 lg:my-0">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-              y: [-6, 6, -6],
-            }}
-            transition={{
-              scale: { duration: 0.8, delay: 0.15, ease: ease.expo },
-              opacity: { duration: 0.8, delay: 0.15 },
-              y: { duration: 4.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
-            }}
-            whileHover={{ scale: 1.08, transition: { ...spring.snappy } }}
-            className="relative flex items-center justify-center select-none group"
-          >
-            {/* Radiant golden halo behind sack */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-amber-500/25 via-yellow-400/15 to-transparent rounded-full blur-2xl pointer-events-none scale-125 group-hover:scale-150 transition-transform duration-500" />
+            {/* CTAs */}
+            <motion.div {...rise(0.28)} className="flex flex-wrap gap-3">
+              <Link
+                href="/products"
+                className="group inline-flex items-center gap-2 rounded-xl bg-amber px-5 py-2.5 text-sm font-bold text-[#1F1300] shadow-[0_10px_30px_-10px_rgba(245,165,36,0.7)] transition-all hover:bg-[#FFB93F] hover:-translate-y-0.5"
+              >
+                Shop All Products
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/products?on_sale=true&sort=newest"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/[0.06] px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/[0.12] hover:border-white/40"
+              >
+                <BadgePercent size={16} className="text-amber" />
+                {dealCount > 0 ? `${dealCount.toLocaleString()} Deals` : "View Deals"}
+              </Link>
+            </motion.div>
+          </div>
 
-            <div className="relative w-44 sm:w-52 md:w-56 lg:w-48 xl:w-56 aspect-square">
-              <Image
-                src="/images/gold-coin-sack.png"
-                alt="Treasure Sack of Gold Coins"
-                fill
-                sizes="(max-width: 768px) 208px, 224px"
-                className="object-contain drop-shadow-[0_12px_28px_rgba(232,168,62,0.35)]"
-                priority
-              />
+          {/* Right: shelf of category spines + treasure sack */}
+          <div className="lg:col-span-5">
+            <div className="relative mx-auto max-w-md lg:max-w-none">
+              <div className="absolute inset-0 bg-[radial-gradient(55%_50%_at_60%_60%,rgba(245,165,36,0.22)_0%,transparent_70%)]" aria-hidden />
+
+              <div className="relative flex items-end justify-center gap-3 sm:gap-5">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={{ visible: { transition: { staggerChildren: 0.1, delayChildren: 0.25 } } }}
+                  className="flex items-end gap-1.5 sm:gap-2"
+                >
+                  {SHOWCASE.map((item) => {
+                    const { icon: Icon, tone } = getCategoryVisual(item.title, item.slug);
+                    return (
+                      <Link
+                        key={item.slug}
+                        href={`/products?category=${encodeURIComponent(item.slug)}`}
+                        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded-lg"
+                        aria-label={`Shop ${item.title}`}
+                      >
+                        <motion.div
+                          variants={{
+                            hidden: { y: reduceMotion ? 0 : 120, opacity: 0, rotate: 0 },
+                            visible: {
+                              y: 0,
+                              opacity: 1,
+                              rotate: item.rotate,
+                              transition: { y: spring.gentle, opacity: { duration: 0.4 } },
+                            },
+                          }}
+                          whileHover={{ y: -18, rotate: 0, transition: spring.snappy }}
+                          className="relative flex w-10 sm:w-12 flex-col items-center justify-between rounded-md rounded-r-lg py-4 text-white shadow-[6px_10px_24px_rgba(0,0,0,0.45)] cursor-pointer"
+                          style={{
+                            height: `clamp(${Math.round(item.height * 0.6)}px, 18vw, ${Math.round(item.height * 0.82)}px)`,
+                            background: `linear-gradient(90deg, ${tone.to} 0%, ${tone.from} 45%, ${tone.to} 100%)`,
+                            transformOrigin: "bottom center",
+                          }}
+                        >
+                          <span className="absolute inset-x-0 top-3 h-px bg-white/30" aria-hidden />
+                          <span className="absolute inset-x-0 bottom-3 h-px bg-white/30" aria-hidden />
+                          <Icon size={14} className="opacity-90" aria-hidden />
+                          <span
+                            className="font-display text-[10px] sm:text-[11px] font-bold tracking-wider"
+                            style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                          >
+                            {item.title}
+                          </span>
+                          <span className="h-1.5 w-1.5 rounded-full bg-amber" aria-hidden />
+                        </motion.div>
+                      </Link>
+                    );
+                  })}
+                </motion.div>
+
+                <motion.div
+                  initial={{ scale: 0.85, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1, y: reduceMotion ? 0 : [-6, 6, -6] }}
+                  transition={{
+                    scale: { duration: 0.8, delay: 0.2, ease: ease.expo },
+                    opacity: { duration: 0.8, delay: 0.2 },
+                    y: { duration: 4.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
+                  }}
+                  whileHover={{ scale: 1.06, transition: spring.snappy }}
+                  className="relative w-28 sm:w-36 lg:w-40 xl:w-44 aspect-square shrink-0 select-none"
+                >
+                  <Image
+                    src="/images/gold-coin-sack.png"
+                    alt="Treasure sack of gold coins: knowledge is the real treasure"
+                    fill
+                    sizes="(max-width: 640px) 128px, 224px"
+                    className="object-contain drop-shadow-[0_18px_30px_rgba(245,165,36,0.35)]"
+                    priority
+                  />
+                </motion.div>
+              </div>
+
+              {/* Shelf */}
+              <div className="relative mt-1 h-3 rounded-full bg-gradient-to-b from-white/25 to-white/5 shadow-[0_12px_24px_rgba(0,0,0,0.4)]" aria-hidden />
             </div>
-          </motion.div>
+          </div>
         </div>
-      </div>
 
-      {/* Floating particles animations */}
-      <style jsx global>{`
-        @keyframes floatSlow {
-          0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-          50% { transform: translateY(-30px) translateX(12px); opacity: 0.6; }
-        }
-        @keyframes floatMedium {
-          0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
-          50% { transform: translateY(-40px) translateX(-15px); opacity: 0.7; }
-        }
-        @keyframes floatFast {
-          0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
-          50% { transform: translateY(-20px) translateX(-8px); opacity: 0.5; }
-        }
-        .animate-float-slow {
-          animation: floatSlow 15s infinite ease-in-out;
-        }
-        .animate-float-medium {
-          animation: floatMedium 10s infinite ease-in-out;
-        }
-        .animate-float-fast {
-          animation: floatFast 7s infinite ease-in-out;
-        }
-      `}</style>
+        {/* Stats + service promises */}
+        <motion.div
+          {...rise(0.35)}
+          className="mt-9 grid grid-cols-3 lg:grid-cols-6 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10"
+        >
+          {stats.map((s) => (
+            <div key={s.label} className="bg-navy-deep/80 px-4 py-3 sm:px-5">
+              <div className="font-display text-lg sm:text-xl font-bold text-white">{s.value}</div>
+              <div className="text-[11px] text-white/60">{s.label}</div>
+            </div>
+          ))}
+          {[
+            { icon: Truck, title: "24-Hour Delivery", text: "Within Depalpur" },
+            { icon: Banknote, title: "Cash on Delivery", text: "Pay at your door" },
+            { icon: ShieldCheck, title: "Secure Checkout", text: "Card or COD" },
+          ].map(({ icon: Icon, title, text }) => (
+            <div key={title} className="hidden lg:flex items-center gap-3 bg-navy-deep/80 px-4 py-3">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/10 text-amber">
+                <Icon size={17} />
+              </span>
+              <div>
+                <div className="text-[13px] font-semibold text-white">{title}</div>
+                <div className="text-[11px] text-white/60">{text}</div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 }

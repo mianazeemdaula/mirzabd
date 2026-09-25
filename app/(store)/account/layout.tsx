@@ -28,7 +28,7 @@ export default async function AccountLayout({
       {/* Header */}
       <div className="space-y-1">
         <span className="text-badge text-gold font-bold">My Account Dashboard</span>
-        <h1 className="font-display text-3xl font-bold text-ink">Welcome back, {session.user.name || "Customer"}!</h1>
+        <h1 className="font-display text-xl sm:text-2xl font-bold text-ink">Welcome back, {session.user.name || "Customer"}!</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">

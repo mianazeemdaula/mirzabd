@@ -59,7 +59,7 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-1 text-center">
-        <h2 className="font-display text-2xl font-bold text-ink">Create Account</h2>
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink">Create Account</h2>
         <p className="text-xs text-muted">Join us today to build your custom literary shelf</p>
       </div>
 

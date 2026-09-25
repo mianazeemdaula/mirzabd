@@ -110,13 +110,15 @@ export function Footer() {
   const { socialLinks, customSocialLinks, schedule } = storeInfo;
 
   return (
-    <footer className="w-full bg-surface border-t border-border mt-auto">
-      <div className="mx-auto w-full max-w-none px-4 py-12 sm:px-8 md:px-12 lg:px-16">
+    <footer className="theme-navy relative w-full overflow-hidden bg-navy-deep mt-auto">
+      <div className="absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,#1B5FB540_0%,transparent_60%)]" aria-hidden />
+      <div className="absolute inset-0 bg-dots opacity-50" aria-hidden />
+      <div className="relative mx-auto w-full max-w-[1440px] px-4 py-14 sm:px-8 md:px-12 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Brand & Contact Info */}
           <div className="space-y-4">
             <Logo size="md" href="/" />
-            <p className="text-sm font-medium italic text-gold">{APP_TAGLINE}</p>
+            <p className="text-sm font-medium italic text-amber">{APP_TAGLINE}</p>
 
             <div className="space-y-3 pt-2 text-sm text-muted">
               {/* Address */}
@@ -399,11 +401,11 @@ export function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full bg-elevated border border-border text-ink text-sm rounded-[var(--radius-btn)] h-10 pl-3 pr-10 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 placeholder:text-faint"
+                  className="w-full bg-white/10 border border-border text-ink text-sm rounded-[var(--radius-btn)] h-11 pl-3 pr-12 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 placeholder:text-faint"
                 />
                 <button
                   type="submit"
-                  className="absolute right-1 top-1 flex h-8 w-8 items-center justify-center rounded-[var(--radius-btn)] bg-gold hover:bg-gold-dim text-white transition-colors cursor-pointer"
+                  className="absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-[var(--radius-btn)] bg-amber hover:bg-[#FFB93F] text-[#1F1300] transition-colors cursor-pointer"
                   aria-label="Subscribe button"
                 >
                   <Send size={14} />

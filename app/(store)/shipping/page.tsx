@@ -64,7 +64,7 @@ export default function ShippingPolicyPage() {
         </motion.span>
         <motion.h1
           variants={fadeUp}
-          className="font-display text-4xl sm:text-5xl font-bold text-ink"
+          className="font-display text-xl sm:text-2xl font-bold text-ink"
         >
           Shipping & Delivery Policy
         </motion.h1>
@@ -80,7 +80,7 @@ export default function ShippingPolicyPage() {
 
       {/* Methods */}
       <div className="space-y-6">
-        <h2 className="font-display text-2xl font-bold text-ink">Shipping Methods & Rates</h2>
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink">Shipping Methods & Rates</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {shippingMethods.map((method, idx) => {
             const Icon = method.icon;
@@ -124,7 +124,7 @@ export default function ShippingPolicyPage() {
 
       {/* FAQ */}
       <div className="space-y-6">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <HelpCircle className="text-gold" size={22} /> Frequently Asked Questions
         </h2>
         <div className="space-y-4">

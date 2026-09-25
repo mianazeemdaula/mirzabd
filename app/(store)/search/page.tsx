@@ -50,7 +50,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {/* Search Header Banner */}
       <div className="bg-surface border border-border p-6 sm:p-8 rounded-[var(--radius-card)] space-y-2">
         <span className="text-badge text-gold font-bold">Search Catalog</span>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink">
+        <h1 className="font-display text-xl sm:text-2xl font-bold text-ink">
           {query ? `Search results for "${query}"` : "Search our entire collection"}
         </h1>
         <p className="text-xs sm:text-sm text-muted">
@@ -63,7 +63,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         {books.length > 0 ? (
           <BookGrid books={books.map(serializeProduct)} />
         ) : (
-          <div className="text-center py-16 bg-surface border border-border rounded-[var(--radius-card)]">
+          <div className="text-center py-12 bg-surface border border-border rounded-[var(--radius-card)]">
             <p className="text-muted text-base">
               No matching products found. Try searching for something else or view all titles.
             </p>

@@ -1,25 +1,32 @@
 @import "tailwindcss";
 
 @theme {
+  /* Brand palette — sampled from the Mirza Book Depot seal logo */
+  --color-navy:       #0E2A6B;  /* Deep seal edge */
+  --color-navy-deep:  #081C4A;  /* Darkest brand surface */
+  --color-azure:      #0A9BDB;  /* Bright inner-ring highlight */
+  --color-amber:      #F5A524;  /* Warm accent — deals, highlights */
+  --color-amber-dim:  #D98B0B;
+
   /* Backgrounds — Light Mode */
-  --color-void:      #FFFFFF;  /* Page background — clean white */
-  --color-surface:   #F8F6F3;  /* Cards, panels — warm off-white */
-  --color-elevated:  #F0EDE8;  /* Elevated surfaces, inputs */
-  --color-border:    #E2DED6;  /* Borders, dividers */
+  --color-void:      #FFFFFF;  /* Page background */
+  --color-surface:   #F5F8FC;  /* Cards, panels — cool paper white */
+  --color-elevated:  #EAF0F8;  /* Elevated surfaces, inputs */
+  --color-border:    #DCE4EF;  /* Borders, dividers */
 
-  /* Accent — Sky Blue (Primary Brand Color) */
-  --color-gold:      #0284C7;  /* Primary CTA, active states — sky blue */
-  --color-gold-dim:  #0369A1;  /* Hover darken */
-  --color-gold-glow: #0284C726;/* Glow/shadow */
+  /* Primary — Royal Blue from the logo (token name kept for compatibility) */
+  --color-gold:      #1B5FB5;  /* Primary CTA, active states */
+  --color-gold-dim:  #154A93;  /* Hover darken */
+  --color-gold-glow: #1B5FB526;/* Glow/shadow */
 
-  /* Accent 2 — Warm Coral */
-  --color-crimson:   #E84855;  /* Sale badges, alerts */
-  --color-crimson-dim: #C73A46;
+  /* Accent 2 — Sale red */
+  --color-crimson:   #E03B4B;
+  --color-crimson-dim: #C22D3C;
 
   /* Text */
-  --color-ink:       #1A1A2E;  /* Primary text — near black */
-  --color-muted:     #6B7280;  /* Secondary text */
-  --color-faint:     #C4C0B8;  /* Disabled, placeholder */
+  --color-ink:       #0F1B35;  /* Primary text — navy-black */
+  --color-muted:     #5A6680;  /* Secondary text */
+  --color-faint:     #A9B4C6;  /* Disabled, placeholder */
 
   /* Typography */
   --font-sans: var(--font-jakarta), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -34,7 +41,8 @@
 
   /* Shadows — Light mode appropriate */
   --shadow-glow: 0 0 40px var(--color-gold-glow);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 4px 24px rgba(14, 42, 107, 0.07);
+  --shadow-lift: 0 18px 40px -12px rgba(14, 42, 107, 0.25);
 }
 
 /* Base layer overrides */
@@ -203,4 +211,40 @@
   }
 }
 
+/* Re-themes any token-based component for placement on the navy brand surface
+   (footer, hero, promo bands) without duplicating component styles. */
+.theme-navy {
+  --color-ink: #FFFFFF;
+  --color-muted: #B7C6E4;
+  --color-faint: #7F92B8;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-surface: rgba(255, 255, 255, 0.06);
+  --color-elevated: rgba(255, 255, 255, 0.1);
+  --color-gold: #5CC3F5;
+  --color-gold-dim: #8AD4F8;
+  color: var(--color-ink);
+}
 
+/* Subtle dotted texture used on brand panels */
+@utility bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@utility bg-dots-ink {
+  background-image: radial-gradient(rgba(14, 42, 107, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

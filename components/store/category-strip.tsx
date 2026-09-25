@@ -4,18 +4,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getCategoryVisual } from "@/lib/category-visuals";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
-  BookOpen,
-  Sparkles,
-  GraduationCap,
-  Scroll,
-  Bookmark,
-  Compass,
   Grid,
-  Library,
 } from "lucide-react";
 import { scaleIn, stagger } from "@/lib/motion";
 
@@ -32,53 +26,6 @@ interface CategoryStripProps {
   activeCategorySlug?: string | null;
 }
 
-// Helper to determine a thematic icon when no logo/image is provided
-function getCategoryFallbackIcon(name: string, slug: string) {
-  const combined = (name + " " + slug).toLowerCase();
-  if (combined.includes("quran") || combined.includes("islam") || combined.includes("deen")) {
-    return Sparkles;
-  }
-  if (
-    combined.includes("school") ||
-    combined.includes("class") ||
-    combined.includes("grade") ||
-    combined.includes("academy") ||
-    combined.includes("textbook")
-  ) {
-    return GraduationCap;
-  }
-  if (
-    combined.includes("fiction") ||
-    combined.includes("novel") ||
-    combined.includes("literature") ||
-    combined.includes("poetry")
-  ) {
-    return BookOpen;
-  }
-  if (
-    combined.includes("history") ||
-    combined.includes("biography") ||
-    combined.includes("ancient")
-  ) {
-    return Scroll;
-  }
-  if (
-    combined.includes("stationery") ||
-    combined.includes("pen") ||
-    combined.includes("pencil") ||
-    combined.includes("notebook")
-  ) {
-    return Bookmark;
-  }
-  if (
-    combined.includes("science") ||
-    combined.includes("tech") ||
-    combined.includes("computer")
-  ) {
-    return Compass;
-  }
-  return Library;
-}
 
 function CategoryCircleCard({
   category,
@@ -88,22 +35,22 @@ function CategoryCircleCard({
   isActive: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
-  const FallbackIcon = getCategoryFallbackIcon(category.name, category.slug);
+  const { icon: FallbackIcon, tone } = getCategoryVisual(category.name, category.slug);
 
   return (
     <Link
       href={`/products?category=${encodeURIComponent(category.slug)}`}
-      className="group flex flex-col items-center flex-shrink-0 w-24 sm:w-28 md:w-32 focus:outline-none select-none transition-transform"
+      className="group flex flex-col items-center flex-shrink-0 w-[76px] sm:w-[88px] focus:outline-none select-none transition-transform"
     >
       {/* 1. Circular Avatar Container */}
       <div
-        className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full p-[2px] transition-all duration-300 ${
+        className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] transition-all duration-300 ${
           isActive
-            ? "border-2 border-gold shadow-[0_0_22px_rgba(232,168,62,0.45)] scale-105"
-            : "border-2 border-border/80 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(232,168,62,0.3)] group-hover:-translate-y-1.5"
+            ? "border-2 border-gold shadow-[0_0_22px_rgba(27,95,181,0.35)] scale-105"
+            : "border-2 border-border/80 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(27,95,181,0.25)] group-hover:-translate-y-1"
         }`}
       >
-        <div className="w-full h-full rounded-full bg-gradient-to-b from-elevated via-surface to-void p-2.5 flex items-center justify-center relative overflow-hidden">
+        <div className="w-full h-full rounded-full bg-white p-1 flex items-center justify-center relative overflow-hidden">
           {category.imageUrl && !imgError ? (
             <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
               <Image
@@ -117,8 +64,11 @@ function CategoryCircleCard({
               />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center text-gold group-hover:scale-110 transition-transform duration-300">
-              <FallbackIcon size={30} className="stroke-[1.6]" />
+            <div
+              className="w-full h-full rounded-full flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-300"
+              style={{ background: tone.soft, color: tone.text }}
+            >
+              <FallbackIcon size={22} className="stroke-[1.8]" />
             </div>
           )}
 
@@ -128,10 +78,10 @@ function CategoryCircleCard({
       </div>
 
       {/* 2. Bottom Line Title Container */}
-      <div className="mt-3 flex flex-col items-center w-full px-1">
+      <div className="mt-2 flex flex-col items-center w-full px-0.5">
         {/* Title Text */}
         <span
-          className={`text-xs sm:text-sm font-semibold text-center line-clamp-2 max-w-[90px] sm:max-w-[110px] leading-tight transition-colors duration-200 ${
+          className={`text-[11px] sm:text-xs font-semibold text-center line-clamp-2 max-w-[76px] sm:max-w-[88px] leading-tight transition-colors duration-200 ${
             isActive ? "text-gold font-bold" : "text-ink/90 group-hover:text-gold"
           }`}
         >
@@ -228,17 +178,17 @@ export function CategoryStrip({
           <motion.div variants={scaleIn}>
             <Link
               href="/products"
-              className="group flex flex-col items-center flex-shrink-0 w-24 sm:w-28 md:w-32 focus:outline-none select-none"
+              className="group flex flex-col items-center flex-shrink-0 w-[76px] sm:w-[88px] focus:outline-none select-none"
             >
               {/* Circle Avatar */}
               <div
-                className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full p-[2px] transition-all duration-300 ${
+                className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] transition-all duration-300 ${
                   !activeCategorySlug
-                    ? "border-2 border-gold shadow-[0_0_22px_rgba(232,168,62,0.45)] scale-105"
-                    : "border-2 border-border/80 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(232,168,62,0.3)] group-hover:-translate-y-1.5"
+                    ? "border-2 border-gold shadow-[0_0_22px_rgba(27,95,181,0.35)] scale-105"
+                    : "border-2 border-border/80 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(27,95,181,0.25)] group-hover:-translate-y-1"
                 }`}
               >
-                <div className="w-full h-full rounded-full bg-gradient-to-b from-elevated via-surface to-void p-2.5 flex flex-col items-center justify-center relative overflow-hidden text-gold">
+                <div className="w-full h-full rounded-full bg-white p-1 flex flex-col items-center justify-center relative overflow-hidden text-gold">
                   <Grid size={28} className="stroke-[1.8] group-hover:scale-110 transition-transform duration-300" />
                   <span className="text-[9px] font-bold uppercase tracking-wider text-muted group-hover:text-gold mt-1">
                     Store
@@ -248,7 +198,7 @@ export function CategoryStrip({
               </div>
 
               {/* Bottom Line Title */}
-              <div className="mt-3 flex flex-col items-center w-full px-1">
+              <div className="mt-2 flex flex-col items-center w-full px-0.5">
                 <span
                   className={`text-xs sm:text-sm font-semibold text-center leading-tight transition-colors duration-200 ${
                     !activeCategorySlug ? "text-gold font-bold" : "text-ink/90 group-hover:text-gold"

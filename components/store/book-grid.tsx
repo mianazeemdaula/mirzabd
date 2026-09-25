@@ -11,7 +11,7 @@ interface BookGridProps {
 export function BookGrid({ books }: BookGridProps) {
   if (!books || books.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="flex flex-col items-center justify-center py-12 text-center">
         <p className="text-muted text-lg">No products found matching your criteria.</p>
       </div>
     );

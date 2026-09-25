@@ -3,7 +3,7 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { ProductImage } from "@/components/store/product-image";
+import { ProductCover } from "@/components/store/product-cover";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/hooks/use-cart";
@@ -93,12 +93,12 @@ export function CartDrawer() {
                   >
                     {/* Image */}
                     <div className="relative w-16 aspect-[2/3] flex-shrink-0 bg-surface rounded overflow-hidden">
-                      <ProductImage
-                        src={item.imageUrl || "/images/placeholder-product.jpg"}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
+                      <ProductCover
+                    compact
+                    name={item.name}
+                    imageSrc={item.imageUrl && !item.imageUrl.includes("/images/placeholder") ? item.imageUrl : null}
+                    sizes="80px"
+                  />
                     </div>
 
                     {/* Details */}

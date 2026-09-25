@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Filter, Search } from "lucide-react";
+import { Filter, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export interface FilterCategoryItem {
@@ -28,6 +28,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
   const [maxPrice, setMaxPrice] = useState("");
   const [inStockOnly, setInStockOnly] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   // Sync state with URL params on load or change
   useEffect(() => {
@@ -128,18 +129,24 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
     inStockOnly;
 
   return (
-    <aside className="w-full lg:w-72 flex-shrink-0 bg-surface border border-border p-5 rounded-[var(--radius-card)] sticky top-20 self-start space-y-6 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-2 font-bold text-ink">
-          <Filter size={16} className="text-gold" />
+    <aside className="w-full lg:w-64 flex-shrink-0 bg-white border border-border p-4 rounded-[var(--radius-card)] lg:sticky lg:top-32 self-start">
+      {/* Header — toggles the panel below lg so products aren't pushed off-screen */}
+      <div className={`flex items-center justify-between lg:border-b lg:border-border lg:pb-3 ${isOpen ? "border-b border-border pb-3" : ""}`}>
+        <button
+          type="button"
+          onClick={() => setIsOpen((v) => !v)}
+          className="flex items-center gap-2 text-sm font-bold text-ink lg:cursor-default cursor-pointer"
+          aria-expanded={isOpen}
+        >
+          <Filter size={15} className="text-gold" />
           <span>Filters</span>
+          <ChevronDown size={15} className={`lg:hidden text-muted transition-transform ${isOpen ? "rotate-180" : ""}`} />
           {selectedCategories.length > 0 && (
             <span className="text-[10px] font-bold bg-gold/15 text-gold border border-gold/30 px-2 py-0.5 rounded-full">
               {selectedCategories.length} active
             </span>
           )}
-        </div>
+        </button>
         {hasActiveFilters && (
           <button
             onClick={handleClearAll}
@@ -150,6 +157,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
         )}
       </div>
 
+      <div className={`${isOpen ? "block" : "hidden"} lg:block space-y-5 pt-4`}>
       {/* Category Filter with Real Product Counts */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -269,6 +277,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
             className="rounded border-border bg-void text-gold focus:ring-gold focus:ring-1 h-4 w-4"
           />
         </label>
+      </div>
       </div>
     </aside>
   );

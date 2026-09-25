@@ -150,10 +150,10 @@ export default async function BooksPage({
     where.isFeatured = true;
   }
 
-  // Sale filter (salePrice must be non-null)
+  // Sale filter — a real discount (many synced products carry salePrice == regularPrice)
   if (onSaleOnly) {
     where.salePrice = {
-      not: null,
+      lt: prisma.product.fields.regularPrice,
     };
   }
 
@@ -318,7 +318,7 @@ export default async function BooksPage({
     onSaleOnly;
 
   return (
-    <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-8 md:px-12 lg:px-16 space-y-8">
+    <div className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-8 md:px-12 lg:px-16 space-y-6">
       {/* Top Circular Category Strip */}
       <div className="space-y-2 border-b border-border pb-4">
         <CategoryStrip
@@ -330,7 +330,7 @@ export default async function BooksPage({
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+          <h1 className="font-display text-2xl sm:text-[1.75rem] font-bold tracking-tight text-ink">
             {pageTitle}
           </h1>
           <p className="text-xs sm:text-sm text-muted">
@@ -443,7 +443,7 @@ export default async function BooksPage({
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-5 lg:gap-6">
         {/* Sidebar Filters with accurate counts */}
         <FilterSidebar categories={formattedCategories} />
 
@@ -459,7 +459,7 @@ export default async function BooksPage({
 
           {/* Book Cards Grid */}
           {books.length === 0 ? (
-            <div className="py-20 text-center bg-surface border border-border rounded-[var(--radius-card)] space-y-3">
+            <div className="py-14 text-center bg-surface border border-border rounded-[var(--radius-card)] space-y-3">
               <p className="text-muted text-sm">No products found matching your filters.</p>
               <Link
                 href="/products"

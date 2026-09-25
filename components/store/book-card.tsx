@@ -3,16 +3,14 @@
 
 import React from "react";
 import Link from "next/link";
-import { ProductImage } from "@/components/store/product-image";
-import { ShoppingCart, Heart, BookOpen } from "lucide-react";
+import { Heart, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { useCart } from "@/hooks/use-cart";
 import { useWishlist } from "@/hooks/use-wishlist";
 import { PriceDisplay } from "@/components/store/price-display";
 import { StarRating } from "@/components/store/star-rating";
-import { BookCardHover } from "@/components/motion/book-card-hover";
-import { Button } from "@/components/ui/button";
+import { ProductCover, getCoverSrc } from "@/components/store/product-cover";
+import { cn } from "@/lib/utils";
 
 interface BookCardProps {
   book: {
@@ -28,28 +26,28 @@ interface BookCardProps {
     averageRating: number;
     ratingCount: number;
     images: any; // array or JSON string
+    categories?: { name: string; slug: string }[];
   };
+  className?: string;
 }
 
-export function BookCard({ book }: BookCardProps) {
-  const { addItem } = useCart();
+export function BookCard({ book, className }: BookCardProps) {
+  const { addItem, items } = useCart();
   const { hasItem, toggleWishlist } = useWishlist();
 
-  // Handle parsing images
-  let coverImage = "/images/placeholder-product.jpg";
-  if (book.images) {
-    try {
-      const parsedImages = typeof book.images === "string" ? JSON.parse(book.images) : book.images;
-      if (Array.isArray(parsedImages) && parsedImages.length > 0) {
-        coverImage = parsedImages[0].src;
-      }
-    } catch (e) {
-      coverImage = "/images/placeholder-product.jpg";
-    }
-  }
+  const imageSrc = getCoverSrc(book.images);
+  const category = book.categories?.[0] ?? null;
 
-  const isSale = book.salePrice !== null && book.salePrice < book.regularPrice;
-  const isOutOfStock = book.stockStatus === "outofstock" || (book.manageStock && book.stockQuantity !== null && book.stockQuantity <= 0);
+  const regular = Number(book.regularPrice);
+  const sale = book.salePrice !== null ? Number(book.salePrice) : null;
+  const isSale = sale !== null && sale < regular;
+  const discount = isSale && regular > 0 ? Math.round(((regular - sale!) / regular) * 100) : 0;
+  const isOutOfStock =
+    book.stockStatus === "outofstock" ||
+    (book.manageStock && book.stockQuantity !== null && book.stockQuantity <= 0);
+  const inCart = items.some((i) => i.productId === book.id);
+  const hasPrice = (sale ?? regular) > 0;
+  const isWishlisted = hasItem(book.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -60,16 +58,15 @@ export function BookCard({ book }: BookCardProps) {
       return;
     }
 
-    // Add to Zustand Cart
     addItem({
       id: `p-${book.id}`,
       productId: book.id,
       variationId: null,
       name: book.name,
       sku: null,
-      price: book.salePrice !== null ? Number(book.salePrice) : Number(book.regularPrice),
-      regularPrice: Number(book.regularPrice),
-      imageUrl: coverImage,
+      price: sale !== null ? sale : regular,
+      regularPrice: regular,
+      imageUrl: imageSrc ?? "/images/placeholder-product.jpg",
       stockQuantity: book.stockQuantity,
       manageStock: book.manageStock,
     });
@@ -83,97 +80,90 @@ export function BookCard({ book }: BookCardProps) {
     toggleWishlist(book.id);
   };
 
-  const isWishlisted = hasItem(book.id);
-
   return (
-    <BookCardHover className="h-full">
-      <div className="group relative flex flex-col h-full bg-surface border border-border rounded-lg sm:rounded-[var(--radius-card)] overflow-hidden transition-all duration-300 hover:border-gold/40 hover:shadow-card">
-        {/* Wishlist button */}
-        <button
-          onClick={handleWishlistToggle}
-          className="absolute top-2 right-2 z-20 p-1.5 rounded-full bg-white/70 text-muted hover:text-gold backdrop-blur-sm transition-colors border border-border/30 hover:border-gold/40 cursor-pointer shadow-xs"
-          aria-label="Add to wishlist"
-        >
-          <Heart size={13} className={isWishlisted ? "fill-gold text-gold" : ""} />
-        </button>
+    <div
+      className={cn(
+        "group relative flex flex-col h-full bg-white border border-border rounded-[var(--radius-card)] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-gold/30 hover:shadow-[var(--shadow-lift)]",
+        className
+      )}
+    >
+      {/* Cover */}
+      <Link
+        href={`/products/${book.slug}`}
+        className="block relative aspect-[3/4] w-full overflow-hidden"
+        aria-label={book.name}
+      >
+        <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
+          <ProductCover name={book.name} imageSrc={imageSrc} category={category} />
+        </div>
 
-        {/* Sale badge */}
-        {isSale && !isOutOfStock && (
-          <div className="absolute top-2 left-2 z-20 bg-crimson text-ink font-bold text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">
-            Sale
-          </div>
+        {isSale && !isOutOfStock && discount > 0 && (
+          <span className="absolute top-2.5 left-2.5 z-10 rounded-full bg-crimson px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+            -{discount}%
+          </span>
         )}
 
-        {/* Out of stock badge */}
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center p-3">
-            <span className="bg-border text-muted font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border border-border">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/75">
+            <span className="rounded-full bg-ink/85 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
               Out of Stock
             </span>
           </div>
         )}
+      </Link>
 
-        {/* Book cover image link */}
-        <Link href={`/products/${book.slug}`} className="block relative aspect-[3/4] sm:aspect-[2/3] w-full overflow-hidden bg-elevated border-b border-border">
-          <ProductImage
-            src={coverImage}
-            alt={book.name}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            priority={false}
-          />
-          {/* Card Hover Actions Overlay */}
-          {!isOutOfStock && (
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2.5 px-2.5 z-10 pointer-events-none">
-              <div className="w-full transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 pointer-events-auto">
-                <Button
-                  onClick={handleAddToCart}
-                  variant="primary"
-                  className="w-full flex items-center justify-center gap-1.5 text-[11px] h-8 py-1 rounded-[var(--radius-btn)] font-semibold"
-                >
-                  <ShoppingCart size={13} />
-                  Add to Cart
-                </Button>
-              </div>
-            </div>
-          )}
+      {/* Wishlist */}
+      <button
+        onClick={handleWishlistToggle}
+        className={cn(
+          "absolute top-2.5 right-2.5 z-20 grid place-items-center h-8 w-8 rounded-full bg-white shadow-sm transition-all cursor-pointer hover:scale-110",
+          isWishlisted ? "text-crimson" : "text-muted hover:text-crimson"
+        )}
+        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+      >
+        <Heart size={15} className={isWishlisted ? "fill-crimson" : ""} />
+      </button>
+
+      {/* Info */}
+      <div className="flex flex-col flex-grow gap-1.5 p-3 sm:p-3.5">
+        <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-gold/90 truncate">
+          {book.author || category?.name || "Mirza Book Depot"}
+        </span>
+
+        <Link href={`/products/${book.slug}`} className="flex-grow">
+          <h3 className="text-[13px] sm:text-sm font-semibold text-ink leading-snug line-clamp-2 transition-colors group-hover:text-gold">
+            {book.name}
+          </h3>
         </Link>
 
-        {/* Card Metadata info */}
-        <div className="p-2.5 sm:p-3 flex flex-col flex-grow space-y-1 sm:space-y-1.5">
-          {/* Author name */}
-          {book.author ? (
-            <span className="text-[10px] sm:text-[11px] text-muted font-medium hover:text-gold transition-colors inline-flex items-center gap-1 truncate">
-              <BookOpen size={10} className="text-gold/70 shrink-0" />
-              <span className="truncate">{book.author}</span>
-            </span>
-          ) : (
-            <span className="text-[10px] sm:text-[11px] text-muted truncate">Unknown Author</span>
-          )}
-
-          {/* Book Title */}
-          <Link href={`/products/${book.slug}`} className="block group-hover:text-gold transition-colors flex-grow">
-            <h4 className="text-xs sm:text-[13px] text-ink font-semibold line-clamp-2 leading-snug">
-              {book.name}
-            </h4>
-          </Link>
-
-          {/* Review Stars if count > 0 */}
-          {book.ratingCount > 0 && (
-            <div className="flex items-center gap-1 pt-0.5">
-              <StarRating rating={book.averageRating} size={11} />
-              <span className="text-[10px] text-muted">({book.ratingCount})</span>
-            </div>
-          )}
-
-          {/* Pricing display */}
-          <div className="pt-0.5 flex items-center justify-between">
-            <PriceDisplay regularPrice={book.regularPrice} salePrice={book.salePrice} size="sm" />
+        {book.ratingCount > 0 && (
+          <div className="flex items-center gap-1">
+            <StarRating rating={book.averageRating} size={11} />
+            <span className="text-[10px] text-muted">({book.ratingCount})</span>
           </div>
+        )}
+
+        <div className="flex items-end justify-between gap-2 pt-1">
+          <PriceDisplay regularPrice={book.regularPrice} salePrice={book.salePrice} size="sm" hideBadge />
+
+          {!isOutOfStock && hasPrice && (
+            <button
+              onClick={handleAddToCart}
+              className={cn(
+                "shrink-0 grid place-items-center h-9 w-9 rounded-full transition-all cursor-pointer active:scale-90",
+                inCart
+                  ? "bg-emerald-600 text-white"
+                  : "bg-gold/10 text-gold hover:bg-gold hover:text-white"
+              )}
+              aria-label={`Add ${book.name} to cart`}
+              title="Add to cart"
+            >
+              {inCart ? <Check size={16} /> : <Plus size={17} strokeWidth={2.5} />}
+            </button>
+          )}
         </div>
       </div>
-    </BookCardHover>
+    </div>
   );
 }
 export default BookCard;

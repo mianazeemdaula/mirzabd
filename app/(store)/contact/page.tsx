@@ -152,7 +152,7 @@ export default function ContactPage() {
         </motion.span>
         <motion.h1
           variants={fadeUp}
-          className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink"
+          className="font-display text-xl sm:text-2xl font-bold text-ink"
         >
           Contact Our Store
         </motion.h1>
@@ -178,7 +178,7 @@ export default function ContactPage() {
             variants={fadeUp}
             className="bg-surface border border-border rounded-[var(--radius-card)] p-6 sm:p-8 space-y-6 shadow-card"
           >
-            <h2 className="font-display text-2xl font-semibold text-ink border-b border-border pb-3">
+            <h2 className="font-display text-lg sm:text-xl font-semibold text-ink border-b border-border pb-3">
               Store Information
             </h2>
             <div className="space-y-5">
@@ -435,7 +435,7 @@ export default function ContactPage() {
             variants={fadeIn}
             className="bg-surface border border-border rounded-[var(--radius-card)] p-6 sm:p-8 shadow-card"
           >
-            <h2 className="font-display text-2xl font-semibold text-ink border-b border-border pb-3 mb-6">
+            <h2 className="font-display text-lg sm:text-xl font-semibold text-ink border-b border-border pb-3 mb-6">
               Send a Message
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">

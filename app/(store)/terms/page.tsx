@@ -43,7 +43,7 @@ export default function TermsOfServicePage() {
         </motion.span>
         <motion.h1
           variants={fadeUp}
-          className="font-display text-4xl sm:text-5xl font-bold text-ink"
+          className="font-display text-xl sm:text-2xl font-bold text-ink"
         >
           Terms of Service
         </motion.h1>
@@ -83,7 +83,7 @@ export default function TermsOfServicePage() {
 
       {/* Account Obligations Section */}
       <div className="bg-surface border border-border rounded-[var(--radius-card)] p-6 sm:p-8 space-y-6 shadow-card">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <FileText className="text-gold" size={22} /> 1. User Account Obligations
         </h2>
         <div className="text-xs sm:text-sm text-muted leading-relaxed space-y-4">
@@ -98,7 +98,7 @@ export default function TermsOfServicePage() {
 
       {/* Liability Section */}
       <div className="bg-surface border border-border rounded-[var(--radius-card)] p-6 sm:p-8 space-y-6 shadow-card">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <AlertCircle className="text-gold" size={22} /> 2. Disclaimer & Limitation of Liability
         </h2>
         <div className="text-xs sm:text-sm text-muted leading-relaxed space-y-4">
@@ -113,7 +113,7 @@ export default function TermsOfServicePage() {
 
       {/* Questions & Contact */}
       <div className="space-y-6">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <HelpCircle className="text-gold" size={22} /> Legal Inquiries
         </h2>
         <p className="text-xs sm:text-sm text-muted leading-relaxed">

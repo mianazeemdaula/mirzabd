@@ -66,7 +66,7 @@ export default function ReturnPolicyPage() {
         </motion.span>
         <motion.h1
           variants={fadeUp}
-          className="font-display text-4xl sm:text-5xl font-bold text-ink"
+          className="font-display text-xl sm:text-2xl font-bold text-ink"
         >
           Return & Refund Policy
         </motion.h1>
@@ -82,7 +82,7 @@ export default function ReturnPolicyPage() {
 
       {/* Return Conditions */}
       <div className="space-y-6">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <RefreshCcw className="text-gold" size={22} /> Eligible Return Cases (Within 7 Days)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -105,7 +105,7 @@ export default function ReturnPolicyPage() {
 
       {/* Steps to Return */}
       <div className="bg-surface border border-border rounded-[var(--radius-card)] p-6 sm:p-8 space-y-6 shadow-card">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <MessageSquare className="text-gold" size={22} /> How to Initiate a Return or Exchange
         </h2>
         <div className="space-y-4">
@@ -166,7 +166,7 @@ export default function ReturnPolicyPage() {
 
       {/* FAQ */}
       <div className="space-y-6">
-        <h2 className="font-display text-2xl font-bold text-ink flex items-center gap-2">
+        <h2 className="font-display text-lg sm:text-xl font-bold text-ink flex items-center gap-2">
           <HelpCircle className="text-gold" size={22} /> Return FAQ
         </h2>
         <div className="space-y-4">

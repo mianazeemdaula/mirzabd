@@ -70,7 +70,7 @@ export default function AboutPage() {
         </motion.span>
         <motion.h1
           variants={fadeUp}
-          className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink"
+          className="font-display text-xl sm:text-2xl font-bold text-ink"
         >
           Serving Readers Since 1980
         </motion.h1>
@@ -101,7 +101,7 @@ export default function AboutPage() {
               <div className="mx-auto w-12 h-12 rounded-full bg-gold-glow/5 border border-gold/15 flex items-center justify-center text-gold">
                 <Icon size={22} />
               </div>
-              <div className="font-display text-3xl sm:text-4xl font-bold text-ink">{stat.value}</div>
+              <div className="font-display text-2xl sm:text-[1.75rem] font-bold text-ink">{stat.value}</div>
               <div className="text-xs sm:text-sm text-muted uppercase tracking-wider font-semibold">{stat.label}</div>
             </motion.div>
           );
@@ -111,7 +111,7 @@ export default function AboutPage() {
       {/* History Timeline */}
       <div className="space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink flex items-center justify-center gap-2">
+          <h2 className="font-display text-2xl sm:text-[1.75rem] font-bold text-ink flex items-center justify-center gap-2">
             <History className="text-gold" size={28} /> Our Historical Journey
           </h2>
           <p className="text-sm text-muted">
@@ -147,7 +147,7 @@ export default function AboutPage() {
       {/* Our Values Section */}
       <div className="bg-surface border border-border rounded-[var(--radius-card)] p-8 sm:p-12 shadow-card space-y-10">
         <div className="text-center max-w-xl mx-auto space-y-3">
-          <h2 className="font-display text-3xl font-bold text-ink">Core Values & Commitments</h2>
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-ink">Core Values & Commitments</h2>
           <p className="text-sm text-muted">
             The foundation of our enduring relationship with generations of readers.
           </p>
