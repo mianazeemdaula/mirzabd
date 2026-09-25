@@ -3,7 +3,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
-import { slugify_safe } from "@/lib/utils";
+import { generateUniqueCategorySlug, normalizeCategorySlug } from "@/lib/slug-helper";
 
 interface CategoryPayload {
   id?: number;
@@ -21,7 +21,7 @@ function parseCategoryInput(input: FormData | CategoryPayload): CategoryPayload 
     const idStr = input.get("id") as string | null;
     const name = (input.get("name") as string)?.trim() || "";
     const rawSlug = (input.get("slug") as string)?.trim();
-    const slug = rawSlug || slugify_safe(name);
+    const slug = normalizeCategorySlug(rawSlug || name);
     const parentIdStr = input.get("parentId") as string | null;
     const description = ((input.get("description") as string) || "").trim();
     const rawImageUrl = input.get("imageUrl") as string | null;
@@ -52,7 +52,7 @@ function parseCategoryInput(input: FormData | CategoryPayload): CategoryPayload 
   return {
     id: input.id,
     name: input.name?.trim() || "",
-    slug: input.slug?.trim() || slugify_safe(input.name || ""),
+    slug: normalizeCategorySlug(input.slug?.trim() || input.name || ""),
     parentId: input.parentId ?? null,
     description: (input.description || "").trim(),
     imageUrl: input.imageUrl?.trim() ? input.imageUrl.trim() : null,
@@ -72,6 +72,11 @@ export async function createCategory(input: FormData | CategoryPayload) {
   }
 
   try {
+    // Names like Urdu-only titles produce an empty slug — generate a fallback
+    if (!parsed.slug) {
+      parsed.slug = await generateUniqueCategorySlug(parsed.name);
+    }
+
     // Check if slug is unique
     const existing = await prisma.category.findUnique({
       where: { slug: parsed.slug },
@@ -84,7 +89,7 @@ export async function createCategory(input: FormData | CategoryPayload) {
     const created = await prisma.category.create({
       data: {
         name: parsed.name,
-        slug: parsed.slug || slugify_safe(parsed.name),
+        slug: parsed.slug,
         parentId: parsed.parentId,
         description: parsed.description || "",
         imageUrl: parsed.imageUrl,

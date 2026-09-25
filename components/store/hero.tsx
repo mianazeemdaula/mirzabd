@@ -64,7 +64,7 @@ export function Hero() {
             className="flex items-end gap-2 select-none"
           >
             {showcaseItems.map((item, idx) => (
-              <Link key={idx} href={`/products?category=${item.slug}`} className="block focus:outline-none">
+              <Link key={idx} href={`/products?category=${encodeURIComponent(item.slug)}`} className="block focus:outline-none">
                 <motion.div
                   variants={{
                     hidden: { y: 120, opacity: 0, rotate: 0 },

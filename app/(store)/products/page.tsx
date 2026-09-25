@@ -60,8 +60,8 @@ export default async function BooksPage({
 }) {
   const params = await searchParams;
 
-  // Extract and parse filters
-  const rawCat = params.category ? decodeURIComponent(params.category) : "";
+  // Extract and parse filters (Next.js already URL-decodes searchParams)
+  const rawCat = params.category ?? "";
   const categoryFilter = rawCat
     ? rawCat
         .split(",")
@@ -69,7 +69,7 @@ export default async function BooksPage({
         .filter(Boolean)
     : [];
 
-  const rawTag = params.tag ? decodeURIComponent(params.tag).trim().toLowerCase() : "";
+  const rawTag = params.tag ? params.tag.trim().toLowerCase() : "";
   const minPrice = params.min_price ? parseFloat(params.min_price) : undefined;
   const maxPrice = params.max_price ? parseFloat(params.max_price) : undefined;
   const inStockOnly = params.in_stock === "true";
@@ -79,11 +79,22 @@ export default async function BooksPage({
   const page = params.page ? Math.max(1, parseInt(params.page) || 1) : 1;
   const searchQuery = params.q ? params.q.trim() : "";
 
-  // Expand categoryFilter using aliases
+  // Expand legacy/general slugs using aliases — only when the slug isn't a real category,
+  // so selecting an actual category never pulls in products from other categories.
+  const existingSlugs = categoryFilter.length
+    ? new Set(
+        (
+          await prisma.category.findMany({
+            where: { slug: { in: categoryFilter } },
+            select: { slug: true },
+          })
+        ).map((c) => c.slug.toLowerCase())
+      )
+    : new Set<string>();
   const expandedCategoryFilter = new Set<string>();
   categoryFilter.forEach((cat) => {
     expandedCategoryFilter.add(cat);
-    if (CATEGORY_SLUG_ALIASES[cat]) {
+    if (!existingSlugs.has(cat) && CATEGORY_SLUG_ALIASES[cat]) {
       CATEGORY_SLUG_ALIASES[cat].forEach((alias) => expandedCategoryFilter.add(alias));
     }
   });

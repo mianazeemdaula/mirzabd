@@ -32,7 +32,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
   // Sync state with URL params on load or change
   useEffect(() => {
     const rawCat = searchParams.get("category");
-    const cats = rawCat ? decodeURIComponent(rawCat).split(",") : [];
+    const cats = rawCat ? rawCat.split(",") : [];
     const min = searchParams.get("min_price") || "";
     const max = searchParams.get("max_price") || "";
     const stock = searchParams.get("in_stock") === "true";

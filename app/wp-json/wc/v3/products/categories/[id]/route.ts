@@ -4,6 +4,7 @@ import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCategory } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
+import { normalizeCategorySlug } from "@/lib/slug-helper";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -71,8 +72,8 @@ async function PUTHandler(req: Request, { params }: Params) {
     const updateData: any = {};
     if (body.name !== undefined) updateData.name = body.name;
     
-    if (body.slug !== undefined) {
-      const slug = body.slug;
+    const slug = body.slug !== undefined ? normalizeCategorySlug(body.slug) : "";
+    if (slug) {
       if (slug !== existing.slug) {
         const dup = await prisma.category.findUnique({ where: { slug } });
         if (dup) {

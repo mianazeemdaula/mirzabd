@@ -224,7 +224,7 @@ export default async function CategoryPage({
 
             <div className="pt-2">
               <Link
-                href={`/products?category=${category.slug}`}
+                href={`/products?category=${encodeURIComponent(category.slug)}`}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-[var(--radius-btn)] bg-gold/15 border border-gold/30 text-gold hover:bg-gold hover:text-white transition-all text-xs font-semibold"
               >
                 <SlidersHorizontal size={14} /> Filter &amp; Sort in Catalog

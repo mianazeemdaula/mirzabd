@@ -109,7 +109,7 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
           <>
             <ChevronRight size={14} />
             <Link
-              href={`/products?category=${book.categories[0].slug}`}
+              href={`/products?category=${encodeURIComponent(book.categories[0].slug)}`}
               className="hover:text-gold transition-colors"
             >
               {book.categories[0].name}

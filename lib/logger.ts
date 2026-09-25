@@ -2,6 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
+import { recordWcSchema } from "@/lib/wc-schema";
 
 const LOGS_DIR = path.join(process.cwd(), "logs");
 const LOG_FILE = path.join(LOGS_DIR, "wc-api.log");
@@ -177,8 +178,10 @@ export function withWcLogging(handler: (req: Request, context: any) => Promise<R
 
     // Clone request before it is consumed by the handler
     let logReq = req;
+    let schemaReq: Request | null = null;
     try {
       logReq = req.clone();
+      schemaReq = req.clone();
     } catch (e) {
       // Ignore clone failure
     }
@@ -207,6 +210,11 @@ export function withWcLogging(handler: (req: Request, context: any) => Promise<R
     const duration = Date.now() - startTime;
     await logWcRequestResponse(logReq, res, duration, resBody);
 
+    // Learn the incoming payload structure (successful requests only, so junk can't pollute it)
+    if (schemaReq && res.ok) {
+      await captureWcSchema(schemaReq);
+    }
+
     if (err) {
       throw err;
     }
@@ -214,3 +222,22 @@ export function withWcLogging(handler: (req: Request, context: any) => Promise<R
   };
 }
 
+async function captureWcSchema(req: Request) {
+  try {
+    const { pathname, searchParams } = new URL(req.url);
+    let body: unknown = null;
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      const text = await req.text();
+      if (text) {
+        try {
+          body = JSON.parse(text);
+        } catch {
+          body = null; // non-JSON bodies have no field structure to record
+        }
+      }
+    }
+    await recordWcSchema(req.method, pathname, searchParams, body);
+  } catch (err) {
+    console.error("Failed to record WC API schema:", err);
+  }
+}

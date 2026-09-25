@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCategory } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
+import { generateUniqueCategorySlug, normalizeCategorySlug } from "@/lib/slug-helper";
 import { logWcApi, withWcLogging } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -75,7 +76,7 @@ async function POSTHandler(req: Request) {
       return NextResponse.json({ code: "rest_missing_callback_param", message: "Missing parameter name." }, { status: 400 });
     }
 
-    const slug = body.slug || body.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const slug = normalizeCategorySlug(body.slug || "") || (await generateUniqueCategorySlug(body.name));
     const parentId = body.parent ? parseInt(body.parent) : null;
     const displayOrder = body.menu_order ? parseInt(body.menu_order) : 0;
     const description = body.description || "";

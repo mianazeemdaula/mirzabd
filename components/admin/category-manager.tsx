@@ -424,11 +424,11 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
 
           {/* URL Slug */}
           <Input
-            label="URL Slug *"
+            label="URL Slug"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            placeholder="e.g. fiction-collection"
-            required
+            onBlur={() => setSlug(slugify_safe(slug))}
+            placeholder="Auto-generated from name, e.g. fiction-collection"
           />
 
           {/* Parent Category */}

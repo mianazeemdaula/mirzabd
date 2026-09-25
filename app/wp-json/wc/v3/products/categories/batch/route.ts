@@ -4,6 +4,7 @@ import { withWcLogging } from "@/lib/logger";
 import { wcAuthenticate } from "@/lib/wc-auth";
 import { formatWcCategory } from "@/lib/wc-formatters";
 import prisma from "@/lib/prisma";
+import { generateUniqueCategorySlug, normalizeCategorySlug } from "@/lib/slug-helper";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ async function POSTHandler(req: Request) {
       try {
         if (!item.name) continue;
 
-        const slug = item.slug || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const slug = normalizeCategorySlug(item.slug || "") || (await generateUniqueCategorySlug(item.name));
         const parentId = item.parent ? parseInt(item.parent) : null;
         const displayOrder = item.menu_order ? parseInt(item.menu_order) : 0;
         const description = item.description || "";
@@ -90,10 +91,11 @@ async function POSTHandler(req: Request) {
         const updateData: any = {};
         if (item.name !== undefined) updateData.name = item.name;
 
-        if (item.slug !== undefined && item.slug !== existing.slug) {
-          const dup = await prisma.category.findUnique({ where: { slug: item.slug } });
+        const newSlug = item.slug !== undefined ? normalizeCategorySlug(item.slug) : "";
+        if (newSlug && newSlug !== existing.slug) {
+          const dup = await prisma.category.findUnique({ where: { slug: newSlug } });
           if (!dup) {
-            updateData.slug = item.slug;
+            updateData.slug = newSlug;
           }
         }
 

@@ -84,7 +84,7 @@ function CircularCategoryCard({ category }: { category: Category }) {
   return (
     <motion.div variants={scaleIn} className="w-full flex justify-center">
       <Link
-        href={`/categories/${category.slug}`}
+        href={`/categories/${encodeURIComponent(category.slug)}`}
         className="group flex flex-col items-center w-full max-w-[180px] focus:outline-none select-none text-center"
       >
         {/* 1. Circular Avatar Container */}

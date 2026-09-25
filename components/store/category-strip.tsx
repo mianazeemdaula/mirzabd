@@ -92,7 +92,7 @@ function CategoryCircleCard({
 
   return (
     <Link
-      href={`/products?category=${category.slug}`}
+      href={`/products?category=${encodeURIComponent(category.slug)}`}
       className="group flex flex-col items-center flex-shrink-0 w-24 sm:w-28 md:w-32 focus:outline-none select-none transition-transform"
     >
       {/* 1. Circular Avatar Container */}
